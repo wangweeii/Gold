@@ -168,6 +168,7 @@
 			isa = PBXGroup;
 			children = (
 				B778FD9420F645ED00E6D168 /* Main.cc */,
+				B778FDAF20F645ED00E6D168 /* TestCppClient.cc */,
 				B778FD9520F645ED00E6D168 /* EReader.cc */,
 				B778FD9620F645ED00E6D168 /* EMutex.cc */,
 				B778FD9720F645ED00E6D168 /* StdAfx.cc */,
@@ -194,7 +195,6 @@
 				B778FDAC20F645ED00E6D168 /* AvailableAlgoParams.cc */,
 				B778FDAD20F645ED00E6D168 /* ContractCondition.cc */,
 				B778FDAE20F645ED00E6D168 /* AccountSummaryTags.cc */,
-				B778FDAF20F645ED00E6D168 /* TestCppClient.cc */,
 			);
 			path = Source;
 			sourceTree = "<group>";
