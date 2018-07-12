@@ -28,6 +28,7 @@ int main(int argc, const char *argv[])
         {
                 port = 7497;
         }
+
         const char *connectOptions = argc > 3 ? argv[3] : "";
         int clientId = 0;
         unsigned attempt = 0;
