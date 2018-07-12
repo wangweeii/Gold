@@ -7,14 +7,14 @@
 
 struct Bar
 {
-	std::string time;
-	double high;
-	double low;
-	double open;
-	double close;
-	double wap;
-	long long volume;
-	int count;
+        std::string time;
+        double high;
+        double low;
+        double open;
+        double close;
+        double wap;
+        long long volume;
+        int count;
 };
 
 #endif

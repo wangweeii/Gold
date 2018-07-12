@@ -4,7 +4,8 @@
 #include "../Header/StdAfx.h"
 #include "../Header/EMutex.h"
 
-EMutex::EMutex() {
+EMutex::EMutex()
+{
 #if defined(IB_POSIX)
 # if !defined(IBAPI_STD_MUTEX)
         pthread_mutex_init(&cs, NULL);
@@ -16,66 +17,71 @@ EMutex::EMutex() {
 #endif
 }
 
-EMutex::~EMutex(void) {
+EMutex::~EMutex(void)
+{
 #if defined(IB_POSIX)
 # if !defined(IBAPI_STD_MUTEX)
-    pthread_mutex_destroy(&cs);
+        pthread_mutex_destroy(&cs);
 # endif
 #elif defined(IB_WIN32)
-    DeleteCriticalSection(&cs);
+        DeleteCriticalSection(&cs);
 #else
 #   error "Not implemented on this platform"
 #endif
 }
 
-bool EMutex::TryEnter() {
+bool EMutex::TryEnter()
+{
 #if defined(IB_POSIX)
 # if !defined(IBAPI_STD_MUTEX)
-    return pthread_mutex_trylock(&cs) == 0;
+        return pthread_mutex_trylock(&cs) == 0;
 # else
-    return cs.try_lock();
+        return cs.try_lock();
 # endif
 #elif defined(IB_WIN32)
-    return TryEnterCriticalSection(&cs);
+        return TryEnterCriticalSection(&cs);
 #else
 #   error "Not implemented on this platform"
 #endif
 }
 
-void EMutex::Enter() {
+void EMutex::Enter()
+{
 #if defined(IB_POSIX)
 # if !defined(IBAPI_STD_MUTEX)
-    pthread_mutex_lock(&cs);
+        pthread_mutex_lock(&cs);
 # else
-    cs.lock();  
+        cs.lock();
 # endif
 #elif defined(IB_WIN32)
-    EnterCriticalSection(&cs);
+        EnterCriticalSection(&cs);
 #else
 #   error "Not implemented on this platform"
 #endif
 }
 
-void EMutex::Leave() {
+void EMutex::Leave()
+{
 #if defined(IB_POSIX)
 # if !defined(IBAPI_STD_MUTEX)
-    pthread_mutex_unlock(&cs);
+        pthread_mutex_unlock(&cs);
 # else
-    cs.unlock();  
+        cs.unlock();
 # endif
 #elif defined(IB_WIN32)
-    LeaveCriticalSection(&cs);
+        LeaveCriticalSection(&cs);
 #else
 #   error "Not implemented on this platform"
 #endif
 }
 
-
-EMutexGuard::EMutexGuard(EMutex& m) : m_mutex(m) {
-    m_mutex.Enter();
+EMutexGuard::EMutexGuard(EMutex &m) : m_mutex(m)
+{
+        m_mutex.Enter();
 }
 
-EMutexGuard::~EMutexGuard() {
-    m_mutex.Leave();
+EMutexGuard::~EMutexGuard()
+{
+        m_mutex.Leave();
 }
 

@@ -6,36 +6,43 @@
 #include "../Header/EDecoder.h"
 #include "../Header/EClient.h"
 
-const char* OperatorCondition::readExternal(const char* ptr, const char* endPtr) {
-	if (!(ptr = OrderCondition::readExternal(ptr, endPtr)))
-		return 0;
+const char *OperatorCondition::readExternal(const char *ptr, const char *endPtr)
+{
+        if (!(ptr = OrderCondition::readExternal(ptr, endPtr)))
+        {
+                return 0;
+        }
 
-	DECODE_FIELD(m_isMore);
+        DECODE_FIELD(m_isMore);
 
-	std::string str;
+        std::string str;
 
-	DECODE_FIELD(str);
+        DECODE_FIELD(str);
 
-	valueFromString(str);
+        valueFromString(str);
 
-	return ptr;
+        return ptr;
 }
 
-std::string OperatorCondition::toString() {
-	return " is " + std::string(isMore() ? ">= " : "<= ") + valueToString();
+std::string OperatorCondition::toString()
+{
+        return " is " + std::string(isMore() ? ">= " : "<= ") + valueToString();
 }
 
-void OperatorCondition::writeExternal(std::ostream & msg) const {
-	OrderCondition::writeExternal(msg);
+void OperatorCondition::writeExternal(std::ostream &msg) const
+{
+        OrderCondition::writeExternal(msg);
 
-	ENCODE_FIELD(m_isMore);
-	ENCODE_FIELD(valueToString());
+        ENCODE_FIELD(m_isMore);
+        ENCODE_FIELD(valueToString());
 }
 
-bool OperatorCondition::isMore() {
-	return m_isMore;
+bool OperatorCondition::isMore()
+{
+        return m_isMore;
 }
 
-void OperatorCondition::isMore(bool isMore) {
-	m_isMore = isMore;
+void OperatorCondition::isMore(bool isMore)
+{
+        m_isMore = isMore;
 }

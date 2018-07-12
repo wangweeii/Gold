@@ -7,10 +7,10 @@
 
 struct HistoricalTick
 {
-    long long time;
-    double price;
-    long long size;
-};  
+        long long time;
+        double price;
+        long long size;
+};
 #endif // !historicaltickendtry_def
 
 

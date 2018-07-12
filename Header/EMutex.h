@@ -9,39 +9,42 @@
 # include  <mutex>
 #endif
 
-
 class TWSAPIDLLEXP EMutex
 {
 #if defined(IB_POSIX)
 # if !defined(IBAPI_STD_MUTEX)
-    pthread_mutex_t cs;
+        pthread_mutex_t cs;
 # else
-    std::mutex cs;
+        std::mutex cs;
 # endif
 #elif defined(IB_WIN32)
-    CRITICAL_SECTION cs;
+        CRITICAL_SECTION cs;
 #else
 #   error "Not implemented on this platform"
 #endif
 
 public:
-    EMutex();
-    ~EMutex();
-    bool TryEnter();
-    void Enter();
-    void Leave();
-};
+        EMutex();
 
+        ~EMutex();
+
+        bool TryEnter();
+
+        void Enter();
+
+        void Leave();
+};
 
 class TWSAPIDLLEXP EMutexGuard
 {
-    EMutex& m_mutex;
+        EMutex &m_mutex;
 public:
-    EMutexGuard(EMutex& m);
-    ~EMutexGuard();
+        EMutexGuard(EMutex &m);
+
+        ~EMutexGuard();
 
 private:
-    // disable copy ctor (compatible with pre C++11 compiler hence =delete not used)
-    EMutexGuard(const EMutex&);
+        // disable copy ctor (compatible with pre C++11 compiler hence =delete not used)
+        EMutexGuard(const EMutex &);
 };
 

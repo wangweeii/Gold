@@ -6,24 +6,20 @@
 #define depthmktdatadescription_def
 
 #include <limits.h>
+
 #define UNSET_INTEGER INT_MAX
 
 struct DepthMktDataDescription
 {
-	DepthMktDataDescription()
-		: exchange("")
-		, secType("")
-		, listingExch("")
-		, serviceDataType("")
-		, aggGroup(UNSET_INTEGER)
-	{
-	}
+        DepthMktDataDescription() : exchange(""), secType(""), listingExch(""), serviceDataType(""), aggGroup(UNSET_INTEGER)
+        {
+        }
 
-	std::string exchange;
-	std::string secType;
-	std::string listingExch;
-	std::string serviceDataType;
-	int aggGroup;
+        std::string exchange;
+        std::string secType;
+        std::string listingExch;
+        std::string serviceDataType;
+        int aggGroup;
 };
 
 #endif // depthmktdatadescription_def

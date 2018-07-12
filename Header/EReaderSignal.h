@@ -2,10 +2,14 @@
  * and conditions of the IB API Non-Commercial License or the IB API Commercial License, as applicable. */
 
 #pragma once
+
 struct EReaderSignal
 {
-    virtual void issueSignal() = 0;
-    virtual void waitForSignal() = 0;
-    virtual ~EReaderSignal() {}
+        virtual void issueSignal() = 0;
+
+        virtual void waitForSignal() = 0;
+
+        virtual ~EReaderSignal()
+        {}
 };
 

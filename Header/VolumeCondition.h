@@ -2,22 +2,27 @@
  * and conditions of the IB API Non-Commercial License or the IB API Commercial License, as applicable. */
 
 #pragma once
+
 #include "ContractCondition.h"
 
-class TWSAPIDLLEXP VolumeCondition : public ContractCondition {
-	friend OrderCondition;
+class TWSAPIDLLEXP VolumeCondition : public ContractCondition
+{
+        friend OrderCondition;
 
-	int m_volume;
+        int m_volume;
 
 protected:
-	VolumeCondition() { }
+        VolumeCondition()
+        {}
 
-	virtual std::string valueToString() const;
-	virtual void valueFromString(const std::string &v);
+        virtual std::string valueToString() const;
+
+        virtual void valueFromString(const std::string &v);
 
 public:
-	static const OrderConditionType conditionType = OrderConditionType::Volume;
+        static const OrderConditionType conditionType = OrderConditionType::Volume;
 
-	int volume();
-	void volume(int volume);
+        int volume();
+
+        void volume(int volume);
 };

@@ -10,50 +10,62 @@
 #include "EReaderOSSignal.h"
 
 class EClientSocket;
+
 struct EReaderSignal;
+
 class EMessage;
 
 class TWSAPIDLLEXP EReader
-{  
-    EClientSocket *m_pClientSocket;
-    EReaderSignal *m_pEReaderSignal;
-    EDecoder processMsgsDecoder_;
-    std::deque<std::shared_ptr<EMessage>> m_msgQueue;
-    EMutex m_csMsgQueue;
-    std::vector<char> m_buf;
-    std::atomic<bool> m_isAlive;
+{
+        EClientSocket *m_pClientSocket;
+        EReaderSignal *m_pEReaderSignal;
+        EDecoder processMsgsDecoder_;
+        std::deque<std::shared_ptr<EMessage>> m_msgQueue;
+        EMutex m_csMsgQueue;
+        std::vector<char> m_buf;
+        std::atomic<bool> m_isAlive;
 #if defined(IB_POSIX)
-    pthread_t m_hReadThread;
+        pthread_t m_hReadThread;
 #elif defined(IB_WIN32)
-    HANDLE m_hReadThread;
+        HANDLE m_hReadThread;
 #endif
-	unsigned int m_nMaxBufSize;
+        unsigned int m_nMaxBufSize;
 
-	void onReceive();
-	void onSend();
-	bool bufferedRead(char *buf, unsigned int size);
+        void onReceive();
+
+        void onSend();
+
+        bool bufferedRead(char *buf, unsigned int size);
 
 public:
-    EReader(EClientSocket *clientSocket, EReaderSignal *signal);
-    ~EReader(void);
+        EReader(EClientSocket *clientSocket, EReaderSignal *signal);
+
+        ~EReader(void);
 
 protected:
-	bool processNonBlockingSelect();
-    std::shared_ptr<EMessage> getMsg(void);
-    void readToQueue();
+        bool processNonBlockingSelect();
+
+        std::shared_ptr<EMessage> getMsg(void);
+
+        void readToQueue();
+
 #if defined(IB_POSIX)
-    static void * readToQueueThread(void * lpParam);
+        static void * readToQueueThread(void * lpParam);
 #elif defined(IB_WIN32)
-    static DWORD WINAPI readToQueueThread(LPVOID lpParam);
+
+        static DWORD WINAPI readToQueueThread(LPVOID lpParam);
+
 #else
 #   error "Not implemented on this platform"
 #endif
-    
-    EMessage * readSingleMsg();
+
+        EMessage *readSingleMsg();
 
 public:
-    void processMsgs(void);
-	bool putMessageToQueue();
-	void start();
+        void processMsgs(void);
+
+        bool putMessageToQueue();
+
+        void start();
 };
 

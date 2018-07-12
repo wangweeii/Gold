@@ -7,33 +7,30 @@
 
 #include "Order.h"
 
-struct OrderState {
+struct OrderState
+{
 
-	explicit OrderState()
-		:
-		commission(UNSET_DOUBLE),
-		minCommission(UNSET_DOUBLE),
-		maxCommission(UNSET_DOUBLE)
-	{}
+        explicit OrderState() : commission(UNSET_DOUBLE), minCommission(UNSET_DOUBLE), maxCommission(UNSET_DOUBLE)
+        {}
 
-	std::string status;
+        std::string status;
 
-	std::string initMarginBefore;
-	std::string maintMarginBefore;
-	std::string equityWithLoanBefore;
-	std::string initMarginChange;
-	std::string maintMarginChange;
-	std::string equityWithLoanChange;
-	std::string initMarginAfter;
-	std::string maintMarginAfter;
-	std::string equityWithLoanAfter;
+        std::string initMarginBefore;
+        std::string maintMarginBefore;
+        std::string equityWithLoanBefore;
+        std::string initMarginChange;
+        std::string maintMarginChange;
+        std::string equityWithLoanChange;
+        std::string initMarginAfter;
+        std::string maintMarginAfter;
+        std::string equityWithLoanAfter;
 
-	double  commission;
-	double  minCommission;
-	double  maxCommission;
-	std::string commissionCurrency;
+        double commission;
+        double minCommission;
+        double maxCommission;
+        std::string commissionCurrency;
 
-	std::string warningText;
+        std::string warningText;
 };
 
 #endif

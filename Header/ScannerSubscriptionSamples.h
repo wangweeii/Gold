@@ -9,12 +9,16 @@
 
 struct ScannerSubscription;
 
-class ScannerSubscriptionSamples {
+class ScannerSubscriptionSamples
+{
 public:
-	static ScannerSubscription HotUSStkByVolume();
-	static ScannerSubscription TopPercentGainersIbis();
-	static ScannerSubscription MostActiveFutSoffex();
-	static ScannerSubscription HighOptVolumePCRatioUSIndexes();
+        static ScannerSubscription HotUSStkByVolume();
+
+        static ScannerSubscription TopPercentGainersIbis();
+
+        static ScannerSubscription MostActiveFutSoffex();
+
+        static ScannerSubscription HighOptVolumePCRatioUSIndexes();
 };
 
 #endif

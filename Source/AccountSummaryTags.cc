@@ -35,8 +35,12 @@ std::string AccountSummaryTags::HighestSeverity = "HighestSeverity";
 std::string AccountSummaryTags::DayTradesRemaining = "DayTradesRemaining";
 std::string AccountSummaryTags::Leverage = "Leverage";
 
-std::string AccountSummaryTags::getAllTags(){
-	return AccountType + "," + NetLiquidation + "," + TotalCashValue + "," + SettledCash + "," + AccruedCash + "," + BuyingPower + "," + EquityWithLoanValue + "," + PreviousEquityWithLoanValue + "," + GrossPositionValue + "," + ReqTEquity
-                + "," + ReqTMargin + "," + SMA + "," + InitMarginReq + "," + MaintMarginReq + "," + AvailableFunds + "," + ExcessLiquidity + "," + Cushion + "," + FullInitMarginReq + "," + FullMaintMarginReq + "," + FullAvailableFunds + "," + FullExcessLiquidity
-                + "," + LookAheadNextChange + "," + LookAheadInitMarginReq + "," + LookAheadMaintMarginReq + "," + LookAheadAvailableFunds + "," + LookAheadExcessLiquidity + "," + HighestSeverity + "," + DayTradesRemaining + "," + Leverage;
+std::string AccountSummaryTags::getAllTags()
+{
+        return AccountType + "," + NetLiquidation + "," + TotalCashValue + "," + SettledCash + "," + AccruedCash + "," + BuyingPower + "," +
+               EquityWithLoanValue + "," + PreviousEquityWithLoanValue + "," + GrossPositionValue + "," + ReqTEquity + "," + ReqTMargin + "," + SMA +
+               "," + InitMarginReq + "," + MaintMarginReq + "," + AvailableFunds + "," + ExcessLiquidity + "," + Cushion + "," + FullInitMarginReq +
+               "," + FullMaintMarginReq + "," + FullAvailableFunds + "," + FullExcessLiquidity + "," + LookAheadNextChange + "," +
+               LookAheadInitMarginReq + "," + LookAheadMaintMarginReq + "," + LookAheadAvailableFunds + "," + LookAheadExcessLiquidity + "," +
+               HighestSeverity + "," + DayTradesRemaining + "," + Leverage;
 }

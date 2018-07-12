@@ -7,12 +7,12 @@
 
 struct HistoricalTickBidAsk
 {
-    long long time;
-    int mask;
-    double priceBid;
-    double priceAsk;
-    long long sizeBid;
-    long long sizeAsk;
+        long long time;
+        int mask;
+        double priceBid;
+        double priceAsk;
+        long long sizeBid;
+        long long sizeAsk;
 };
 #endif
 

@@ -2,10 +2,14 @@
  * and conditions of the IB API Non-Commercial License or the IB API Commercial License, as applicable. */
 
 #pragma once
+
 struct EClientMsgSink
 {
-    virtual void serverVersion(int version, const char *time) = 0;
-    virtual void redirect(const char *host, int port) = 0;
-    virtual ~EClientMsgSink() {}
+        virtual void serverVersion(int version, const char *time) = 0;
+
+        virtual void redirect(const char *host, int port) = 0;
+
+        virtual ~EClientMsgSink()
+        {}
 };
 

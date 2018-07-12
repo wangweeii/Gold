@@ -7,21 +7,21 @@
 
 struct CommissionReport
 {
-	CommissionReport()
-	{
-		commission = 0;
-		realizedPNL = 0;
-		yield = 0;
-		yieldRedemptionDate = 0;
-	}
+        CommissionReport()
+        {
+                commission = 0;
+                realizedPNL = 0;
+                yield = 0;
+                yieldRedemptionDate = 0;
+        }
 
-	// commission report fields
-	std::string	execId;
-	double		commission;
-	std::string	currency;
-	double		realizedPNL;
-	double		yield;
-	int			yieldRedemptionDate; // YYYYMMDD format
+        // commission report fields
+        std::string execId;
+        double commission;
+        std::string currency;
+        double realizedPNL;
+        double yield;
+        int yieldRedemptionDate; // YYYYMMDD format
 };
 
 #endif // commissionreport_def

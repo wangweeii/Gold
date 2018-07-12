@@ -7,8 +7,8 @@
 
 struct FamilyCode
 {
-	std::string accountID;
-	std::string familyCodeStr;
+        std::string accountID;
+        std::string familyCodeStr;
 };
 
 #endif // familycode_def

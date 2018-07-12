@@ -2,24 +2,29 @@
  * and conditions of the IB API Non-Commercial License or the IB API Commercial License, as applicable. */
 
 #pragma once
+
 #include "OperatorCondition.h"
 
-class TWSAPIDLLEXP TimeCondition : public OperatorCondition {
-	friend OrderCondition;
+class TWSAPIDLLEXP TimeCondition : public OperatorCondition
+{
+        friend OrderCondition;
 
-	std::string m_time;
+        std::string m_time;
 
 protected:
-	TimeCondition() { }
+        TimeCondition()
+        {}
 
-	virtual std::string valueToString() const;
-	virtual void valueFromString(const std::string &v);
+        virtual std::string valueToString() const;
+
+        virtual void valueFromString(const std::string &v);
 
 public:
-	static const OrderConditionType conditionType = OrderConditionType::Time;
+        static const OrderConditionType conditionType = OrderConditionType::Time;
 
-	virtual std::string toString();
+        virtual std::string toString();
 
-	std::string time();
-	void time(const std::string &time);
+        std::string time();
+
+        void time(const std::string &time);
 };

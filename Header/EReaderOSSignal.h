@@ -2,6 +2,7 @@
  * and conditions of the IB API Non-Commercial License or the IB API Commercial License, as applicable. */
 
 #pragma once
+
 #include "EReaderSignal.h"
 #include "StdAfx.h"
 #include <stdexcept>
@@ -10,26 +11,27 @@
 #define INFINITE ((unsigned long)-1)
 #endif
 
-class TWSAPIDLLEXP EReaderOSSignal :
-	public EReaderSignal
+class TWSAPIDLLEXP EReaderOSSignal : public EReaderSignal
 {
 #if defined(IB_POSIX)
-    pthread_condattr_t m_condattr;
-    pthread_cond_t m_evMsgs;
-    pthread_mutex_t m_mutex;
-    bool open;
+        pthread_condattr_t m_condattr;
+        pthread_cond_t m_evMsgs;
+        pthread_mutex_t m_mutex;
+        bool open;
 #elif defined(IB_WIN32)
-	HANDLE m_evMsgs;
+        HANDLE m_evMsgs;
 #else
 #   error "Not implemented on this platform"
 #endif
-    unsigned long m_waitTimeout; // in milliseconds
+        unsigned long m_waitTimeout; // in milliseconds
 
 public:
-	EReaderOSSignal(unsigned long waitTimeout = INFINITE) throw (std::runtime_error);
-	virtual ~EReaderOSSignal(void);
+        EReaderOSSignal(unsigned long waitTimeout = INFINITE) throw(std::runtime_error);
 
-	virtual void issueSignal();
-	virtual void waitForSignal();
+        virtual ~EReaderOSSignal(void);
+
+        virtual void issueSignal();
+
+        virtual void waitForSignal();
 };
 

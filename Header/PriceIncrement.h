@@ -7,8 +7,8 @@
 
 struct PriceIncrement
 {
-	double lowEdge;
-	double increment;
+        double lowEdge;
+        double increment;
 };
 
 #endif // priceincrement_def

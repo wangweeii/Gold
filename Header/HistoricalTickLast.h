@@ -7,12 +7,12 @@
 
 struct HistoricalTickLast
 {
-    long long time;
-    int mask; 
-    double price;
-    long long size;
-    std::string exchange;
-    std::string specialConditions;
+        long long time;
+        int mask;
+        double price;
+        long long size;
+        std::string exchange;
+        std::string specialConditions;
 };
 #endif
 

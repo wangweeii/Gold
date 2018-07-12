@@ -7,8 +7,8 @@
 
 struct HistogramEntry
 {
-	double price;
-	long long size;
+        double price;
+        long long size;
 };
 
 #endif

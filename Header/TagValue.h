@@ -5,20 +5,20 @@
 #ifndef tagvalue_def
 #define tagvalue_def
 
-
 #include <string>
 #include <vector>
 #include <memory>
 
 struct TagValue
 {
-	TagValue() {}
-	TagValue(const std::string& p_tag, const std::string& p_value)
-		: tag(p_tag), value(p_value)
-	{}
+        TagValue()
+        {}
 
-	std::string tag;
-	std::string value;
+        TagValue(const std::string &p_tag, const std::string &p_value) : tag(p_tag), value(p_value)
+        {}
+
+        std::string tag;
+        std::string value;
 };
 
 typedef std::shared_ptr<TagValue> TagValueSPtr;

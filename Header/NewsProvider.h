@@ -7,8 +7,8 @@
 
 struct NewsProvider
 {
-	std::string providerCode;
-	std::string providerName;
+        std::string providerCode;
+        std::string providerName;
 };
 
 #endif // newsprovider_def
