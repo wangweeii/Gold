@@ -31,7 +31,7 @@ int main(int argc, const char *argv[])
         const char *connectOptions = argc > 3 ? argv[3] : "";
         int clientId = 0;
         unsigned attempt = 0;
-        // printf("Start of C++ Socket Client Test %u\n", attempt);
+        std::cout << "Start of C++ Socket Client Test " << attempt << std::endl;
 
         while (true)
         {
