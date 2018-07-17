@@ -2004,8 +2004,10 @@ void TestCppClient::histogramData(int reqId, const HistogramDataVector &data)
 //! [historicalDataUpdate]
 void TestCppClient::historicalDataUpdate(TickerId reqId, const Bar &bar)
 {
-        printf("HistoricalDataUpdate. ReqId: %ld - Date: %s, Open: %g, High: %g, Low: %g, Close: %g, Volume: %lld, Count: %d, WAP: %g\n", reqId,
-               bar.time.c_str(), bar.open, bar.high, bar.low, bar.close, bar.volume, bar.count, bar.wap);
+        printf("HistoricalDataUpdate. ReqId: %ld - Date: %s, Open: %g, High: %g, Low: %g, Close: %g, Count: %d\n", reqId, bar.time.c_str(), bar.open,
+               bar.high, bar.low, bar.close, bar.count);
+        // printf("HistoricalDataUpdate. ReqId: %ld - Date: %s, Open: %g, High: %g, Low: %g, Close: %g, Volume: %lld, Count: %d, WAP: %g\n", reqId,
+        //        bar.time.c_str(), bar.open, bar.high, bar.low, bar.close, bar.volume, bar.count, bar.wap);
 }
 //! [historicalDataUpdate]
 

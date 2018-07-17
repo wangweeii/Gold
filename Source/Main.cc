@@ -47,8 +47,8 @@ int main(int argc, const char *argv[])
                 }
 
                 client.connect(host, port, clientId);
-                std::cout << "Shit, I had know how to use this application..." << std::endl;
                 std::this_thread::sleep_for(std::chrono::seconds(5));
+
                 client.historicalDataRequests();
 
                 while (client.isConnected())
