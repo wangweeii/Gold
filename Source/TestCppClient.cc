@@ -29,7 +29,7 @@
 #include "../Header/AccountSummaryTags.h"
 #include "../Header/Utils.h"
 
-#include <stdio.h>
+#include <cstdio>
 #include <chrono>
 #include <iostream>
 #include <thread>
@@ -2005,8 +2005,8 @@ void TestCppClient::histogramData(int reqId, const HistogramDataVector &data)
 //! [historicalDataUpdate]
 void TestCppClient::historicalDataUpdate(TickerId reqId, const Bar &bar)
 {
-        printf("HistoricalDataUpdate. ReqId: %ld - Date: %s, Open: %g, High: %g, Low: %g, Close: %g\n", reqId, bar.time.c_str(), bar.open,
-               bar.high, bar.low, bar.close);
+        printf("HistoricalDataUpdate. ReqId: %ld - Date: %s, Open: %g, High: %g, Low: %g, Close: %g\n", reqId, bar.time.c_str(), bar.open, bar.high,
+               bar.low, bar.close);
         // printf("HistoricalDataUpdate. ReqId: %ld - Date: %s, Open: %g, High: %g, Low: %g, Close: %g, Volume: %lld, Count: %d, WAP: %g\n", reqId,
         //        bar.time.c_str(), bar.open, bar.high, bar.low, bar.close, bar.volume, bar.count, bar.wap);
 }

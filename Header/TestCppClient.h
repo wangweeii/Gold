@@ -122,17 +122,19 @@ public:
 
 public:
 
+        void accountOperations();
+
         bool connect(const char *host, unsigned int port, int clientId = 0);
 
         void disconnect() const;
 
-        bool isConnected() const;
-
-        void accountOperations();
-
         void historicalDataRequests();
 
+        bool isConnected() const;
+
 private:
+        bool isActive();
+
         void pnlOperation();
 
         void pnlSingleOperation();
