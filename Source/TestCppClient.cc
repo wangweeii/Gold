@@ -588,59 +588,60 @@ void TestCppClient::accountOperations()
 {
         /*** Requesting managed accounts***/
         //! [reqmanagedaccts]
-        m_pClient->reqManagedAccts();
+        // m_pClient->reqManagedAccts();
         //! [reqmanagedaccts]
         std::this_thread::sleep_for(std::chrono::seconds(2));
         /*** Requesting accounts' summary ***/
         //! [reqaaccountsummary]
-        m_pClient->reqAccountSummary(9001, "All", AccountSummaryTags::getAllTags());
+        m_pClient->reqAccountSummary(9000, "All", "NetLiquidation");
+        // m_pClient->reqAccountSummary(9001, "All", AccountSummaryTags::getAllTags());
         //! [reqaaccountsummary]
-        std::this_thread::sleep_for(std::chrono::seconds(2));
+        // std::this_thread::sleep_for(std::chrono::seconds(2));
         //! [reqaaccountsummaryledger]
-        m_pClient->reqAccountSummary(9002, "All", "$LEDGER");
+        // m_pClient->reqAccountSummary(9002, "All", "$LEDGER");
         //! [reqaaccountsummaryledger]
-        std::this_thread::sleep_for(std::chrono::seconds(2));
+        // std::this_thread::sleep_for(std::chrono::seconds(2));
         //! [reqaaccountsummaryledgercurrency]
-        m_pClient->reqAccountSummary(9003, "All", "$LEDGER:EUR");
+        // m_pClient->reqAccountSummary(9003, "All", "$LEDGER:EUR");
         //! [reqaaccountsummaryledgercurrency]
-        std::this_thread::sleep_for(std::chrono::seconds(2));
+        // std::this_thread::sleep_for(std::chrono::seconds(2));
         //! [reqaaccountsummaryledgerall]
-        m_pClient->reqAccountSummary(9004, "All", "$LEDGER:ALL");
+        // m_pClient->reqAccountSummary(9004, "All", "$LEDGER:ALL");
         //! [reqaaccountsummaryledgerall]
-        std::this_thread::sleep_for(std::chrono::seconds(2));
+        // std::this_thread::sleep_for(std::chrono::seconds(2));
         //! [cancelaaccountsummary]
-        m_pClient->cancelAccountSummary(9001);
-        m_pClient->cancelAccountSummary(9002);
-        m_pClient->cancelAccountSummary(9003);
-        m_pClient->cancelAccountSummary(9004);
+        // m_pClient->cancelAccountSummary(9001);
+        // m_pClient->cancelAccountSummary(9002);
+        // m_pClient->cancelAccountSummary(9003);
+        // m_pClient->cancelAccountSummary(9004);
         //! [cancelaaccountsummary]
-        std::this_thread::sleep_for(std::chrono::seconds(2));
+        // std::this_thread::sleep_for(std::chrono::seconds(2));
         /*** Subscribing to an account's information. Only one at a time! ***/
         //! [reqaaccountupdates]
-        m_pClient->reqAccountUpdates(true, "U150462");
+        // m_pClient->reqAccountUpdates(true, "U150462");
         //! [reqaaccountupdates]
-        std::this_thread::sleep_for(std::chrono::seconds(2));
+        // std::this_thread::sleep_for(std::chrono::seconds(2));
         //! [cancelaaccountupdates]
-        m_pClient->reqAccountUpdates(false, "U150462");
+        // m_pClient->reqAccountUpdates(false, "U150462");
         //! [cancelaaccountupdates]
-        std::this_thread::sleep_for(std::chrono::seconds(2));
+        // std::this_thread::sleep_for(std::chrono::seconds(2));
 
         //! [reqaaccountupdatesmulti]
-        m_pClient->reqAccountUpdatesMulti(9002, "U150462", "EUstocks", true);
+        // m_pClient->reqAccountUpdatesMulti(9002, "U150462", "EUstocks", true);
         //! [reqaaccountupdatesmulti]
-        std::this_thread::sleep_for(std::chrono::seconds(2));
+        // std::this_thread::sleep_for(std::chrono::seconds(2));
 
         /*** Requesting all accounts' positions. ***/
         //! [reqpositions]
-        m_pClient->reqPositions();
+        // m_pClient->reqPositions();
         //! [reqpositions]
-        std::this_thread::sleep_for(std::chrono::seconds(2));
+        // std::this_thread::sleep_for(std::chrono::seconds(2));
         //! [cancelpositions]
-        m_pClient->cancelPositions();
+        // m_pClient->cancelPositions();
         //! [cancelpositions]
 
         //! [reqpositionsmulti]
-        m_pClient->reqPositionsMulti(9003, "U150462", "EUstocks");
+        // m_pClient->reqPositionsMulti(9003, "U150462", "EUstocks");
         //! [reqpositionsmulti]
 
         m_state = ST_ACCOUNTOPERATIONS_ACK;
@@ -2004,8 +2005,8 @@ void TestCppClient::histogramData(int reqId, const HistogramDataVector &data)
 //! [historicalDataUpdate]
 void TestCppClient::historicalDataUpdate(TickerId reqId, const Bar &bar)
 {
-        printf("HistoricalDataUpdate. ReqId: %ld - Date: %s, Open: %g, High: %g, Low: %g, Close: %g, Count: %d\n", reqId, bar.time.c_str(), bar.open,
-               bar.high, bar.low, bar.close, bar.count);
+        printf("HistoricalDataUpdate. ReqId: %ld - Date: %s, Open: %g, High: %g, Low: %g, Close: %g\n", reqId, bar.time.c_str(), bar.open,
+               bar.high, bar.low, bar.close);
         // printf("HistoricalDataUpdate. ReqId: %ld - Date: %s, Open: %g, High: %g, Low: %g, Close: %g, Volume: %lld, Count: %d, WAP: %g\n", reqId,
         //        bar.time.c_str(), bar.open, bar.high, bar.low, bar.close, bar.volume, bar.count, bar.wap);
 }
