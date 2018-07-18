@@ -246,7 +246,7 @@ private:
         bool m_extraAuth;
         std::string m_bboExchange;
 
-        double raw_avg[10000];
+        double raw_price[10000];
         int tail = -1;
         Bar previous_bar, current_bar;
         const int fast_step = 8;

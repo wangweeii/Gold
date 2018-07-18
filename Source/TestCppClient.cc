@@ -62,7 +62,8 @@ TestCppClient::~TestCppClient()
 bool TestCppClient::connect(const char *host, unsigned int port, int clientId)
 {
         // trying to connect
-        printf("Connecting to %s:%d clientId:%d\n", !(host && *host) ? "127.0.0.1" : host, port, clientId);
+        std::cout << "Connecting to " << (!(host && *host) ? "127.0.0.1" : host) << ":" << port << " clientId:" << clientId << std::endl;
+        // printf("Connecting to %s:%d clientId:%d\n", !(host && *host) ? "127.0.0.1" : host, port, clientId);
 
         //! [connect]
         bool bRes = m_pClient->eConnect(host, port, clientId, m_extraAuth);
@@ -70,7 +71,8 @@ bool TestCppClient::connect(const char *host, unsigned int port, int clientId)
 
         if (bRes)
         {
-                printf("Connected to %s:%d clientId:%d\n", m_pClient->host().c_str(), m_pClient->port(), clientId);
+                std::cout << "Connected to " << m_pClient->host() << ":" << m_pClient->port() << " clientId:" << clientId << std::endl;
+                // printf("Connected to %s:%d clientId:%d\n", m_pClient->host().c_str(), m_pClient->port(), clientId);
                 //! [ereader]
                 m_pReader = new EReader(m_pClient, &m_osSignal);
                 m_pReader->start();
@@ -78,7 +80,8 @@ bool TestCppClient::connect(const char *host, unsigned int port, int clientId)
         }
         else
         {
-                printf("Cannot connect to %s:%d clientId:%d\n", m_pClient->host().c_str(), m_pClient->port(), clientId);
+                std::cout << "Cannot connect to " << m_pClient->host() << ":" << m_pClient->port() << " clientId:" << clientId << std::endl;
+                // printf("Cannot connect to %s:%d clientId:%d\n", m_pClient->host().c_str(), m_pClient->port(), clientId);
         }
 
         return bRes;
@@ -88,7 +91,8 @@ void TestCppClient::disconnect() const
 {
         m_pClient->eDisconnect();
 
-        printf("Disconnected\n");
+        std::cout << "Disconnected" << std::endl;
+        // printf("Disconnected\n");
 }
 
 bool TestCppClient::isConnected() const
@@ -109,8 +113,8 @@ double TestCppClient::fast_sma()
 
         if (fast_total > 0)
         {
-                fast_total -= raw_avg[(tail + length - fast_step) % length];
-                fast_total += raw_avg[tail % length];
+                fast_total -= raw_price[(tail + length - fast_step) % length];
+                fast_total += raw_price[tail % length];
         }
         else
         {
@@ -118,18 +122,18 @@ double TestCppClient::fast_sma()
                 {
                         for (int i = begin + 1; i <= end; i++)
                         {
-                                fast_total += raw_avg[i];
+                                fast_total += raw_price[i];
                         }
                 }
                 else if (begin > end)
                 {
                         for (int i = begin + 1; i < length; i++)
                         {
-                                fast_total += raw_avg[i];
+                                fast_total += raw_price[i];
                         }
                         for (int i = 0; i <= end; i++)
                         {
-                                fast_total += raw_avg[i];
+                                fast_total += raw_price[i];
                         }
                 }
         }
@@ -145,8 +149,8 @@ double TestCppClient::slow_sma()
 
         if (slow_total > 0)
         {
-                slow_total -= raw_avg[(tail + length - slow_step) % length];
-                slow_total += raw_avg[tail % length];
+                slow_total -= raw_price[(tail + length - slow_step) % length];
+                slow_total += raw_price[tail % length];
         }
         else
         {
@@ -154,18 +158,18 @@ double TestCppClient::slow_sma()
                 {
                         for (int i = begin + 1; i <= end; i++)
                         {
-                                slow_total += raw_avg[i];
+                                slow_total += raw_price[i];
                         }
                 }
                 else if (begin > end)
                 {
                         for (int i = begin + 1; i < length; i++)
                         {
-                                slow_total += raw_avg[i];
+                                slow_total += raw_price[i];
                         }
                         for (int i = 0; i <= end; i++)
                         {
-                                slow_total += raw_avg[i];
+                                slow_total += raw_price[i];
                         }
                 }
         }
@@ -182,125 +186,203 @@ void TestCppClient::processMessages()
         /*****************************************************************/
         switch (m_state)
         {
-                case ST_PNLSINGLE:pnlSingleOperation();
+                case ST_PNLSINGLE:
+                        pnlSingleOperation();
                         break;
-                case ST_PNLSINGLE_ACK:break;
-                case ST_PNL:pnlOperation();
+                case ST_PNLSINGLE_ACK:
                         break;
-                case ST_PNL_ACK:break;
-                case ST_TICKDATAOPERATION:tickDataOperation();
+                case ST_PNL:
+                        pnlOperation();
                         break;
-                case ST_TICKDATAOPERATION_ACK:break;
-                case ST_TICKOPTIONCOMPUTATIONOPERATION:tickOptionComputationOperation();
+                case ST_PNL_ACK:
                         break;
-                case ST_TICKOPTIONCOMPUTATIONOPERATION_ACK:break;
-                case ST_DELAYEDTICKDATAOPERATION:delayedTickDataOperation();
+                case ST_TICKDATAOPERATION:
+                        tickDataOperation();
                         break;
-                case ST_DELAYEDTICKDATAOPERATION_ACK:break;
-                case ST_MARKETDEPTHOPERATION:marketDepthOperations();
+                case ST_TICKDATAOPERATION_ACK:
                         break;
-                case ST_MARKETDEPTHOPERATION_ACK:break;
-                case ST_REALTIMEBARS:realTimeBars();
+                case ST_TICKOPTIONCOMPUTATIONOPERATION:
+                        tickOptionComputationOperation();
                         break;
-                case ST_REALTIMEBARS_ACK:break;
-                case ST_MARKETDATATYPE:marketDataType();
+                case ST_TICKOPTIONCOMPUTATIONOPERATION_ACK:
                         break;
-                case ST_MARKETDATATYPE_ACK:break;
-                case ST_HISTORICALDATAREQUESTS:historicalDataRequests();
+                case ST_DELAYEDTICKDATAOPERATION:
+                        delayedTickDataOperation();
                         break;
-                case ST_HISTORICALDATAREQUESTS_ACK:break;
-                case ST_OPTIONSOPERATIONS:optionsOperations();
+                case ST_DELAYEDTICKDATAOPERATION_ACK:
                         break;
-                case ST_OPTIONSOPERATIONS_ACK:break;
-                case ST_CONTRACTOPERATION:contractOperations();
+                case ST_MARKETDEPTHOPERATION:
+                        marketDepthOperations();
                         break;
-                case ST_CONTRACTOPERATION_ACK:break;
-                case ST_MARKETSCANNERS:marketScanners();
+                case ST_MARKETDEPTHOPERATION_ACK:
                         break;
-                case ST_MARKETSCANNERS_ACK:break;
-                case ST_REUTERSFUNDAMENTALS:reutersFundamentals();
+                case ST_REALTIMEBARS:
+                        realTimeBars();
                         break;
-                case ST_REUTERSFUNDAMENTALS_ACK:break;
-                case ST_BULLETINS:bulletins();
+                case ST_REALTIMEBARS_ACK:
                         break;
-                case ST_BULLETINS_ACK:break;
-                case ST_ACCOUNTOPERATIONS:accountOperations();
+                case ST_MARKETDATATYPE:
+                        marketDataType();
                         break;
-                case ST_ACCOUNTOPERATIONS_ACK:break;
-                case ST_ORDEROPERATIONS:orderOperations();
+                case ST_MARKETDATATYPE_ACK:
                         break;
-                case ST_ORDEROPERATIONS_ACK:break;
-                case ST_OCASAMPLES:ocaSamples();
+                case ST_HISTORICALDATAREQUESTS:
+                        historicalDataRequests();
                         break;
-                case ST_OCASAMPLES_ACK:break;
-                case ST_CONDITIONSAMPLES:conditionSamples();
+                case ST_HISTORICALDATAREQUESTS_ACK:
                         break;
-                case ST_CONDITIONSAMPLES_ACK:break;
-                case ST_BRACKETSAMPLES:bracketSample();
+                case ST_OPTIONSOPERATIONS:
+                        optionsOperations();
                         break;
-                case ST_BRACKETSAMPLES_ACK:break;
-                case ST_HEDGESAMPLES:hedgeSample();
+                case ST_OPTIONSOPERATIONS_ACK:
                         break;
-                case ST_HEDGESAMPLES_ACK:break;
-                case ST_TESTALGOSAMPLES:testAlgoSamples();
+                case ST_CONTRACTOPERATION:
+                        contractOperations();
                         break;
-                case ST_TESTALGOSAMPLES_ACK:break;
-                case ST_FAORDERSAMPLES:financialAdvisorOrderSamples();
+                case ST_CONTRACTOPERATION_ACK:
                         break;
-                case ST_FAORDERSAMPLES_ACK:break;
-                case ST_FAOPERATIONS:financialAdvisorOperations();
+                case ST_MARKETSCANNERS:
+                        marketScanners();
                         break;
-                case ST_FAOPERATIONS_ACK:break;
-                case ST_DISPLAYGROUPS:testDisplayGroups();
+                case ST_MARKETSCANNERS_ACK:
                         break;
-                case ST_DISPLAYGROUPS_ACK:break;
-                case ST_MISCELANEOUS:miscelaneous();
+                case ST_REUTERSFUNDAMENTALS:
+                        reutersFundamentals();
                         break;
-                case ST_MISCELANEOUS_ACK:break;
-                case ST_FAMILYCODES:reqFamilyCodes();
+                case ST_REUTERSFUNDAMENTALS_ACK:
                         break;
-                case ST_FAMILYCODES_ACK:break;
-                case ST_SYMBOLSAMPLES:reqMatchingSymbols();
+                case ST_BULLETINS:
+                        bulletins();
                         break;
-                case ST_SYMBOLSAMPLES_ACK:break;
-                case ST_REQMKTDEPTHEXCHANGES:reqMktDepthExchanges();
+                case ST_BULLETINS_ACK:
                         break;
-                case ST_REQMKTDEPTHEXCHANGES_ACK:break;
-                case ST_REQNEWSTICKS:reqNewsTicks();
+                case ST_ACCOUNTOPERATIONS:
+                        accountOperations();
                         break;
-                case ST_REQNEWSTICKS_ACK:break;
-                case ST_REQSMARTCOMPONENTS:reqSmartComponents();
+                case ST_ACCOUNTOPERATIONS_ACK:
                         break;
-                case ST_REQSMARTCOMPONENTS_ACK:break;
-                case ST_NEWSPROVIDERS:reqNewsProviders();
+                case ST_ORDEROPERATIONS:
+                        orderOperations();
                         break;
-                case ST_NEWSPROVIDERS_ACK:break;
-                case ST_REQNEWSARTICLE:reqNewsArticle();
+                case ST_ORDEROPERATIONS_ACK:
                         break;
-                case ST_REQNEWSARTICLE_ACK:break;
-                case ST_REQHISTORICALNEWS:reqHistoricalNews();
+                case ST_OCASAMPLES:
+                        ocaSamples();
                         break;
-                case ST_REQHISTORICALNEWS_ACK:break;
-                case ST_REQHEADTIMESTAMP:reqHeadTimestamp();
+                case ST_OCASAMPLES_ACK:
                         break;
-                case ST_REQHISTOGRAMDATA:reqHistogramData();
+                case ST_CONDITIONSAMPLES:
+                        conditionSamples();
                         break;
-                case ST_REROUTECFD:rerouteCFDOperations();
+                case ST_CONDITIONSAMPLES_ACK:
                         break;
-                case ST_MARKETRULE:marketRuleOperations();
+                case ST_BRACKETSAMPLES:
+                        bracketSample();
                         break;
-                case ST_CONTFUT:continuousFuturesOperations();
+                case ST_BRACKETSAMPLES_ACK:
                         break;
-                case ST_REQHISTORICALTICKS:reqHistoricalTicks();
+                case ST_HEDGESAMPLES:
+                        hedgeSample();
                         break;
-                case ST_REQHISTORICALTICKS_ACK:break;
-                case ST_REQTICKBYTICKDATA:reqTickByTickData();
+                case ST_HEDGESAMPLES_ACK:
                         break;
-                case ST_REQTICKBYTICKDATA_ACK:break;
-                case ST_WHATIFSAMPLES:whatIfSamples();
+                case ST_TESTALGOSAMPLES:
+                        testAlgoSamples();
                         break;
-                case ST_WHATIFSAMPLES_ACK:break;
-                case ST_PING:reqCurrentTime();
+                case ST_TESTALGOSAMPLES_ACK:
+                        break;
+                case ST_FAORDERSAMPLES:
+                        financialAdvisorOrderSamples();
+                        break;
+                case ST_FAORDERSAMPLES_ACK:
+                        break;
+                case ST_FAOPERATIONS:
+                        financialAdvisorOperations();
+                        break;
+                case ST_FAOPERATIONS_ACK:
+                        break;
+                case ST_DISPLAYGROUPS:
+                        testDisplayGroups();
+                        break;
+                case ST_DISPLAYGROUPS_ACK:
+                        break;
+                case ST_MISCELANEOUS:
+                        miscelaneous();
+                        break;
+                case ST_MISCELANEOUS_ACK:
+                        break;
+                case ST_FAMILYCODES:
+                        reqFamilyCodes();
+                        break;
+                case ST_FAMILYCODES_ACK:
+                        break;
+                case ST_SYMBOLSAMPLES:
+                        reqMatchingSymbols();
+                        break;
+                case ST_SYMBOLSAMPLES_ACK:
+                        break;
+                case ST_REQMKTDEPTHEXCHANGES:
+                        reqMktDepthExchanges();
+                        break;
+                case ST_REQMKTDEPTHEXCHANGES_ACK:
+                        break;
+                case ST_REQNEWSTICKS:
+                        reqNewsTicks();
+                        break;
+                case ST_REQNEWSTICKS_ACK:
+                        break;
+                case ST_REQSMARTCOMPONENTS:
+                        reqSmartComponents();
+                        break;
+                case ST_REQSMARTCOMPONENTS_ACK:
+                        break;
+                case ST_NEWSPROVIDERS:
+                        reqNewsProviders();
+                        break;
+                case ST_NEWSPROVIDERS_ACK:
+                        break;
+                case ST_REQNEWSARTICLE:
+                        reqNewsArticle();
+                        break;
+                case ST_REQNEWSARTICLE_ACK:
+                        break;
+                case ST_REQHISTORICALNEWS:
+                        reqHistoricalNews();
+                        break;
+                case ST_REQHISTORICALNEWS_ACK:
+                        break;
+                case ST_REQHEADTIMESTAMP:
+                        reqHeadTimestamp();
+                        break;
+                case ST_REQHISTOGRAMDATA:
+                        reqHistogramData();
+                        break;
+                case ST_REROUTECFD:
+                        rerouteCFDOperations();
+                        break;
+                case ST_MARKETRULE:
+                        marketRuleOperations();
+                        break;
+                case ST_CONTFUT:
+                        continuousFuturesOperations();
+                        break;
+                case ST_REQHISTORICALTICKS:
+                        reqHistoricalTicks();
+                        break;
+                case ST_REQHISTORICALTICKS_ACK:
+                        break;
+                case ST_REQTICKBYTICKDATA:
+                        reqTickByTickData();
+                        break;
+                case ST_REQTICKBYTICKDATA_ACK:
+                        break;
+                case ST_WHATIFSAMPLES:
+                        whatIfSamples();
+                        break;
+                case ST_WHATIFSAMPLES_ACK:
+                        break;
+                case ST_PING:
+                        reqCurrentTime();
                         break;
                 case ST_PING_ACK:
                         if (m_sleepDeadline < now)
@@ -337,7 +419,8 @@ void TestCppClient::connectAck()
 
 void TestCppClient::reqCurrentTime()
 {
-        printf("Requesting Current Time\n");
+        std::cout << "Requesting Current Time" << std::endl;
+        // printf("Requesting Current Time\n");
 
         // set ping deadline to "now + n seconds"
         m_sleepDeadline = time(NULL) + PING_DEADLINE;
@@ -682,6 +765,7 @@ void TestCppClient::accountOperations()
         //! [reqaaccountsummaryledgerall]
         // std::this_thread::sleep_for(std::chrono::seconds(2));
         //! [cancelaaccountsummary]
+        m_pClient->cancelAccountSummary(9000);
         // m_pClient->cancelAccountSummary(9001);
         // m_pClient->cancelAccountSummary(9002);
         // m_pClient->cancelAccountSummary(9003);
@@ -1339,7 +1423,8 @@ void TestCppClient::whatIfSamples()
 //! [nextvalidid]
 void TestCppClient::nextValidId(OrderId orderId)
 {
-        printf("Next Valid Id: %ld\n", orderId);
+        std::cout << "Next Valid Id: " << orderId << std::endl;
+        // printf("Next Valid Id: %ld\n", orderId);
         m_orderId = orderId;
         //! [nextvalidid]
 
@@ -1392,7 +1477,8 @@ void TestCppClient::currentTime(long time)
         {
                 time_t t = (time_t) time;
                 struct tm *timeinfo = localtime(&t);
-                printf("The current date/time is: %s", asctime(timeinfo));
+                std::cout << "The current date/time is: " << asctime(timeinfo) << std::endl;
+                // printf("The current date/time is: %s", asctime(timeinfo));
 
                 time_t now = ::time(NULL);
                 m_sleepDeadline = now + SLEEP_BETWEEN_PINGS;
@@ -1404,22 +1490,26 @@ void TestCppClient::currentTime(long time)
 //! [error]
 void TestCppClient::error(int id, int errorCode, const std::string &errorString)
 {
-        printf("Error. Id: %d, Code: %d, Msg: %s\n", id, errorCode, errorString.c_str());
+        std::cout << "Error. Id: " << id << ", Code: " << errorCode << ", Msg: " << errorString << std::endl;
+        // printf("Error. Id: %d, Code: %d, Msg: %s\n", id, errorCode, errorString.c_str());
 }
 //! [error]
 
 //! [tickprice]
 void TestCppClient::tickPrice(TickerId tickerId, TickType field, double price, const TickAttrib &attribs)
 {
-        printf("Tick Price. Ticker Id: %ld, Field: %d, Price: %g, CanAutoExecute: %d, PastLimit: %d, PreOpen: %d\n", tickerId, (int) field, price,
-               attribs.canAutoExecute, attribs.pastLimit, attribs.preOpen);
+        std::cout << "Tick Price. Ticker Id: " << tickerId << ", Field: " << (int) field << ", Price: " << price << ", CanAutoExecute: "
+                  << attribs.canAutoExecute << ", PastLimit: " << attribs.pastLimit << ", PreOpen: " << attribs.preOpen << std::endl;
+        // printf("Tick Price. Ticker Id: %ld, Field: %d, Price: %g, CanAutoExecute: %d, PastLimit: %d, PreOpen: %d\n", tickerId, (int) field, price,
+        //        attribs.canAutoExecute, attribs.pastLimit, attribs.preOpen);
 }
 //! [tickprice]
 
 //! [ticksize]
 void TestCppClient::tickSize(TickerId tickerId, TickType field, int size)
 {
-        printf("Tick Size. Ticker Id: %ld, Field: %d, Size: %d\n", tickerId, (int) field, size);
+        std::cout << "Tick Size. Ticker Id: " << tickerId << ", Field: " << (int) field << ", Size: " << size << std::endl;
+        // printf("Tick Size. Ticker Id: %ld, Field: %d, Size: %d\n", tickerId, (int) field, size);
 }
 //! [ticksize]
 
@@ -1427,22 +1517,27 @@ void TestCppClient::tickSize(TickerId tickerId, TickType field, int size)
 void TestCppClient::tickOptionComputation(TickerId tickerId, TickType tickType, double impliedVol, double delta, double optPrice, double pvDividend,
                                           double gamma, double vega, double theta, double undPrice)
 {
-        printf("TickOptionComputation. Ticker Id: %ld, Type: %d, ImpliedVolatility: %g, Delta: %g, OptionPrice: %g, pvDividend: %g, Gamma: %g, Vega: %g, Theta: %g, Underlying Price: %g\n",
-               tickerId, (int) tickType, impliedVol, delta, optPrice, pvDividend, gamma, vega, theta, undPrice);
+        std::cout << "TickOptionComputation. Ticker Id: " << tickerId << ", Type: " << (int) tickType << ", ImpliedVolatility: " << impliedVol
+                  << ", Delta: " << delta << ", OptionPrice: " << optPrice << ", pvDividend: " << pvDividend << ", Gamma: " << gamma << ", Vega:"
+                  << vega << ", Theta: " << theta << ", Underlying Price: " << undPrice << std::endl;
+        // printf("TickOptionComputation. Ticker Id: %ld, Type: %d, ImpliedVolatility: %g, Delta: %g, OptionPrice: %g, pvDividend: %g, Gamma: %g, Vega: %g, Theta: %g, Underlying Price: %g\n",
+        //        tickerId, (int) tickType, impliedVol, delta, optPrice, pvDividend, gamma, vega, theta, undPrice);
 }
 //! [tickoptioncomputation]
 
 //! [tickgeneric]
 void TestCppClient::tickGeneric(TickerId tickerId, TickType tickType, double value)
 {
-        printf("Tick Generic. Ticker Id: %ld, Type: %d, Value: %g\n", tickerId, (int) tickType, value);
+        std::cout << "Tick Generic. Ticker Id: " << tickerId << ", Type: " << (int) tickType << ", Value: " << value << std::endl;
+        // printf("Tick Generic. Ticker Id: %ld, Type: %d, Value: %g\n", tickerId, (int) tickType, value);
 }
 //! [tickgeneric]
 
 //! [tickstring]
 void TestCppClient::tickString(TickerId tickerId, TickType tickType, const std::string &value)
 {
-        printf("Tick String. Ticker Id: %ld, Type: %d, Value: %s\n", tickerId, (int) tickType, value.c_str());
+        std::cout << "Tick String. Ticker Id: " << tickerId << ", Type: " << (int) tickType << ", Value: " << value << std::endl;
+        // printf("Tick String. Ticker Id: %ld, Type: %d, Value: %s\n", tickerId, (int) tickType, value.c_str());
 }
 //! [tickstring]
 
@@ -1705,7 +1800,7 @@ void TestCppClient::receiveFA(faDataType pFaDataType, const std::string &cxml)
 //! [historicaldata]
 void TestCppClient::historicalData(TickerId reqId, const Bar &bar)
 {
-        raw_avg[++tail] = bar.close;
+        raw_price[++tail] = bar.close;
         previous_bar = current_bar;
         current_bar = bar;
         // printf("HistoricalData. ReqId: %ld - Date: %s, Open: %g, High: %g, Low: %g, Close: %g, Volume: %lld, Count: %d, WAP: %g\n", reqId,
@@ -2036,7 +2131,8 @@ void TestCppClient::newsArticle(int requestId, int articleType, const std::strin
                 path = s + std::string("\\MST$06f53098.pdf");
 #elif defined(IB_POSIX)
                 char s[1024];
-                if (getcwd(s, sizeof(s)) == NULL) {
+                if (getcwd(s, sizeof(s)) == NULL)
+                {
                         printf("getcwd() error\n");
                         return;
                 }
@@ -2090,10 +2186,11 @@ void TestCppClient::historicalDataUpdate(TickerId reqId, const Bar &bar)
 {
         if (current_bar.time != bar.time)
         {
-                raw_avg[++tail] = bar.close;
+                raw_price[++tail] = bar.close;
                 previous_bar = current_bar;
                 current_bar = bar;
-                std::cout << current_bar.time << " and " << bar.time << std::endl;
+                std::cout << "FastSMA: " << fast_sma() << ", SlowSMA: " << slow_sma() << std::endl;
+                // std::cout << current_bar.time << " and " << bar.time << std::endl;
         }
         // std::cout << bar.time << std::endl;
         // printf("HistoricalUpdate. ReqId: %ld, Date: %s, Open: %g, High: %g, Low: %g, Close: %g\n", reqId, bar.time.c_str(), bar.open, bar.high,
