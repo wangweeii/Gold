@@ -109,7 +109,6 @@ enum State
 //! [ewrapperimpl]
 class TestCppClient : public EWrapper
 {
-        //! [ewrapperimpl]
 public:
 
         TestCppClient();
@@ -133,7 +132,11 @@ public:
         bool isConnected() const;
 
 private:
-        bool isActive();
+        double fast_sma();
+
+        double slow_sma();
+
+        // bool isActive();
 
         void pnlOperation();
 
@@ -242,6 +245,15 @@ private:
         EReader *m_pReader;
         bool m_extraAuth;
         std::string m_bboExchange;
+
+        double raw_avg[10000];
+        int tail = -1;
+        Bar previous_bar, current_bar;
+        const int fast_step = 8;
+        const int slow_step = 55;
+        double fast_total = 0;
+        double slow_total = 0;
 };
+//! [ewrapperimpl]
 
 #endif

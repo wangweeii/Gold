@@ -101,6 +101,78 @@ void TestCppClient::setConnectOptions(const std::string &connectOptions)
         m_pClient->setConnectOptions(connectOptions);
 }
 
+double TestCppClient::fast_sma()
+{
+        int length = 10000;
+        int end = tail % length;
+        int begin = (end + length - fast_step) % length;
+
+        if (fast_total > 0)
+        {
+                fast_total -= raw_avg[(tail + length - fast_step) % length];
+                fast_total += raw_avg[tail % length];
+        }
+        else
+        {
+                if (begin < end)
+                {
+                        for (int i = begin + 1; i <= end; i++)
+                        {
+                                fast_total += raw_avg[i];
+                        }
+                }
+                else if (begin > end)
+                {
+                        for (int i = begin + 1; i < length; i++)
+                        {
+                                fast_total += raw_avg[i];
+                        }
+                        for (int i = 0; i <= end; i++)
+                        {
+                                fast_total += raw_avg[i];
+                        }
+                }
+        }
+
+        return fast_total / fast_step;
+}
+
+double TestCppClient::slow_sma()
+{
+        int length = 10000;
+        int end = tail % length;
+        int begin = (end + length - slow_step) % length;
+
+        if (slow_total > 0)
+        {
+                slow_total -= raw_avg[(tail + length - slow_step) % length];
+                slow_total += raw_avg[tail % length];
+        }
+        else
+        {
+                if (begin < end)
+                {
+                        for (int i = begin + 1; i <= end; i++)
+                        {
+                                slow_total += raw_avg[i];
+                        }
+                }
+                else if (begin > end)
+                {
+                        for (int i = begin + 1; i < length; i++)
+                        {
+                                slow_total += raw_avg[i];
+                        }
+                        for (int i = 0; i <= end; i++)
+                        {
+                                slow_total += raw_avg[i];
+                        }
+                }
+        }
+
+        return slow_total / slow_step;
+}
+
 void TestCppClient::processMessages()
 {
         time_t now = time(NULL);
@@ -471,7 +543,7 @@ void TestCppClient::historicalDataRequests()
         timeinfo = std::localtime(&rawtime);
         std::strftime(queryTime, 80, "%Y%m%d %H:%M:%S", timeinfo);
 
-        m_pClient->reqHistoricalData(4001, ContractSamples::XAUUSD(), "", "1 D", "30 secs", "MIDPOINT", 1, 1, true, TagValueListSPtr());
+        m_pClient->reqHistoricalData(4001, ContractSamples::EurUsdFx(), "", "1 D", "1 min", "MIDPOINT", 1, 1, true, TagValueListSPtr());
         //        m_pClient->reqHistoricalData(4001, ContractSamples::EurUsdFx(), queryTime, "1 M", "1 hour", "MIDPOINT", 1, 1, false, TagValueListSPtr());
         //        m_pClient->reqHistoricalData(4002, ContractSamples::EuropeanStock(), queryTime, "10 D", "1 min", "TRADES", 1, 1, false, TagValueListSPtr());
         //! [reqhistoricaldata]
@@ -1633,15 +1705,26 @@ void TestCppClient::receiveFA(faDataType pFaDataType, const std::string &cxml)
 //! [historicaldata]
 void TestCppClient::historicalData(TickerId reqId, const Bar &bar)
 {
-        printf("HistoricalData. ReqId: %ld - Date: %s, Open: %g, High: %g, Low: %g, Close: %g, Volume: %lld, Count: %d, WAP: %g\n", reqId,
-               bar.time.c_str(), bar.open, bar.high, bar.low, bar.close, bar.volume, bar.count, bar.wap);
+        raw_avg[++tail] = bar.close;
+        previous_bar = current_bar;
+        current_bar = bar;
+        // printf("HistoricalData. ReqId: %ld - Date: %s, Open: %g, High: %g, Low: %g, Close: %g, Volume: %lld, Count: %d, WAP: %g\n", reqId,
+        //        bar.time.c_str(), bar.open, bar.high, bar.low, bar.close, bar.volume, bar.count, bar.wap);
+        // printf("HistoricalData. ReqId: %ld - Date: %s, Open: %g, High: %g, Low: %g, Close: %g\n", reqId, bar.time.c_str(), bar.open, bar.high,
+        //        bar.low, bar.close);
+        std::cout << "HistoricalData. ReqId: " << reqId << ", Date: " << bar.time << ", Open: " << bar.open << ", High: " << bar.high << ", Low: "
+                  << bar.low << ", Close: " << bar.close << std::endl;
+        // printf("CurrentBar. ReqId: %ld, Date: %s, Open: %g, High: %g, Low: %g, Close: %g\n", reqId, current_bar.time.c_str(), current_bar.open,
+        //        current_bar.high, current_bar.low, current_bar.close);
 }
 //! [historicaldata]
 
 //! [historicaldataend]
 void TestCppClient::historicalDataEnd(int reqId, const std::string &startDateStr, const std::string &endDateStr)
 {
-        std::cout << "HistoricalDataEnd. ReqId: " << reqId << " - Start Date: " << startDateStr << ", End Date: " << endDateStr << std::endl;
+        tail--;
+        std::cout << "FastSMA: " << fast_sma() << ", SlowSMA: " << slow_sma() << std::endl;
+        // std::cout << "HistoricalDataEnd. ReqId: " << reqId << " - Start Date: " << startDateStr << ", End Date: " << endDateStr << std::endl;
 }
 //! [historicaldataend]
 
@@ -2005,8 +2088,16 @@ void TestCppClient::histogramData(int reqId, const HistogramDataVector &data)
 //! [historicalDataUpdate]
 void TestCppClient::historicalDataUpdate(TickerId reqId, const Bar &bar)
 {
-        printf("HistoricalDataUpdate. ReqId: %ld - Date: %s, Open: %g, High: %g, Low: %g, Close: %g\n", reqId, bar.time.c_str(), bar.open, bar.high,
-               bar.low, bar.close);
+        if (current_bar.time != bar.time)
+        {
+                raw_avg[++tail] = bar.close;
+                previous_bar = current_bar;
+                current_bar = bar;
+                std::cout << current_bar.time << " and " << bar.time << std::endl;
+        }
+        // std::cout << bar.time << std::endl;
+        // printf("HistoricalUpdate. ReqId: %ld, Date: %s, Open: %g, High: %g, Low: %g, Close: %g\n", reqId, bar.time.c_str(), bar.open, bar.high,
+        //        bar.low, bar.close);
         // printf("HistoricalDataUpdate. ReqId: %ld - Date: %s, Open: %g, High: %g, Low: %g, Close: %g, Volume: %lld, Count: %d, WAP: %g\n", reqId,
         //        bar.time.c_str(), bar.open, bar.high, bar.low, bar.close, bar.volume, bar.count, bar.wap);
 }
