@@ -3,10 +3,15 @@
 
 /* not using "#pragma once" on purpose! */
 
+#include <vector>
+#include "CommonDefs.h"
+#include "EWrapper.h"
+
 #if !defined(EWRAPPER_VIRTUAL_IMPL)
 # define EWRAPPER_VIRTUAL_IMPL
 #endif
 
+virtual double simpleMovingAverage() EWRAPPER_VIRTUAL_IMPL;
 virtual void tickPrice(TickerId tickerId, TickType field, double price, const TickAttrib &attrib) EWRAPPER_VIRTUAL_IMPL;
 
 virtual void tickSize(TickerId tickerId, TickType field, int size) EWRAPPER_VIRTUAL_IMPL;
@@ -130,18 +135,18 @@ virtual void accountUpdateMulti(int reqId, const std::string &account, const std
 virtual void accountUpdateMultiEnd(int reqId) EWRAPPER_VIRTUAL_IMPL;
 
 virtual void securityDefinitionOptionalParameter(int reqId, const std::string &exchange, int underlyingConId, const std::string &tradingClass,
-                                                 const std::string &multiplier, const std::set <std::string> &expirations,
+                                                 const std::string &multiplier, const std::set<std::string> &expirations,
                                                  const std::set<double> &strikes) EWRAPPER_VIRTUAL_IMPL;
 
 virtual void securityDefinitionOptionalParameterEnd(int reqId) EWRAPPER_VIRTUAL_IMPL;
 
-virtual void softDollarTiers(int reqId, const std::vector <SoftDollarTier> &tiers) EWRAPPER_VIRTUAL_IMPL;
+virtual void softDollarTiers(int reqId, const std::vector<SoftDollarTier> &tiers) EWRAPPER_VIRTUAL_IMPL;
 
-virtual void familyCodes(const std::vector <FamilyCode> &familyCodes) EWRAPPER_VIRTUAL_IMPL;
+virtual void familyCodes(const std::vector<FamilyCode> &familyCodes) EWRAPPER_VIRTUAL_IMPL;
 
-virtual void symbolSamples(int reqId, const std::vector <ContractDescription> &contractDescriptions) EWRAPPER_VIRTUAL_IMPL;
+virtual void symbolSamples(int reqId, const std::vector<ContractDescription> &contractDescriptions) EWRAPPER_VIRTUAL_IMPL;
 
-virtual void mktDepthExchanges(const std::vector <DepthMktDataDescription> &depthMktDataDescriptions) EWRAPPER_VIRTUAL_IMPL;
+virtual void mktDepthExchanges(const std::vector<DepthMktDataDescription> &depthMktDataDescriptions) EWRAPPER_VIRTUAL_IMPL;
 
 virtual void tickNews(int tickerId, time_t timeStamp, const std::string &providerCode, const std::string &articleId, const std::string &headline,
                       const std::string &extraData) EWRAPPER_VIRTUAL_IMPL;
@@ -150,7 +155,7 @@ virtual void smartComponents(int reqId, const SmartComponentsMap &theMap) EWRAPP
 
 virtual void tickReqParams(int tickerId, double minTick, const std::string &bboExchange, int snapshotPermissions) EWRAPPER_VIRTUAL_IMPL;
 
-virtual void newsProviders(const std::vector <NewsProvider> &newsProviders) EWRAPPER_VIRTUAL_IMPL;
+virtual void newsProviders(const std::vector<NewsProvider> &newsProviders) EWRAPPER_VIRTUAL_IMPL;
 
 virtual void newsArticle(int requestId, int articleType, const std::string &articleText) EWRAPPER_VIRTUAL_IMPL;
 
@@ -169,17 +174,17 @@ virtual void rerouteMktDataReq(int reqId, int conid, const std::string &exchange
 
 virtual void rerouteMktDepthReq(int reqId, int conid, const std::string &exchange) EWRAPPER_VIRTUAL_IMPL;
 
-virtual void marketRule(int marketRuleId, const std::vector <PriceIncrement> &priceIncrements) EWRAPPER_VIRTUAL_IMPL;
+virtual void marketRule(int marketRuleId, const std::vector<PriceIncrement> &priceIncrements) EWRAPPER_VIRTUAL_IMPL;
 
 virtual void pnl(int reqId, double dailyPnL, double unrealizedPnL, double realizedPnL) EWRAPPER_VIRTUAL_IMPL;
 
 virtual void pnlSingle(int reqId, int pos, double dailyPnL, double unrealizedPnL, double realizedPnL, double value) EWRAPPER_VIRTUAL_IMPL;
 
-virtual void historicalTicks(int reqId, const std::vector <HistoricalTick> &ticks, bool done) EWRAPPER_VIRTUAL_IMPL;
+virtual void historicalTicks(int reqId, const std::vector<HistoricalTick> &ticks, bool done) EWRAPPER_VIRTUAL_IMPL;
 
-virtual void historicalTicksBidAsk(int reqId, const std::vector <HistoricalTickBidAsk> &ticks, bool done) EWRAPPER_VIRTUAL_IMPL;
+virtual void historicalTicksBidAsk(int reqId, const std::vector<HistoricalTickBidAsk> &ticks, bool done) EWRAPPER_VIRTUAL_IMPL;
 
-virtual void historicalTicksLast(int reqId, const std::vector <HistoricalTickLast> &ticks, bool done) EWRAPPER_VIRTUAL_IMPL;
+virtual void historicalTicksLast(int reqId, const std::vector<HistoricalTickLast> &ticks, bool done) EWRAPPER_VIRTUAL_IMPL;
 
 virtual void tickByTickAllLast(int reqId, int tickType, time_t time, double price, int size, const TickAttrib &attribs, const std::string &exchange,
                                const std::string &specialConditions) EWRAPPER_VIRTUAL_IMPL;
