@@ -132,6 +132,8 @@ public:
         bool isConnected() const;
 
 private:
+        double exprMovingAverage(int step);
+
         double fast_sma();
 
         double slow_sma();
@@ -253,6 +255,10 @@ private:
         const int slow_step = 55;
         double fast_total = 0;
         double slow_total = 0;
+        double fast_line = 0;
+        double slow_line = 0;
+        double old_fast_line = 0;
+        double old_slow_line = 0;
 };
 //! [ewrapperimpl]
 

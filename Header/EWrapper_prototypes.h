@@ -11,7 +11,6 @@
 # define EWRAPPER_VIRTUAL_IMPL
 #endif
 
-virtual double simpleMovingAverage() EWRAPPER_VIRTUAL_IMPL;
 virtual void tickPrice(TickerId tickerId, TickType field, double price, const TickAttrib &attrib) EWRAPPER_VIRTUAL_IMPL;
 
 virtual void tickSize(TickerId tickerId, TickType field, int size) EWRAPPER_VIRTUAL_IMPL;
