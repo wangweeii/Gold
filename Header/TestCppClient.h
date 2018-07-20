@@ -262,8 +262,8 @@ private:
 
         Bar previous_bar, current_bar;
 
-        static double fast_alpha = 2.0 / (FAST_STEP + 1);
-        static double slow_alpha = 2.0 / (SLOW_STEP + 1);
+        double fast_alpha = 2.0 / (FAST_STEP + 1);
+        double slow_alpha = 2.0 / (SLOW_STEP + 1);
         double fast_beta = 1 - fast_alpha;
         double slow_beta = 1 - slow_alpha;
 

@@ -210,125 +210,203 @@ void TestCppClient::processMessages()
         /*****************************************************************/
         switch (m_state)
         {
-                case ST_PNLSINGLE:pnlSingleOperation();
+                case ST_PNLSINGLE:
+                        pnlSingleOperation();
                         break;
-                case ST_PNLSINGLE_ACK:break;
-                case ST_PNL:pnlOperation();
+                case ST_PNLSINGLE_ACK:
                         break;
-                case ST_PNL_ACK:break;
-                case ST_TICKDATAOPERATION:tickDataOperation();
+                case ST_PNL:
+                        pnlOperation();
                         break;
-                case ST_TICKDATAOPERATION_ACK:break;
-                case ST_TICKOPTIONCOMPUTATIONOPERATION:tickOptionComputationOperation();
+                case ST_PNL_ACK:
                         break;
-                case ST_TICKOPTIONCOMPUTATIONOPERATION_ACK:break;
-                case ST_DELAYEDTICKDATAOPERATION:delayedTickDataOperation();
+                case ST_TICKDATAOPERATION:
+                        tickDataOperation();
                         break;
-                case ST_DELAYEDTICKDATAOPERATION_ACK:break;
-                case ST_MARKETDEPTHOPERATION:marketDepthOperations();
+                case ST_TICKDATAOPERATION_ACK:
                         break;
-                case ST_MARKETDEPTHOPERATION_ACK:break;
-                case ST_REALTIMEBARS:realTimeBars();
+                case ST_TICKOPTIONCOMPUTATIONOPERATION:
+                        tickOptionComputationOperation();
                         break;
-                case ST_REALTIMEBARS_ACK:break;
-                case ST_MARKETDATATYPE:marketDataType();
+                case ST_TICKOPTIONCOMPUTATIONOPERATION_ACK:
                         break;
-                case ST_MARKETDATATYPE_ACK:break;
-                case ST_HISTORICALDATAREQUESTS:historicalDataRequests();
+                case ST_DELAYEDTICKDATAOPERATION:
+                        delayedTickDataOperation();
                         break;
-                case ST_HISTORICALDATAREQUESTS_ACK:break;
-                case ST_OPTIONSOPERATIONS:optionsOperations();
+                case ST_DELAYEDTICKDATAOPERATION_ACK:
                         break;
-                case ST_OPTIONSOPERATIONS_ACK:break;
-                case ST_CONTRACTOPERATION:contractOperations();
+                case ST_MARKETDEPTHOPERATION:
+                        marketDepthOperations();
                         break;
-                case ST_CONTRACTOPERATION_ACK:break;
-                case ST_MARKETSCANNERS:marketScanners();
+                case ST_MARKETDEPTHOPERATION_ACK:
                         break;
-                case ST_MARKETSCANNERS_ACK:break;
-                case ST_REUTERSFUNDAMENTALS:reutersFundamentals();
+                case ST_REALTIMEBARS:
+                        realTimeBars();
                         break;
-                case ST_REUTERSFUNDAMENTALS_ACK:break;
-                case ST_BULLETINS:bulletins();
+                case ST_REALTIMEBARS_ACK:
                         break;
-                case ST_BULLETINS_ACK:break;
-                case ST_ACCOUNTOPERATIONS:accountOperations();
+                case ST_MARKETDATATYPE:
+                        marketDataType();
                         break;
-                case ST_ACCOUNTOPERATIONS_ACK:break;
-                case ST_ORDEROPERATIONS:orderOperations();
+                case ST_MARKETDATATYPE_ACK:
                         break;
-                case ST_ORDEROPERATIONS_ACK:break;
-                case ST_OCASAMPLES:ocaSamples();
+                case ST_HISTORICALDATAREQUESTS:
+                        historicalDataRequests();
                         break;
-                case ST_OCASAMPLES_ACK:break;
-                case ST_CONDITIONSAMPLES:conditionSamples();
+                case ST_HISTORICALDATAREQUESTS_ACK:
                         break;
-                case ST_CONDITIONSAMPLES_ACK:break;
-                case ST_BRACKETSAMPLES:bracketSample();
+                case ST_OPTIONSOPERATIONS:
+                        optionsOperations();
                         break;
-                case ST_BRACKETSAMPLES_ACK:break;
-                case ST_HEDGESAMPLES:hedgeSample();
+                case ST_OPTIONSOPERATIONS_ACK:
                         break;
-                case ST_HEDGESAMPLES_ACK:break;
-                case ST_TESTALGOSAMPLES:testAlgoSamples();
+                case ST_CONTRACTOPERATION:
+                        contractOperations();
                         break;
-                case ST_TESTALGOSAMPLES_ACK:break;
-                case ST_FAORDERSAMPLES:financialAdvisorOrderSamples();
+                case ST_CONTRACTOPERATION_ACK:
                         break;
-                case ST_FAORDERSAMPLES_ACK:break;
-                case ST_FAOPERATIONS:financialAdvisorOperations();
+                case ST_MARKETSCANNERS:
+                        marketScanners();
                         break;
-                case ST_FAOPERATIONS_ACK:break;
-                case ST_DISPLAYGROUPS:testDisplayGroups();
+                case ST_MARKETSCANNERS_ACK:
                         break;
-                case ST_DISPLAYGROUPS_ACK:break;
-                case ST_MISCELANEOUS:miscelaneous();
+                case ST_REUTERSFUNDAMENTALS:
+                        reutersFundamentals();
                         break;
-                case ST_MISCELANEOUS_ACK:break;
-                case ST_FAMILYCODES:reqFamilyCodes();
+                case ST_REUTERSFUNDAMENTALS_ACK:
                         break;
-                case ST_FAMILYCODES_ACK:break;
-                case ST_SYMBOLSAMPLES:reqMatchingSymbols();
+                case ST_BULLETINS:
+                        bulletins();
                         break;
-                case ST_SYMBOLSAMPLES_ACK:break;
-                case ST_REQMKTDEPTHEXCHANGES:reqMktDepthExchanges();
+                case ST_BULLETINS_ACK:
                         break;
-                case ST_REQMKTDEPTHEXCHANGES_ACK:break;
-                case ST_REQNEWSTICKS:reqNewsTicks();
+                case ST_ACCOUNTOPERATIONS:
+                        accountOperations();
                         break;
-                case ST_REQNEWSTICKS_ACK:break;
-                case ST_REQSMARTCOMPONENTS:reqSmartComponents();
+                case ST_ACCOUNTOPERATIONS_ACK:
                         break;
-                case ST_REQSMARTCOMPONENTS_ACK:break;
-                case ST_NEWSPROVIDERS:reqNewsProviders();
+                case ST_ORDEROPERATIONS:
+                        orderOperations();
                         break;
-                case ST_NEWSPROVIDERS_ACK:break;
-                case ST_REQNEWSARTICLE:reqNewsArticle();
+                case ST_ORDEROPERATIONS_ACK:
                         break;
-                case ST_REQNEWSARTICLE_ACK:break;
-                case ST_REQHISTORICALNEWS:reqHistoricalNews();
+                case ST_OCASAMPLES:
+                        ocaSamples();
                         break;
-                case ST_REQHISTORICALNEWS_ACK:break;
-                case ST_REQHEADTIMESTAMP:reqHeadTimestamp();
+                case ST_OCASAMPLES_ACK:
                         break;
-                case ST_REQHISTOGRAMDATA:reqHistogramData();
+                case ST_CONDITIONSAMPLES:
+                        conditionSamples();
                         break;
-                case ST_REROUTECFD:rerouteCFDOperations();
+                case ST_CONDITIONSAMPLES_ACK:
                         break;
-                case ST_MARKETRULE:marketRuleOperations();
+                case ST_BRACKETSAMPLES:
+                        bracketSample();
                         break;
-                case ST_CONTFUT:continuousFuturesOperations();
+                case ST_BRACKETSAMPLES_ACK:
                         break;
-                case ST_REQHISTORICALTICKS:reqHistoricalTicks();
+                case ST_HEDGESAMPLES:
+                        hedgeSample();
                         break;
-                case ST_REQHISTORICALTICKS_ACK:break;
-                case ST_REQTICKBYTICKDATA:reqTickByTickData();
+                case ST_HEDGESAMPLES_ACK:
                         break;
-                case ST_REQTICKBYTICKDATA_ACK:break;
-                case ST_WHATIFSAMPLES:whatIfSamples();
+                case ST_TESTALGOSAMPLES:
+                        testAlgoSamples();
                         break;
-                case ST_WHATIFSAMPLES_ACK:break;
-                case ST_PING:reqCurrentTime();
+                case ST_TESTALGOSAMPLES_ACK:
+                        break;
+                case ST_FAORDERSAMPLES:
+                        financialAdvisorOrderSamples();
+                        break;
+                case ST_FAORDERSAMPLES_ACK:
+                        break;
+                case ST_FAOPERATIONS:
+                        financialAdvisorOperations();
+                        break;
+                case ST_FAOPERATIONS_ACK:
+                        break;
+                case ST_DISPLAYGROUPS:
+                        testDisplayGroups();
+                        break;
+                case ST_DISPLAYGROUPS_ACK:
+                        break;
+                case ST_MISCELANEOUS:
+                        miscelaneous();
+                        break;
+                case ST_MISCELANEOUS_ACK:
+                        break;
+                case ST_FAMILYCODES:
+                        reqFamilyCodes();
+                        break;
+                case ST_FAMILYCODES_ACK:
+                        break;
+                case ST_SYMBOLSAMPLES:
+                        reqMatchingSymbols();
+                        break;
+                case ST_SYMBOLSAMPLES_ACK:
+                        break;
+                case ST_REQMKTDEPTHEXCHANGES:
+                        reqMktDepthExchanges();
+                        break;
+                case ST_REQMKTDEPTHEXCHANGES_ACK:
+                        break;
+                case ST_REQNEWSTICKS:
+                        reqNewsTicks();
+                        break;
+                case ST_REQNEWSTICKS_ACK:
+                        break;
+                case ST_REQSMARTCOMPONENTS:
+                        reqSmartComponents();
+                        break;
+                case ST_REQSMARTCOMPONENTS_ACK:
+                        break;
+                case ST_NEWSPROVIDERS:
+                        reqNewsProviders();
+                        break;
+                case ST_NEWSPROVIDERS_ACK:
+                        break;
+                case ST_REQNEWSARTICLE:
+                        reqNewsArticle();
+                        break;
+                case ST_REQNEWSARTICLE_ACK:
+                        break;
+                case ST_REQHISTORICALNEWS:
+                        reqHistoricalNews();
+                        break;
+                case ST_REQHISTORICALNEWS_ACK:
+                        break;
+                case ST_REQHEADTIMESTAMP:
+                        reqHeadTimestamp();
+                        break;
+                case ST_REQHISTOGRAMDATA:
+                        reqHistogramData();
+                        break;
+                case ST_REROUTECFD:
+                        rerouteCFDOperations();
+                        break;
+                case ST_MARKETRULE:
+                        marketRuleOperations();
+                        break;
+                case ST_CONTFUT:
+                        continuousFuturesOperations();
+                        break;
+                case ST_REQHISTORICALTICKS:
+                        reqHistoricalTicks();
+                        break;
+                case ST_REQHISTORICALTICKS_ACK:
+                        break;
+                case ST_REQTICKBYTICKDATA:
+                        reqTickByTickData();
+                        break;
+                case ST_REQTICKBYTICKDATA_ACK:
+                        break;
+                case ST_WHATIFSAMPLES:
+                        whatIfSamples();
+                        break;
+                case ST_WHATIFSAMPLES_ACK:
+                        break;
+                case ST_PING:
+                        reqCurrentTime();
                         break;
                 case ST_PING_ACK:
                         if (m_sleepDeadline < now)
@@ -572,7 +650,7 @@ void TestCppClient::historicalDataRequests()
         timeinfo = std::localtime(&rawtime);
         std::strftime(queryTime, 80, "%Y%m%d %H:%M:%S", timeinfo);
 
-        m_pClient->reqHistoricalData(4001, ContractSamples::EurUsdFx(), "", "1 D", "1 min", "MIDPOINT", 1, 1, true, TagValueListSPtr());
+        m_pClient->reqHistoricalData(4001, ContractSamples::EurUsdFx(), "", "1 D", "5 mins", "MIDPOINT", 1, 1, true, TagValueListSPtr());
         //        m_pClient->reqHistoricalData(4001, ContractSamples::EurUsdFx(), queryTime, "1 M", "1 hour", "MIDPOINT", 1, 1, false, TagValueListSPtr());
         //        m_pClient->reqHistoricalData(4002, ContractSamples::EuropeanStock(), queryTime, "10 D", "1 min", "TRADES", 1, 1, false, TagValueListSPtr());
         //! [reqhistoricaldata]
@@ -1798,9 +1876,11 @@ void TestCppClient::historicalData(TickerId reqId, const Bar &bar)
 //! [historicaldataend]
 void TestCppClient::historicalDataEnd(int reqId, const std::string &startDateStr, const std::string &endDateStr)
 {
+        fast_line = old_fast_line;
+        slow_line = old_slow_line;
         // tail--;
         // std::cout << "FastSMA: " << fast_sma() << ", SlowSMA: " << slow_sma() << std::endl;
-        std::cout << "HistoricalDataEnd. ReqId: " << reqId << " - Start Date: " << startDateStr << ", End Date: " << endDateStr << std::endl;
+        // std::cout << "HistoricalDataEnd. ReqId: " << reqId << " - Start Date: " << startDateStr << ", End Date: " << endDateStr << std::endl;
 }
 //! [historicaldataend]
 
@@ -2165,25 +2245,35 @@ void TestCppClient::histogramData(int reqId, const HistogramDataVector &data)
 //! [historicalDataUpdate]
 void TestCppClient::historicalDataUpdate(TickerId reqId, const Bar &bar)
 {
+        if (bar.close == 0)
+        {
+                return;
+        }
+
         if (current_bar.time != bar.time)
         {
-                raw_price[++tail] = bar.close;
-                previous_bar = current_bar;
-                current_bar = bar;
-                std::cout << "HistoricalUpdate. ReqId: " << reqId << ", Date: " << bar.time << ", Open: " << bar.open << ", High: " << bar.high
-                          << ", Low: " << bar.low << ", Close: " << bar.close << std::endl;
-                std::cout << "FastSMA: " << fast_sma() << ", SlowSMA: " << slow_sma() << std::endl;
-                // std::cout << current_bar.time << " and " << bar.time << std::endl;
+                std::cout << "HistoricalUpdate. ReqId: " << reqId << ", Date: " << current_bar.time << ", Open: " << current_bar.open << ", High: "
+                          << current_bar.high << ", Low: " << current_bar.low << ", Close: " << current_bar.close << std::endl;
+                // std::cout << "HistoricalUpdate. ReqId: " << reqId << ", Date: " << bar.time << ", Open: " << bar.open << ", High: " << bar.high
+                //           << ", Low: " << bar.low << ", Close: " << bar.close << std::endl;
                 old_fast_line = fast_line;
                 old_slow_line = slow_line;
+                fast_line = fast_alpha * current_bar.close + fast_beta * old_fast_line;
+                slow_line = slow_alpha * current_bar.close + slow_beta * old_slow_line;
+                std::cout << "The FAST EMA(8) is: " << fast_line << ", SLOW EMA(55) is: " << slow_line << std::endl;
+                // raw_price[++tail] = bar.close;
+                // previous_bar = current_bar;
+                current_bar = bar;
+                // std::cout << "FastSMA: " << fast_sma() << ", SlowSMA: " << slow_sma() << std::endl;
+                // std::cout << current_bar.time << " and " << bar.time << std::endl;
                 // fast_line = computeEMA(FAST_STEP);
                 // slow_line = computeEMA(SLOW_STEP);
         }
         else
         {
                 current_bar = bar;
-                std::cout << "HistoricalUpdate. ReqId:" << reqId << ", Date: " << bar.time << ", Open: " << bar.open << ", High, " << bar.high
-                          << ", Low: " << bar.low << ", Close: " << bar.close << std::endl;
+                // std::cout << "HistoricalUpdate. ReqId:" << reqId << ", Date: " << bar.time << ", Open: " << bar.open << ", High, " << bar.high
+                //           << ", Low: " << bar.low << ", Close: " << bar.close << std::endl;
         }
         // std::cout << bar.time << std::endl;
         // printf("HistoricalUpdate. ReqId: %ld, Date: %s, Open: %g, High: %g, Low: %g, Close: %g\n", reqId, bar.time.c_str(), bar.open, bar.high,
