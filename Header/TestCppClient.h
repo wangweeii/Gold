@@ -5,6 +5,9 @@
 #ifndef testcppclient_h__INCLUDED
 #define testcppclient_h__INCLUDED
 
+#define FAST_STEP 8
+#define SLOW_STEP 55
+
 #include "EWrapper.h"
 #include "EReaderOSSignal.h"
 #include "EReader.h"
@@ -132,7 +135,7 @@ public:
         bool isConnected() const;
 
 private:
-        double exprMovingAverage(int step);
+        double exprMovingAverage(double *price, int tail, const int step);
 
         double fast_sma();
 
@@ -250,9 +253,15 @@ private:
 
         double raw_price[10000];
         int tail = -1;
+
+        double fast_price[FAST_STEP];
+        int fast_tail = -1;
+
+        double slow_price[SLOW_STEP];
+        int slow_tail = -1;
+
         Bar previous_bar, current_bar;
-        const int fast_step = 8;
-        const int slow_step = 55;
+
         double fast_total = 0;
         double slow_total = 0;
         double fast_line = 0;

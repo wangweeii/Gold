@@ -105,29 +105,33 @@ void TestCppClient::setConnectOptions(const std::string &connectOptions)
         m_pClient->setConnectOptions(connectOptions);
 }
 
-double TestCppClient::exprMovingAverage(int step)
+double TestCppClient::exprMovingAverage(double *price, int tail, const int step)
 {
         double alpha = 2 / (step + 1);
-        double current_price;
-        if (step == 1)
+        double beta = 1 - alpha;
+
+        int begin = (tail + 1) % step;
+        double ema = price[begin++];
+
+        while (begin <= tail)
         {
-                return raw_price[tail - step];
+                ema = alpha * price[begin] + beta * ema;
+                ++begin;
+                begin %= step;
         }
-        else
-        {
-                return exprMovingAverage(step - 1) * (1 - alpha) + alpha * current_price;
-        }
+
+        return ema;
 }
 
 double TestCppClient::fast_sma()
 {
         int length = 10000;
         int end = tail % length;
-        int begin = (end + length - fast_step) % length;
+        int begin = (end + length - FAST_STEP) % length;
 
         if (fast_total > 0)
         {
-                fast_total -= raw_price[(tail + length - fast_step) % length];
+                fast_total -= raw_price[(tail + length - FAST_STEP) % length];
                 fast_total += raw_price[tail % length];
         }
         else
@@ -152,18 +156,18 @@ double TestCppClient::fast_sma()
                 }
         }
 
-        return fast_total / fast_step;
+        return fast_total / FAST_STEP;
 }
 
 double TestCppClient::slow_sma()
 {
         int length = 10000;
         int end = tail % length;
-        int begin = (end + length - slow_step) % length;
+        int begin = (end + length - SLOW_STEP) % length;
 
         if (slow_total > 0)
         {
-                slow_total -= raw_price[(tail + length - slow_step) % length];
+                slow_total -= raw_price[(tail + length - SLOW_STEP) % length];
                 slow_total += raw_price[tail % length];
         }
         else
@@ -188,7 +192,7 @@ double TestCppClient::slow_sma()
                 }
         }
 
-        return slow_total / slow_step;
+        return slow_total / SLOW_STEP;
 }
 
 void TestCppClient::processMessages()
@@ -200,203 +204,125 @@ void TestCppClient::processMessages()
         /*****************************************************************/
         switch (m_state)
         {
-                case ST_PNLSINGLE:
-                        pnlSingleOperation();
+                case ST_PNLSINGLE:pnlSingleOperation();
                         break;
-                case ST_PNLSINGLE_ACK:
+                case ST_PNLSINGLE_ACK:break;
+                case ST_PNL:pnlOperation();
                         break;
-                case ST_PNL:
-                        pnlOperation();
+                case ST_PNL_ACK:break;
+                case ST_TICKDATAOPERATION:tickDataOperation();
                         break;
-                case ST_PNL_ACK:
+                case ST_TICKDATAOPERATION_ACK:break;
+                case ST_TICKOPTIONCOMPUTATIONOPERATION:tickOptionComputationOperation();
                         break;
-                case ST_TICKDATAOPERATION:
-                        tickDataOperation();
+                case ST_TICKOPTIONCOMPUTATIONOPERATION_ACK:break;
+                case ST_DELAYEDTICKDATAOPERATION:delayedTickDataOperation();
                         break;
-                case ST_TICKDATAOPERATION_ACK:
+                case ST_DELAYEDTICKDATAOPERATION_ACK:break;
+                case ST_MARKETDEPTHOPERATION:marketDepthOperations();
                         break;
-                case ST_TICKOPTIONCOMPUTATIONOPERATION:
-                        tickOptionComputationOperation();
+                case ST_MARKETDEPTHOPERATION_ACK:break;
+                case ST_REALTIMEBARS:realTimeBars();
                         break;
-                case ST_TICKOPTIONCOMPUTATIONOPERATION_ACK:
+                case ST_REALTIMEBARS_ACK:break;
+                case ST_MARKETDATATYPE:marketDataType();
                         break;
-                case ST_DELAYEDTICKDATAOPERATION:
-                        delayedTickDataOperation();
+                case ST_MARKETDATATYPE_ACK:break;
+                case ST_HISTORICALDATAREQUESTS:historicalDataRequests();
                         break;
-                case ST_DELAYEDTICKDATAOPERATION_ACK:
+                case ST_HISTORICALDATAREQUESTS_ACK:break;
+                case ST_OPTIONSOPERATIONS:optionsOperations();
                         break;
-                case ST_MARKETDEPTHOPERATION:
-                        marketDepthOperations();
+                case ST_OPTIONSOPERATIONS_ACK:break;
+                case ST_CONTRACTOPERATION:contractOperations();
                         break;
-                case ST_MARKETDEPTHOPERATION_ACK:
+                case ST_CONTRACTOPERATION_ACK:break;
+                case ST_MARKETSCANNERS:marketScanners();
                         break;
-                case ST_REALTIMEBARS:
-                        realTimeBars();
+                case ST_MARKETSCANNERS_ACK:break;
+                case ST_REUTERSFUNDAMENTALS:reutersFundamentals();
                         break;
-                case ST_REALTIMEBARS_ACK:
+                case ST_REUTERSFUNDAMENTALS_ACK:break;
+                case ST_BULLETINS:bulletins();
                         break;
-                case ST_MARKETDATATYPE:
-                        marketDataType();
+                case ST_BULLETINS_ACK:break;
+                case ST_ACCOUNTOPERATIONS:accountOperations();
                         break;
-                case ST_MARKETDATATYPE_ACK:
+                case ST_ACCOUNTOPERATIONS_ACK:break;
+                case ST_ORDEROPERATIONS:orderOperations();
                         break;
-                case ST_HISTORICALDATAREQUESTS:
-                        historicalDataRequests();
+                case ST_ORDEROPERATIONS_ACK:break;
+                case ST_OCASAMPLES:ocaSamples();
                         break;
-                case ST_HISTORICALDATAREQUESTS_ACK:
+                case ST_OCASAMPLES_ACK:break;
+                case ST_CONDITIONSAMPLES:conditionSamples();
                         break;
-                case ST_OPTIONSOPERATIONS:
-                        optionsOperations();
+                case ST_CONDITIONSAMPLES_ACK:break;
+                case ST_BRACKETSAMPLES:bracketSample();
                         break;
-                case ST_OPTIONSOPERATIONS_ACK:
+                case ST_BRACKETSAMPLES_ACK:break;
+                case ST_HEDGESAMPLES:hedgeSample();
                         break;
-                case ST_CONTRACTOPERATION:
-                        contractOperations();
+                case ST_HEDGESAMPLES_ACK:break;
+                case ST_TESTALGOSAMPLES:testAlgoSamples();
                         break;
-                case ST_CONTRACTOPERATION_ACK:
+                case ST_TESTALGOSAMPLES_ACK:break;
+                case ST_FAORDERSAMPLES:financialAdvisorOrderSamples();
                         break;
-                case ST_MARKETSCANNERS:
-                        marketScanners();
+                case ST_FAORDERSAMPLES_ACK:break;
+                case ST_FAOPERATIONS:financialAdvisorOperations();
                         break;
-                case ST_MARKETSCANNERS_ACK:
+                case ST_FAOPERATIONS_ACK:break;
+                case ST_DISPLAYGROUPS:testDisplayGroups();
                         break;
-                case ST_REUTERSFUNDAMENTALS:
-                        reutersFundamentals();
+                case ST_DISPLAYGROUPS_ACK:break;
+                case ST_MISCELANEOUS:miscelaneous();
                         break;
-                case ST_REUTERSFUNDAMENTALS_ACK:
+                case ST_MISCELANEOUS_ACK:break;
+                case ST_FAMILYCODES:reqFamilyCodes();
                         break;
-                case ST_BULLETINS:
-                        bulletins();
+                case ST_FAMILYCODES_ACK:break;
+                case ST_SYMBOLSAMPLES:reqMatchingSymbols();
                         break;
-                case ST_BULLETINS_ACK:
+                case ST_SYMBOLSAMPLES_ACK:break;
+                case ST_REQMKTDEPTHEXCHANGES:reqMktDepthExchanges();
                         break;
-                case ST_ACCOUNTOPERATIONS:
-                        accountOperations();
+                case ST_REQMKTDEPTHEXCHANGES_ACK:break;
+                case ST_REQNEWSTICKS:reqNewsTicks();
                         break;
-                case ST_ACCOUNTOPERATIONS_ACK:
+                case ST_REQNEWSTICKS_ACK:break;
+                case ST_REQSMARTCOMPONENTS:reqSmartComponents();
                         break;
-                case ST_ORDEROPERATIONS:
-                        orderOperations();
+                case ST_REQSMARTCOMPONENTS_ACK:break;
+                case ST_NEWSPROVIDERS:reqNewsProviders();
                         break;
-                case ST_ORDEROPERATIONS_ACK:
+                case ST_NEWSPROVIDERS_ACK:break;
+                case ST_REQNEWSARTICLE:reqNewsArticle();
                         break;
-                case ST_OCASAMPLES:
-                        ocaSamples();
+                case ST_REQNEWSARTICLE_ACK:break;
+                case ST_REQHISTORICALNEWS:reqHistoricalNews();
                         break;
-                case ST_OCASAMPLES_ACK:
+                case ST_REQHISTORICALNEWS_ACK:break;
+                case ST_REQHEADTIMESTAMP:reqHeadTimestamp();
                         break;
-                case ST_CONDITIONSAMPLES:
-                        conditionSamples();
+                case ST_REQHISTOGRAMDATA:reqHistogramData();
                         break;
-                case ST_CONDITIONSAMPLES_ACK:
+                case ST_REROUTECFD:rerouteCFDOperations();
                         break;
-                case ST_BRACKETSAMPLES:
-                        bracketSample();
+                case ST_MARKETRULE:marketRuleOperations();
                         break;
-                case ST_BRACKETSAMPLES_ACK:
+                case ST_CONTFUT:continuousFuturesOperations();
                         break;
-                case ST_HEDGESAMPLES:
-                        hedgeSample();
+                case ST_REQHISTORICALTICKS:reqHistoricalTicks();
                         break;
-                case ST_HEDGESAMPLES_ACK:
+                case ST_REQHISTORICALTICKS_ACK:break;
+                case ST_REQTICKBYTICKDATA:reqTickByTickData();
                         break;
-                case ST_TESTALGOSAMPLES:
-                        testAlgoSamples();
+                case ST_REQTICKBYTICKDATA_ACK:break;
+                case ST_WHATIFSAMPLES:whatIfSamples();
                         break;
-                case ST_TESTALGOSAMPLES_ACK:
-                        break;
-                case ST_FAORDERSAMPLES:
-                        financialAdvisorOrderSamples();
-                        break;
-                case ST_FAORDERSAMPLES_ACK:
-                        break;
-                case ST_FAOPERATIONS:
-                        financialAdvisorOperations();
-                        break;
-                case ST_FAOPERATIONS_ACK:
-                        break;
-                case ST_DISPLAYGROUPS:
-                        testDisplayGroups();
-                        break;
-                case ST_DISPLAYGROUPS_ACK:
-                        break;
-                case ST_MISCELANEOUS:
-                        miscelaneous();
-                        break;
-                case ST_MISCELANEOUS_ACK:
-                        break;
-                case ST_FAMILYCODES:
-                        reqFamilyCodes();
-                        break;
-                case ST_FAMILYCODES_ACK:
-                        break;
-                case ST_SYMBOLSAMPLES:
-                        reqMatchingSymbols();
-                        break;
-                case ST_SYMBOLSAMPLES_ACK:
-                        break;
-                case ST_REQMKTDEPTHEXCHANGES:
-                        reqMktDepthExchanges();
-                        break;
-                case ST_REQMKTDEPTHEXCHANGES_ACK:
-                        break;
-                case ST_REQNEWSTICKS:
-                        reqNewsTicks();
-                        break;
-                case ST_REQNEWSTICKS_ACK:
-                        break;
-                case ST_REQSMARTCOMPONENTS:
-                        reqSmartComponents();
-                        break;
-                case ST_REQSMARTCOMPONENTS_ACK:
-                        break;
-                case ST_NEWSPROVIDERS:
-                        reqNewsProviders();
-                        break;
-                case ST_NEWSPROVIDERS_ACK:
-                        break;
-                case ST_REQNEWSARTICLE:
-                        reqNewsArticle();
-                        break;
-                case ST_REQNEWSARTICLE_ACK:
-                        break;
-                case ST_REQHISTORICALNEWS:
-                        reqHistoricalNews();
-                        break;
-                case ST_REQHISTORICALNEWS_ACK:
-                        break;
-                case ST_REQHEADTIMESTAMP:
-                        reqHeadTimestamp();
-                        break;
-                case ST_REQHISTOGRAMDATA:
-                        reqHistogramData();
-                        break;
-                case ST_REROUTECFD:
-                        rerouteCFDOperations();
-                        break;
-                case ST_MARKETRULE:
-                        marketRuleOperations();
-                        break;
-                case ST_CONTFUT:
-                        continuousFuturesOperations();
-                        break;
-                case ST_REQHISTORICALTICKS:
-                        reqHistoricalTicks();
-                        break;
-                case ST_REQHISTORICALTICKS_ACK:
-                        break;
-                case ST_REQTICKBYTICKDATA:
-                        reqTickByTickData();
-                        break;
-                case ST_REQTICKBYTICKDATA_ACK:
-                        break;
-                case ST_WHATIFSAMPLES:
-                        whatIfSamples();
-                        break;
-                case ST_WHATIFSAMPLES_ACK:
-                        break;
-                case ST_PING:
-                        reqCurrentTime();
+                case ST_WHATIFSAMPLES_ACK:break;
+                case ST_PING:reqCurrentTime();
                         break;
                 case ST_PING_ACK:
                         if (m_sleepDeadline < now)
@@ -1814,7 +1740,20 @@ void TestCppClient::receiveFA(faDataType pFaDataType, const std::string &cxml)
 //! [historicaldata]
 void TestCppClient::historicalData(TickerId reqId, const Bar &bar)
 {
-        raw_price[++tail] = bar.close;
+        ++tail;
+        tail %= 10000;
+        raw_price[tail] = bar.close;
+
+        ++fast_tail;
+        fast_tail %= FAST_STEP;
+        fast_price[fast_tail] = bar.close;
+
+        ++slow_tail;
+        slow_tail %= SLOW_STEP;
+        slow_price[slow_tail] = bar.close;
+
+        std::cout << exprMovingAverage(fast_price, fast_tail, FAST_STEP) << std::endl;
+
         previous_bar = current_bar;
         current_bar = bar;
         // printf("HistoricalData. ReqId: %ld - Date: %s, Open: %g, High: %g, Low: %g, Close: %g, Volume: %lld, Count: %d, WAP: %g\n", reqId,
@@ -1831,9 +1770,9 @@ void TestCppClient::historicalData(TickerId reqId, const Bar &bar)
 //! [historicaldataend]
 void TestCppClient::historicalDataEnd(int reqId, const std::string &startDateStr, const std::string &endDateStr)
 {
-        tail--;
-        std::cout << "FastSMA: " << fast_sma() << ", SlowSMA: " << slow_sma() << std::endl;
-        // std::cout << "HistoricalDataEnd. ReqId: " << reqId << " - Start Date: " << startDateStr << ", End Date: " << endDateStr << std::endl;
+        // tail--;
+        // std::cout << "FastSMA: " << fast_sma() << ", SlowSMA: " << slow_sma() << std::endl;
+        std::cout << "HistoricalDataEnd. ReqId: " << reqId << " - Start Date: " << startDateStr << ", End Date: " << endDateStr << std::endl;
 }
 //! [historicaldataend]
 
@@ -2209,8 +2148,8 @@ void TestCppClient::historicalDataUpdate(TickerId reqId, const Bar &bar)
                 // std::cout << current_bar.time << " and " << bar.time << std::endl;
                 old_fast_line = fast_line;
                 old_slow_line = slow_line;
-                fast_line=exprMovingAverage(fast_step);
-                slow_line=exprMovingAverage(slow_step);
+                fast_line = exprMovingAverage(fast_step);
+                slow_line = exprMovingAverage(slow_step);
         }
         else
         {
