@@ -7,3 +7,7 @@ set(CMAKE_CXX_STANDARD 11)
 file(GLOB SOURCE "Source/*.cc" "Header/*.h")
 
 add_executable(Gold ${SOURCE})
+
+find_package(Threads REQUIRED)
+
+target_link_libraries(Gold Threads::Threads)
