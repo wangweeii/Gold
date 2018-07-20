@@ -105,22 +105,28 @@ void TestCppClient::setConnectOptions(const std::string &connectOptions)
         m_pClient->setConnectOptions(connectOptions);
 }
 
-double TestCppClient::exprMovingAverage(double *price, int tail, const int step)
+double TestCppClient::computeEMA(double *price, int tail, const int step)
 {
+        /*
         double alpha = 2 / (step + 1);
         double beta = 1 - alpha;
 
         int begin = (tail + 1) % step;
+        int end = begin;
         double ema = price[begin++];
 
-        while (begin <= tail)
+        while (begin != end)
         {
+                // std::cout << "yes" << std::endl;
                 ema = alpha * price[begin] + beta * ema;
                 ++begin;
                 begin %= step;
         }
 
         return ema;
+         */
+
+        return 0;
 }
 
 double TestCppClient::fast_sma()
@@ -1740,28 +1746,50 @@ void TestCppClient::receiveFA(faDataType pFaDataType, const std::string &cxml)
 //! [historicaldata]
 void TestCppClient::historicalData(TickerId reqId, const Bar &bar)
 {
-        ++tail;
-        tail %= 10000;
-        raw_price[tail] = bar.close;
+        std::cout << "HistoricalData. ReqId: " << reqId << ", Date: " << bar.time << ", Open: " << bar.open << ", High: " << bar.high << ", Low: "
+                  << bar.low << ", Close: " << bar.close << std::endl;
+        // ++tail;
+        // tail %= 10000;
+        // raw_price[tail] = bar.close;
 
-        ++fast_tail;
-        fast_tail %= FAST_STEP;
-        fast_price[fast_tail] = bar.close;
+        old_fast_line = fast_line;
+        old_slow_line = slow_line;
 
-        ++slow_tail;
-        slow_tail %= SLOW_STEP;
-        slow_price[slow_tail] = bar.close;
+        // ++fast_tail;
+        // fast_tail %= FAST_STEP;
+        // fast_price[fast_tail] = bar.close;
 
-        std::cout << exprMovingAverage(fast_price, fast_tail, FAST_STEP) << std::endl;
+        // ++slow_tail;
+        // slow_tail %= SLOW_STEP;
+        // slow_price[slow_tail] = bar.close;
+
+        if (fast_line != 0)
+        {
+                fast_line = fast_alpha * bar.close + fast_beta * old_fast_line;
+        }
+        else
+        {
+                fast_line = bar.close;
+        }
+        if (slow_line != 0)
+        {
+                slow_line = slow_alpha * bar.close + slow_beta * old_slow_line;
+        }
+        else
+        {
+                slow_line = bar.close;
+        }
+        std::cout << "The FAST EMA(8) is: " << fast_line << ", SLOW EMA(55) is: " << slow_line << std::endl;
 
         previous_bar = current_bar;
         current_bar = bar;
+
+        // std::cout << "The FAST EMA(8) is: " << computeEMA(fast_price, fast_tail, FAST_STEP) << "; ";
+        // std::cout << "SLOW EMA(55) is: " << computeEMA(slow_price, slow_tail, SLOW_STEP) << std::endl;
         // printf("HistoricalData. ReqId: %ld - Date: %s, Open: %g, High: %g, Low: %g, Close: %g, Volume: %lld, Count: %d, WAP: %g\n", reqId,
         //        bar.time.c_str(), bar.open, bar.high, bar.low, bar.close, bar.volume, bar.count, bar.wap);
         // printf("HistoricalData. ReqId: %ld - Date: %s, Open: %g, High: %g, Low: %g, Close: %g\n", reqId, bar.time.c_str(), bar.open, bar.high,
         //        bar.low, bar.close);
-        std::cout << "HistoricalData. ReqId: " << reqId << ", Date: " << bar.time << ", Open: " << bar.open << ", High: " << bar.high << ", Low: "
-                  << bar.low << ", Close: " << bar.close << std::endl;
         // printf("CurrentBar. ReqId: %ld, Date: %s, Open: %g, High: %g, Low: %g, Close: %g\n", reqId, current_bar.time.c_str(), current_bar.open,
         //        current_bar.high, current_bar.low, current_bar.close);
 }
@@ -2148,8 +2176,8 @@ void TestCppClient::historicalDataUpdate(TickerId reqId, const Bar &bar)
                 // std::cout << current_bar.time << " and " << bar.time << std::endl;
                 old_fast_line = fast_line;
                 old_slow_line = slow_line;
-                fast_line = exprMovingAverage(fast_step);
-                slow_line = exprMovingAverage(slow_step);
+                // fast_line = computeEMA(FAST_STEP);
+                // slow_line = computeEMA(SLOW_STEP);
         }
         else
         {

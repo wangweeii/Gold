@@ -135,7 +135,7 @@ public:
         bool isConnected() const;
 
 private:
-        double exprMovingAverage(double *price, int tail, const int step);
+        double computeEMA(double *price, int tail, const int step);
 
         double fast_sma();
 
@@ -254,13 +254,21 @@ private:
         double raw_price[10000];
         int tail = -1;
 
-        double fast_price[FAST_STEP];
+        double fast_price[FAST_STEP] = {0};
         int fast_tail = -1;
 
-        double slow_price[SLOW_STEP];
+        double slow_price[SLOW_STEP] = {0};
         int slow_tail = -1;
 
         Bar previous_bar, current_bar;
+
+        static double fast_alpha = 2.0 / (FAST_STEP + 1);
+        static double slow_alpha = 2.0 / (SLOW_STEP + 1);
+        double fast_beta = 1 - fast_alpha;
+        double slow_beta = 1 - slow_alpha;
+
+        double fast_ema = 0;
+        double slow_ema = 0;
 
         double fast_total = 0;
         double slow_total = 0;
