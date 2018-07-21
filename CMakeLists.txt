@@ -3,6 +3,7 @@ project(Gold)
 
 set(CMAKE_CXX_STANDARD 11)
 #add_compile_options(-std=c++11)
+#SET(CMAKE_CXX_FLAGS -pthread)
 
 file(GLOB SOURCE "Source/*.cc" "Header/*.h")
 
