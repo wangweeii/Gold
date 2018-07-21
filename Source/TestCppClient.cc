@@ -422,6 +422,8 @@ void TestCppClient::processMessages()
                                 return;
                         }
                         break;
+                default:
+                        break;
         }
 
         m_osSignal.waitForSignal();
