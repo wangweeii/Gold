@@ -58,11 +58,37 @@ Contract ContractSamples::HKStk()
         return contract;
 }
 
+Contract ContractSamples::AudUsdFx()
+{
+        //! [cashcontract]
+        Contract contract;
+        contract.symbol = "AUD";
+        contract.secType = "CASH";
+        contract.currency = "USD";
+        contract.exchange = "IDEALPRO";
+
+        //! [cashcontract]
+        return contract;
+}
+
 Contract ContractSamples::EurUsdFx()
 {
         //! [cashcontract]
         Contract contract;
         contract.symbol = "EUR";
+        contract.secType = "CASH";
+        contract.currency = "USD";
+        contract.exchange = "IDEALPRO";
+
+        //! [cashcontract]
+        return contract;
+}
+
+Contract ContractSamples::GbpUsdFx()
+{
+        //! [cashcontract]
+        Contract contract;
+        contract.symbol = "GBP";
         contract.secType = "CASH";
         contract.currency = "USD";
         contract.exchange = "IDEALPRO";
