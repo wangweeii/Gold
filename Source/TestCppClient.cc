@@ -652,14 +652,17 @@ void TestCppClient::historicalDataRequests()
         timeinfo = std::localtime(&rawtime);
         std::strftime(queryTime, 80, "%Y%m%d %H:%M:%S", timeinfo);
 
-        m_pClient->reqHistoricalData(4001, ContractSamples::EurUsdFx(), "", "1 D", "5 mins", "MIDPOINT", 1, 1, true, TagValueListSPtr());
-        //        m_pClient->reqHistoricalData(4001, ContractSamples::EurUsdFx(), queryTime, "1 M", "1 hour", "MIDPOINT", 1, 1, false, TagValueListSPtr());
-        //        m_pClient->reqHistoricalData(4002, ContractSamples::EuropeanStock(), queryTime, "10 D", "1 min", "TRADES", 1, 1, false, TagValueListSPtr());
+        // m_pClient->reqHistoricalData(4001, ContractSamples::GbpUsdFx(), "", "250 D", "15 mins", "MIDPOINT", 1, 1, true, TagValueListSPtr());
+        m_pClient->reqHistoricalData(4002, ContractSamples::EurUsdFx(), "", "1 Y", "15 mins", "MIDPOINT", 1, 1, true, TagValueListSPtr());
+        // m_pClient->reqHistoricalData(4002, ContractSamples::AudUsdFx(), "", "250 D", "15 mins", "MIDPOINT", 1, 1, true, TagValueListSPtr());
+        // m_pClient->reqHistoricalData(4003, ContractSamples::XAUUSD(), "", "250 D", "15 mins", "MIDPOINT", 1, 1, true, TagValueListSPtr());
         //! [reqhistoricaldata]
-        //        std::this_thread::sleep_for(std::chrono::seconds(2));
+        // m_pClient->reqHistoricalData(4001, ContractSamples::EurUsdFx(), queryTime, "1 M", "1 hour", "MIDPOINT", 1, 1, false, TagValueListSPtr());
+        // m_pClient->reqHistoricalData(4002, ContractSamples::EuropeanStock(), queryTime, "10 D", "1 min", "TRADES", 1, 1, false, TagValueListSPtr());
+        // std::this_thread::sleep_for(std::chrono::seconds(2));
         /*** Canceling historical data requests ***/
-        //        m_pClient->cancelHistoricalData(4001);
-        //        m_pClient->cancelHistoricalData(4002);
+        // m_pClient->cancelHistoricalData(4001);
+        // m_pClient->cancelHistoricalData(4002);
 
         m_state = ST_HISTORICALDATAREQUESTS_ACK;
 }
@@ -791,7 +794,7 @@ void TestCppClient::accountOperations()
         //! [reqaaccountsummaryledgerall]
         // std::this_thread::sleep_for(std::chrono::seconds(2));
         //! [cancelaaccountsummary]
-        m_pClient->cancelAccountSummary(9000);
+        // m_pClient->cancelAccountSummary(9000);
         // m_pClient->cancelAccountSummary(9001);
         // m_pClient->cancelAccountSummary(9002);
         // m_pClient->cancelAccountSummary(9003);
@@ -1826,8 +1829,9 @@ void TestCppClient::receiveFA(faDataType pFaDataType, const std::string &cxml)
 //! [historicaldata]
 void TestCppClient::historicalData(TickerId reqId, const Bar &bar)
 {
-        std::cout << "HistoricalData. ReqId: " << reqId << ", Date: " << bar.time << ", Open: " << bar.open << ", High: " << bar.high << ", Low: "
-                  << bar.low << ", Close: " << bar.close << std::endl;
+        bar_count++;
+        // std::cout << "HistoricalData. ReqId: " << reqId << ", Date: " << bar.time << ", Open: " << bar.open << ", High: " << bar.high << ", Low: "
+        //           << bar.low << ", Close: " << bar.close << std::endl;
         // ++tail;
         // tail %= 10000;
         // raw_price[tail] = bar.close;
@@ -1859,21 +1863,137 @@ void TestCppClient::historicalData(TickerId reqId, const Bar &bar)
         {
                 slow_line = bar.close;
         }
-        std::cout << "The FAST EMA(8) is: " << fast_line << ", SLOW EMA(55) is: " << slow_line << std::endl;
+        // std::cout << "The FAST EMA(8) is: " << fast_line << ", SLOW EMA(55) is: " << slow_line << ", Date: " << bar.time << std::endl;
 
+        if (bar_count > 300)
+        {
+                // std::cout << "Date: " << bar.time;
+                backTest(bar);
+        }
         previous_bar = current_bar;
         current_bar = bar;
-
-        // std::cout << "The FAST EMA(8) is: " << computeEMA(fast_price, fast_tail, FAST_STEP) << "; ";
-        // std::cout << "SLOW EMA(55) is: " << computeEMA(slow_price, slow_tail, SLOW_STEP) << std::endl;
-        // printf("HistoricalData. ReqId: %ld - Date: %s, Open: %g, High: %g, Low: %g, Close: %g, Volume: %lld, Count: %d, WAP: %g\n", reqId,
-        //        bar.time.c_str(), bar.open, bar.high, bar.low, bar.close, bar.volume, bar.count, bar.wap);
-        // printf("HistoricalData. ReqId: %ld - Date: %s, Open: %g, High: %g, Low: %g, Close: %g\n", reqId, bar.time.c_str(), bar.open, bar.high,
-        //        bar.low, bar.close);
-        // printf("CurrentBar. ReqId: %ld, Date: %s, Open: %g, High: %g, Low: %g, Close: %g\n", reqId, current_bar.time.c_str(), current_bar.open,
-        //        current_bar.high, current_bar.low, current_bar.close);
 }
 //! [historicaldata]
+
+//! [backTest]
+void TestCppClient::backTest(const Bar &bar)
+{
+        quantity = (int(total_value) * beishu / 100000) * 100000;
+        commission = (int(total_value) * beishu / 100000) * 10;
+        if (1 == have_position)
+        {
+                if (bar.high > highest)
+                {
+                        highest = bar.high;
+                }
+                if (highest - place_buy_position_price > stop && bar.close <= (highest + place_buy_position_price) / 2)
+                {
+                        sel_price = (highest + place_buy_position_price) / 2;
+                        have_position = 0;
+                        total_value += (sel_price - buy_price) * quantity;
+                        total_value -= commission;
+                        service_fee += commission;
+                        std::cout << bar.time << ", Stop long: " << sel_price << ", Total value: " << total_value << ", Service fee: " << service_fee
+                                  << std::endl;
+                }
+                if ((bar.low - place_buy_position_price) <= -stop)
+                {
+                        sel_price = place_buy_position_price - stop;
+                        have_position = 0;
+                        total_value += (sel_price - buy_price) * quantity;
+                        total_value -= commission;
+                        service_fee += commission;
+                        std::cout << bar.time << ", Stop loss long: " << sel_price << ", Total value: " << total_value << ", Service fee: "
+                                  << service_fee << std::endl;
+                }
+        }
+        else if (-1 == have_position)
+        {
+                if (bar.low < lowest)
+                {
+                        lowest = bar.low;
+                }
+                // 空单盈利超过设定值又回调一半则平仓
+                if (lowest - place_sel_position_price < -stop && bar.close >= (lowest + place_sel_position_price) / 2)
+                {
+                        buy_price = (lowest + place_sel_position_price) / 2;
+                        have_position = 0;
+                        total_value += (sel_price - buy_price) * quantity;
+                        total_value -= commission;
+                        service_fee += commission;
+                        std::cout << bar.time << ", Stop short: " << buy_price << ", Total value: " << total_value << ", Service fee: " << service_fee
+                                  << std::endl;
+                }
+                if ((bar.high - place_sel_position_price) >= stop)
+                {
+                        buy_price = place_sel_position_price + stop;
+                        have_position = 0;
+                        total_value += (sel_price - buy_price) * quantity;
+                        total_value -= commission;
+                        service_fee += commission;
+                        std::cout << bar.time << ", Stop loss short: " << buy_price << ", Total value: " << total_value << ", Service fee: "
+                                  << service_fee << std::endl;
+                }
+        }
+        if (old_fast_line < old_slow_line && fast_line >= slow_line)
+        {
+                if (0 == have_position)
+                {
+                        buy_price = bar.close;
+                        place_buy_position_price = fast_line;
+                        highest = bar.close;
+                        have_position = 1;
+                        std::cout << bar.time << ", Open long: " << buy_price << ", Total value: " << total_value << ", Service fee: " << service_fee
+                                  << std::endl;
+                }
+                else if (-1 == have_position)
+                {
+                        buy_price = bar.close;
+                        have_position = 0;
+                        total_value += (sel_price - buy_price) * quantity;
+                        total_value -= commission;
+                        service_fee += commission;
+                        std::cout << bar.time << ", Close short: " << buy_price << ", Total value: " << total_value << ", Service fee: "
+                                  << service_fee << std::endl;
+                        buy_price = bar.close;
+                        place_buy_position_price = fast_line;
+                        highest = bar.close;
+                        have_position = 1;
+                        std::cout << bar.time << ", Open long: " << buy_price << ", Total value: " << total_value << ", Service fee: " << service_fee
+                                  << std::endl;
+                }
+        }
+        if (old_fast_line >= old_slow_line && fast_line < slow_line)
+        {
+                if (0 == have_position)
+                {
+                        sel_price = bar.close;
+                        place_sel_position_price = fast_line;
+                        lowest = bar.close;
+                        have_position = -1;
+                        std::cout << bar.time << ", Open short: " << sel_price << ", Total value: " << total_value << ", Service fee: " << service_fee
+                                  << std::endl;
+                }
+                else if (1 == have_position)
+                {
+                        sel_price = bar.close;
+                        have_position = 0;
+                        total_value += (sel_price - buy_price) * quantity;
+                        total_value -= commission;
+                        service_fee += commission;
+                        std::cout << bar.time << ", Close long: " << sel_price << ", Total value: " << total_value << ", Service fee: " << service_fee
+                                  << std::endl;
+                        sel_price = bar.close;
+                        place_sel_position_price = fast_line;
+                        lowest = bar.close;
+                        have_position = -1;
+                        std::cout << bar.time << ", Open short: " << sel_price << ", Total value: " << total_value << ", Service fee: " << service_fee
+                                  << std::endl;
+                }
+        }
+        // std::cout << "Total account value is: " << total_value << ", Service fee is: " << service_fee << ", Date: " << bar.time << std::endl;
+}
+//! [backTest]
 
 //! [historicaldataend]
 void TestCppClient::historicalDataEnd(int reqId, const std::string &startDateStr, const std::string &endDateStr)
@@ -1973,6 +2093,8 @@ void TestCppClient::positionEnd()
 void
 TestCppClient::accountSummary(int reqId, const std::string &account, const std::string &tag, const std::string &value, const std::string &currency)
 {
+        // total_value = atof(value.c_str());
+        std::cout << total_value << std::endl;
         printf("Acct Summary. ReqId: %d, Account: %s, Tag: %s, Value: %s, Currency: %s\n", reqId, account.c_str(), tag.c_str(), value.c_str(),
                currency.c_str());
 }
