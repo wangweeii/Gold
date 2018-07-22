@@ -49,7 +49,9 @@ int main(int argc, const char *argv[])
                 client.connect(host, port, clientId);
                 std::this_thread::sleep_for(std::chrono::seconds(2));
 
-                client.accountOperations();
+                // client.accountOperations();
+                // std::this_thread::sleep_for(std::chrono::seconds(2));
+
                 client.historicalDataRequests();
 
                 while (client.isConnected())
