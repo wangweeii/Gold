@@ -135,6 +135,8 @@ public:
         bool isConnected() const;
 
 private:
+        void backTest(const Bar &bar);
+
         double computeEMA(double *price, int tail, const int step);
 
         double fast_sma();
@@ -269,13 +271,30 @@ private:
 
         double fast_ema = 0;
         double slow_ema = 0;
-
         double fast_total = 0;
         double slow_total = 0;
+
         double fast_line = 0;
         double slow_line = 0;
         double old_fast_line = 0;
         double old_slow_line = 0;
+
+        int have_position = 0;
+        double buy_price = 0;
+        double sel_price = 0;
+        double place_buy_position_price = 0;
+        double place_sel_position_price = 0;
+        double highest = 0;
+        double lowest = 0;
+
+        int service_fee = 0;
+        int bar_count = 0;
+
+        int beishu = 20;
+        double total_value = 20000;
+        int quantity = 0;
+        int commission = 40;
+        const double stop = 0.0012;
 };
 //! [ewrapperimpl]
 
