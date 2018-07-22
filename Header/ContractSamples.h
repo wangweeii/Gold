@@ -15,7 +15,11 @@ public:
 
         static Contract HKStk();
 
+        static Contract AudUsdFx();
+
         static Contract EurUsdFx();
+
+        static Contract GbpUsdFx();
 
         static Contract XAUUSD();
 
