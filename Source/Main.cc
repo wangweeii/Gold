@@ -26,7 +26,7 @@ int main(int argc, const char *argv[])
         unsigned int port = argc > 2 ? atoi(argv[2]) : 0;
         if (port <= 0)
         {
-                port = 4003;
+                port = 8888;
         }
 
         const char *connectOptions = argc > 3 ? argv[3] : "";
