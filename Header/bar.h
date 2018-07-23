@@ -8,9 +8,9 @@
 struct Bar
 {
         std::string time;
+        double open;
         double high;
         double low;
-        double open;
         double close;
         double wap;
         long long volume;
