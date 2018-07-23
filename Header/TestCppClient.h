@@ -291,10 +291,13 @@ private:
         int bar_count = 0;
 
         int beishu = 20;
-        double total_value = 20000;
+        double total_value = 50000;
         int quantity = 0;
         int commission = 40;
-        const double stop = 0.0012;
+        double stop = 0.0012;
+
+        int win_count = 0;
+        int los_count = 0;
 };
 //! [ewrapperimpl]
 
