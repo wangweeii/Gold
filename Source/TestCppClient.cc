@@ -36,6 +36,7 @@
 #include <ctime>
 #include <fstream>
 #include <cstdint>
+#include <iomanip>
 
 const int PING_DEADLINE = 2; // seconds
 const int SLEEP_BETWEEN_PINGS = 30; // seconds
@@ -210,203 +211,125 @@ void TestCppClient::processMessages()
         /*****************************************************************/
         switch (m_state)
         {
-                case ST_PNLSINGLE:
-                        pnlSingleOperation();
+                case ST_PNLSINGLE:pnlSingleOperation();
                         break;
-                case ST_PNLSINGLE_ACK:
+                case ST_PNLSINGLE_ACK:break;
+                case ST_PNL:pnlOperation();
                         break;
-                case ST_PNL:
-                        pnlOperation();
+                case ST_PNL_ACK:break;
+                case ST_TICKDATAOPERATION:tickDataOperation();
                         break;
-                case ST_PNL_ACK:
+                case ST_TICKDATAOPERATION_ACK:break;
+                case ST_TICKOPTIONCOMPUTATIONOPERATION:tickOptionComputationOperation();
                         break;
-                case ST_TICKDATAOPERATION:
-                        tickDataOperation();
+                case ST_TICKOPTIONCOMPUTATIONOPERATION_ACK:break;
+                case ST_DELAYEDTICKDATAOPERATION:delayedTickDataOperation();
                         break;
-                case ST_TICKDATAOPERATION_ACK:
+                case ST_DELAYEDTICKDATAOPERATION_ACK:break;
+                case ST_MARKETDEPTHOPERATION:marketDepthOperations();
                         break;
-                case ST_TICKOPTIONCOMPUTATIONOPERATION:
-                        tickOptionComputationOperation();
+                case ST_MARKETDEPTHOPERATION_ACK:break;
+                case ST_REALTIMEBARS:realTimeBars();
                         break;
-                case ST_TICKOPTIONCOMPUTATIONOPERATION_ACK:
+                case ST_REALTIMEBARS_ACK:break;
+                case ST_MARKETDATATYPE:marketDataType();
                         break;
-                case ST_DELAYEDTICKDATAOPERATION:
-                        delayedTickDataOperation();
+                case ST_MARKETDATATYPE_ACK:break;
+                case ST_HISTORICALDATAREQUESTS:historicalDataRequests();
                         break;
-                case ST_DELAYEDTICKDATAOPERATION_ACK:
+                case ST_HISTORICALDATAREQUESTS_ACK:break;
+                case ST_OPTIONSOPERATIONS:optionsOperations();
                         break;
-                case ST_MARKETDEPTHOPERATION:
-                        marketDepthOperations();
+                case ST_OPTIONSOPERATIONS_ACK:break;
+                case ST_CONTRACTOPERATION:contractOperations();
                         break;
-                case ST_MARKETDEPTHOPERATION_ACK:
+                case ST_CONTRACTOPERATION_ACK:break;
+                case ST_MARKETSCANNERS:marketScanners();
                         break;
-                case ST_REALTIMEBARS:
-                        realTimeBars();
+                case ST_MARKETSCANNERS_ACK:break;
+                case ST_REUTERSFUNDAMENTALS:reutersFundamentals();
                         break;
-                case ST_REALTIMEBARS_ACK:
+                case ST_REUTERSFUNDAMENTALS_ACK:break;
+                case ST_BULLETINS:bulletins();
                         break;
-                case ST_MARKETDATATYPE:
-                        marketDataType();
+                case ST_BULLETINS_ACK:break;
+                case ST_ACCOUNTOPERATIONS:accountOperations();
                         break;
-                case ST_MARKETDATATYPE_ACK:
+                case ST_ACCOUNTOPERATIONS_ACK:break;
+                case ST_ORDEROPERATIONS:orderOperations();
                         break;
-                case ST_HISTORICALDATAREQUESTS:
-                        historicalDataRequests();
+                case ST_ORDEROPERATIONS_ACK:break;
+                case ST_OCASAMPLES:ocaSamples();
                         break;
-                case ST_HISTORICALDATAREQUESTS_ACK:
+                case ST_OCASAMPLES_ACK:break;
+                case ST_CONDITIONSAMPLES:conditionSamples();
                         break;
-                case ST_OPTIONSOPERATIONS:
-                        optionsOperations();
+                case ST_CONDITIONSAMPLES_ACK:break;
+                case ST_BRACKETSAMPLES:bracketSample();
                         break;
-                case ST_OPTIONSOPERATIONS_ACK:
+                case ST_BRACKETSAMPLES_ACK:break;
+                case ST_HEDGESAMPLES:hedgeSample();
                         break;
-                case ST_CONTRACTOPERATION:
-                        contractOperations();
+                case ST_HEDGESAMPLES_ACK:break;
+                case ST_TESTALGOSAMPLES:testAlgoSamples();
                         break;
-                case ST_CONTRACTOPERATION_ACK:
+                case ST_TESTALGOSAMPLES_ACK:break;
+                case ST_FAORDERSAMPLES:financialAdvisorOrderSamples();
                         break;
-                case ST_MARKETSCANNERS:
-                        marketScanners();
+                case ST_FAORDERSAMPLES_ACK:break;
+                case ST_FAOPERATIONS:financialAdvisorOperations();
                         break;
-                case ST_MARKETSCANNERS_ACK:
+                case ST_FAOPERATIONS_ACK:break;
+                case ST_DISPLAYGROUPS:testDisplayGroups();
                         break;
-                case ST_REUTERSFUNDAMENTALS:
-                        reutersFundamentals();
+                case ST_DISPLAYGROUPS_ACK:break;
+                case ST_MISCELANEOUS:miscelaneous();
                         break;
-                case ST_REUTERSFUNDAMENTALS_ACK:
+                case ST_MISCELANEOUS_ACK:break;
+                case ST_FAMILYCODES:reqFamilyCodes();
                         break;
-                case ST_BULLETINS:
-                        bulletins();
+                case ST_FAMILYCODES_ACK:break;
+                case ST_SYMBOLSAMPLES:reqMatchingSymbols();
                         break;
-                case ST_BULLETINS_ACK:
+                case ST_SYMBOLSAMPLES_ACK:break;
+                case ST_REQMKTDEPTHEXCHANGES:reqMktDepthExchanges();
                         break;
-                case ST_ACCOUNTOPERATIONS:
-                        accountOperations();
+                case ST_REQMKTDEPTHEXCHANGES_ACK:break;
+                case ST_REQNEWSTICKS:reqNewsTicks();
                         break;
-                case ST_ACCOUNTOPERATIONS_ACK:
+                case ST_REQNEWSTICKS_ACK:break;
+                case ST_REQSMARTCOMPONENTS:reqSmartComponents();
                         break;
-                case ST_ORDEROPERATIONS:
-                        orderOperations();
+                case ST_REQSMARTCOMPONENTS_ACK:break;
+                case ST_NEWSPROVIDERS:reqNewsProviders();
                         break;
-                case ST_ORDEROPERATIONS_ACK:
+                case ST_NEWSPROVIDERS_ACK:break;
+                case ST_REQNEWSARTICLE:reqNewsArticle();
                         break;
-                case ST_OCASAMPLES:
-                        ocaSamples();
+                case ST_REQNEWSARTICLE_ACK:break;
+                case ST_REQHISTORICALNEWS:reqHistoricalNews();
                         break;
-                case ST_OCASAMPLES_ACK:
+                case ST_REQHISTORICALNEWS_ACK:break;
+                case ST_REQHEADTIMESTAMP:reqHeadTimestamp();
                         break;
-                case ST_CONDITIONSAMPLES:
-                        conditionSamples();
+                case ST_REQHISTOGRAMDATA:reqHistogramData();
                         break;
-                case ST_CONDITIONSAMPLES_ACK:
+                case ST_REROUTECFD:rerouteCFDOperations();
                         break;
-                case ST_BRACKETSAMPLES:
-                        bracketSample();
+                case ST_MARKETRULE:marketRuleOperations();
                         break;
-                case ST_BRACKETSAMPLES_ACK:
+                case ST_CONTFUT:continuousFuturesOperations();
                         break;
-                case ST_HEDGESAMPLES:
-                        hedgeSample();
+                case ST_REQHISTORICALTICKS:reqHistoricalTicks();
                         break;
-                case ST_HEDGESAMPLES_ACK:
+                case ST_REQHISTORICALTICKS_ACK:break;
+                case ST_REQTICKBYTICKDATA:reqTickByTickData();
                         break;
-                case ST_TESTALGOSAMPLES:
-                        testAlgoSamples();
+                case ST_REQTICKBYTICKDATA_ACK:break;
+                case ST_WHATIFSAMPLES:whatIfSamples();
                         break;
-                case ST_TESTALGOSAMPLES_ACK:
-                        break;
-                case ST_FAORDERSAMPLES:
-                        financialAdvisorOrderSamples();
-                        break;
-                case ST_FAORDERSAMPLES_ACK:
-                        break;
-                case ST_FAOPERATIONS:
-                        financialAdvisorOperations();
-                        break;
-                case ST_FAOPERATIONS_ACK:
-                        break;
-                case ST_DISPLAYGROUPS:
-                        testDisplayGroups();
-                        break;
-                case ST_DISPLAYGROUPS_ACK:
-                        break;
-                case ST_MISCELANEOUS:
-                        miscelaneous();
-                        break;
-                case ST_MISCELANEOUS_ACK:
-                        break;
-                case ST_FAMILYCODES:
-                        reqFamilyCodes();
-                        break;
-                case ST_FAMILYCODES_ACK:
-                        break;
-                case ST_SYMBOLSAMPLES:
-                        reqMatchingSymbols();
-                        break;
-                case ST_SYMBOLSAMPLES_ACK:
-                        break;
-                case ST_REQMKTDEPTHEXCHANGES:
-                        reqMktDepthExchanges();
-                        break;
-                case ST_REQMKTDEPTHEXCHANGES_ACK:
-                        break;
-                case ST_REQNEWSTICKS:
-                        reqNewsTicks();
-                        break;
-                case ST_REQNEWSTICKS_ACK:
-                        break;
-                case ST_REQSMARTCOMPONENTS:
-                        reqSmartComponents();
-                        break;
-                case ST_REQSMARTCOMPONENTS_ACK:
-                        break;
-                case ST_NEWSPROVIDERS:
-                        reqNewsProviders();
-                        break;
-                case ST_NEWSPROVIDERS_ACK:
-                        break;
-                case ST_REQNEWSARTICLE:
-                        reqNewsArticle();
-                        break;
-                case ST_REQNEWSARTICLE_ACK:
-                        break;
-                case ST_REQHISTORICALNEWS:
-                        reqHistoricalNews();
-                        break;
-                case ST_REQHISTORICALNEWS_ACK:
-                        break;
-                case ST_REQHEADTIMESTAMP:
-                        reqHeadTimestamp();
-                        break;
-                case ST_REQHISTOGRAMDATA:
-                        reqHistogramData();
-                        break;
-                case ST_REROUTECFD:
-                        rerouteCFDOperations();
-                        break;
-                case ST_MARKETRULE:
-                        marketRuleOperations();
-                        break;
-                case ST_CONTFUT:
-                        continuousFuturesOperations();
-                        break;
-                case ST_REQHISTORICALTICKS:
-                        reqHistoricalTicks();
-                        break;
-                case ST_REQHISTORICALTICKS_ACK:
-                        break;
-                case ST_REQTICKBYTICKDATA:
-                        reqTickByTickData();
-                        break;
-                case ST_REQTICKBYTICKDATA_ACK:
-                        break;
-                case ST_WHATIFSAMPLES:
-                        whatIfSamples();
-                        break;
-                case ST_WHATIFSAMPLES_ACK:
-                        break;
-                case ST_PING:
-                        reqCurrentTime();
+                case ST_WHATIFSAMPLES_ACK:break;
+                case ST_PING:reqCurrentTime();
                         break;
                 case ST_PING_ACK:
                         if (m_sleepDeadline < now)
@@ -422,8 +345,7 @@ void TestCppClient::processMessages()
                                 return;
                         }
                         break;
-                default:
-                        break;
+                default:break;
         }
 
         m_osSignal.waitForSignal();
@@ -653,7 +575,7 @@ void TestCppClient::historicalDataRequests()
         std::strftime(queryTime, 80, "%Y%m%d %H:%M:%S", timeinfo);
 
         // m_pClient->reqHistoricalData(4001, ContractSamples::GbpUsdFx(), "", "250 D", "15 mins", "MIDPOINT", 1, 1, true, TagValueListSPtr());
-        m_pClient->reqHistoricalData(4002, ContractSamples::EurUsdFx(), "", "1 Y", "15 mins", "MIDPOINT", 1, 1, true, TagValueListSPtr());
+        m_pClient->reqHistoricalData(4002, ContractSamples::EurUsdFx(), "", "2 M", "15 mins", "MIDPOINT", 1, 1, false, TagValueListSPtr());
         // m_pClient->reqHistoricalData(4002, ContractSamples::AudUsdFx(), "", "250 D", "15 mins", "MIDPOINT", 1, 1, true, TagValueListSPtr());
         // m_pClient->reqHistoricalData(4003, ContractSamples::XAUUSD(), "", "250 D", "15 mins", "MIDPOINT", 1, 1, true, TagValueListSPtr());
         //! [reqhistoricaldata]
@@ -1583,8 +1505,11 @@ void
 TestCppClient::orderStatus(OrderId orderId, const std::string &status, double filled, double remaining, double avgFillPrice, int permId, int parentId,
                            double lastFillPrice, int clientId, const std::string &whyHeld, double mktCapPrice)
 {
-        printf("OrderStatus. Id: %ld, Status: %s, Filled: %g, Remaining: %g, AvgFillPrice: %g, PermId: %d, LastFillPrice: %g, ClientId: %d, WhyHeld: %s, MktCapPrice: %g\n",
-               orderId, status.c_str(), filled, remaining, avgFillPrice, permId, lastFillPrice, clientId, whyHeld.c_str(), mktCapPrice);
+        // printf("OrderStatus. Id: %ld, Status: %s, Filled: %g, Remaining: %g, AvgFillPrice: %g, PermId: %d, LastFillPrice: %g, ClientId: %d, WhyHeld: %s, MktCapPrice: %g\n",
+        //        orderId, status.c_str(), filled, remaining, avgFillPrice, permId, lastFillPrice, clientId, whyHeld.c_str(), mktCapPrice);
+        std::cout << "OrderStatus. Id: " << orderId << ", Status: " << status << ", Filled: " << filled << ", Remaining: " << remaining
+                  << ", AvgFillPrice: " << avgFillPrice << ", PermId: " << permId << ", LastFillPrice: " << lastFillPrice << ", ClientId: "
+                  << clientId << ", WhyHeld: " << whyHeld << ", MktCapPrice: " << mktCapPrice << std::endl;
 }
 //! [orderstatus]
 
@@ -1609,7 +1534,8 @@ void TestCppClient::openOrder(OrderId orderId, const Contract &contract, const O
 //! [openorderend]
 void TestCppClient::openOrderEnd()
 {
-        printf("OpenOrderEnd\n");
+        // printf("OpenOrderEnd\n");
+        std::cout << "OpenOrderEnd" << std::endl;
 }
 //! [openorderend]
 
@@ -1618,14 +1544,17 @@ void TestCppClient::winError(const std::string &str, int lastError)
 
 void TestCppClient::connectionClosed()
 {
-        printf("Connection Closed\n");
+        std::cout << "Connection Closed" << std::endl;
+        // printf("Connection Closed\n");
 }
 
 //! [updateaccountvalue]
 void TestCppClient::updateAccountValue(const std::string &key, const std::string &val, const std::string &currency, const std::string &accountName)
 {
-        printf("UpdateAccountValue. Key: %s, Value: %s, Currency: %s, Account Name: %s\n", key.c_str(), val.c_str(), currency.c_str(),
-               accountName.c_str());
+        // printf("UpdateAccountValue. Key: %s, Value: %s, Currency: %s, Account Name: %s\n", key.c_str(), val.c_str(), currency.c_str(),
+        //        accountName.c_str());
+        std::cout << "UpdateAccountValue. Key: " << key << ", Value: " << val << ", Currency: " << currency << ", Account Name: " << accountName
+                  << std::endl;
 }
 //! [updateaccountvalue]
 
@@ -1642,33 +1571,39 @@ void TestCppClient::updatePortfolio(const Contract &contract, double position, d
 //! [updateaccounttime]
 void TestCppClient::updateAccountTime(const std::string &timeStamp)
 {
-        printf("UpdateAccountTime. Time: %s\n", timeStamp.c_str());
+        // printf("UpdateAccountTime. Time: %s\n", timeStamp.c_str());
+        std::cout << "UpdateAccountTime. Time: " << timeStamp << std::endl;
 }
 //! [updateaccounttime]
 
 //! [accountdownloadend]
 void TestCppClient::accountDownloadEnd(const std::string &accountName)
 {
-        printf("Account download finished: %s\n", accountName.c_str());
+        std::cout << "Account download finished: " << accountName << std::endl;
+        // printf("Account download finished: %s\n", accountName.c_str());
 }
 //! [accountdownloadend]
 
 //! [contractdetails]
 void TestCppClient::contractDetails(int reqId, const ContractDetails &contractDetails)
 {
-        printf("ContractDetails begin. ReqId: %d\n", reqId);
+        // printf("ContractDetails begin. ReqId: %d\n", reqId);
+        std::cout << "ContractDetails begin. ReaId: " << reqId << std::endl;
         printContractMsg(contractDetails.contract);
         printContractDetailsMsg(contractDetails);
-        printf("ContractDetails end. ReqId: %d\n", reqId);
+        std::cout << "ContractDetails end. ReqId: " << reqId << std::endl;
+        // printf("ContractDetails end. ReqId: %d\n", reqId);
 }
 //! [contractdetails]
 
 //! [bondcontractdetails]
 void TestCppClient::bondContractDetails(int reqId, const ContractDetails &contractDetails)
 {
-        printf("BondContractDetails begin. ReqId: %d\n", reqId);
+        // printf("BondContractDetails begin. ReqId: %d\n", reqId);
+        std::cout << "BondContractDetails begin. ReqId: " << reqId << std::endl;
         printBondContractDetailsMsg(contractDetails);
-        printf("BondContractDetails end. ReqId: %d\n", reqId);
+        std::cout << "BondContractDetails end. ReqId: " << reqId << std::endl;
+        // printf("BondContractDetails end. ReqId: %d\n", reqId);
 }
 //! [bondcontractdetails]
 
@@ -1772,7 +1707,8 @@ void TestCppClient::printBondContractDetailsMsg(const ContractDetails &contractD
 //! [contractdetailsend]
 void TestCppClient::contractDetailsEnd(int reqId)
 {
-        printf("ContractDetailsEnd. %d\n", reqId);
+        // printf("ContractDetailsEnd. %d\n", reqId);
+        std::cout << "ContractDetailEnd. " << reqId << std::endl;
 }
 //! [contractdetailsend]
 
@@ -1879,22 +1815,35 @@ void TestCppClient::historicalData(TickerId reqId, const Bar &bar)
 void TestCppClient::backTest(const Bar &bar)
 {
         quantity = (int(total_value) * beishu / 100000) * 100000;
-        commission = (int(total_value) * beishu / 100000) * 10;
-        if (1 == have_position)
+        // commission = (int(total_value) * beishu / 100000) * 10;
+        commission = quantity / 10000;
+        if (1 == have_position) //已有多单
         {
                 if (bar.high > highest)
                 {
                         highest = bar.high;
                 }
-                if (highest - place_buy_position_price > stop && bar.close <= (highest + place_buy_position_price) / 2)
+                // 多单盈利超过设定值又回调一半则平仓
+                // if ((highest - place_buy_position_price) > stop && bar.close <= (highest + place_buy_position_price) / 2)
+                // 多单盈利超过设定值但又回调到开仓时快线位置则平仓
+                if ((highest - place_buy_position_price) > stop && bar.close <= place_buy_position_price)
                 {
-                        sel_price = (highest + place_buy_position_price) / 2;
+                        bool value = bar.close <= place_buy_position_price;
+                        bool value2 = bar.close <= (highest + place_buy_position_price) / 2;
+                        // sel_price = (highest + place_buy_position_price) / 2;
+                        sel_price = place_buy_position_price;
                         have_position = 0;
                         total_value += (sel_price - buy_price) * quantity;
                         total_value -= commission;
                         service_fee += commission;
-                        std::cout << bar.time << ", Stop long: " << sel_price << ", Total value: " << total_value << ", Service fee: " << service_fee
+                        sel_price > buy_price ? win_count++ : los_count++;
+                        std::cout << std::fixed << std::setprecision(5) << bar.time << ", Stop long: " << sel_price << ", Total value: "
+                                  << total_value << ", Service fee: " << service_fee << ", win: " << win_count << ", los: " << los_count << std::endl;
+                        std::cout << bar.time << ", Open: " << bar.open << ", High: " << bar.high << ", Low: " << bar.low << ", Close: " << bar.close
                                   << std::endl;
+                        std::cout << "Highest: " << highest << ", Bar.close: " << bar.close << ", Place_fast_price: " << place_buy_position_price
+                                  << ", high-place: " << highest - place_buy_position_price << ", bar.close <= place: " << value
+                                  << ", bar.close <= (high+place)/2: " << value2 << std::endl;
                 }
                 if ((bar.low - place_buy_position_price) <= -stop)
                 {
@@ -1903,26 +1852,31 @@ void TestCppClient::backTest(const Bar &bar)
                         total_value += (sel_price - buy_price) * quantity;
                         total_value -= commission;
                         service_fee += commission;
+                        sel_price > buy_price ? win_count++ : los_count++;
                         std::cout << bar.time << ", Stop loss long: " << sel_price << ", Total value: " << total_value << ", Service fee: "
-                                  << service_fee << std::endl;
+                                  << service_fee << ", Win: " << win_count << ", Los: " << los_count << std::endl;
                 }
         }
-        else if (-1 == have_position)
+        else if (-1 == have_position) //已有空单
         {
                 if (bar.low < lowest)
                 {
                         lowest = bar.low;
                 }
                 // 空单盈利超过设定值又回调一半则平仓
-                if (lowest - place_sel_position_price < -stop && bar.close >= (lowest + place_sel_position_price) / 2)
+                // if ((lowest - place_sel_position_price) < -stop && bar.close >= (lowest + place_sel_position_price) / 2)
+                // 空单盈利超过设定值又回调至开仓时快线位置则平仓
+                if ((lowest - place_sel_position_price) < -stop && bar.close >= place_sel_position_price)
                 {
-                        buy_price = (lowest + place_sel_position_price) / 2;
+                        // buy_price = (lowest + place_sel_position_price) / 2;
+                        buy_price = place_sel_position_price;
                         have_position = 0;
                         total_value += (sel_price - buy_price) * quantity;
                         total_value -= commission;
                         service_fee += commission;
+                        sel_price > buy_price ? win_count++ : los_count++;
                         std::cout << bar.time << ", Stop short: " << buy_price << ", Total value: " << total_value << ", Service fee: " << service_fee
-                                  << std::endl;
+                                  << ", Win: " << win_count << ", Los: " << los_count << std::endl;
                 }
                 if ((bar.high - place_sel_position_price) >= stop)
                 {
@@ -1931,11 +1885,12 @@ void TestCppClient::backTest(const Bar &bar)
                         total_value += (sel_price - buy_price) * quantity;
                         total_value -= commission;
                         service_fee += commission;
+                        sel_price > buy_price ? win_count++ : los_count++;
                         std::cout << bar.time << ", Stop loss short: " << buy_price << ", Total value: " << total_value << ", Service fee: "
-                                  << service_fee << std::endl;
+                                  << service_fee << ", Win: " << win_count << ", Los: " << los_count << std::endl;
                 }
         }
-        if (old_fast_line < old_slow_line && fast_line >= slow_line)
+        if (old_fast_line < old_slow_line && fast_line >= slow_line) // 快线上穿慢线
         {
                 if (0 == have_position)
                 {
@@ -1945,6 +1900,8 @@ void TestCppClient::backTest(const Bar &bar)
                         have_position = 1;
                         std::cout << bar.time << ", Open long: " << buy_price << ", Total value: " << total_value << ", Service fee: " << service_fee
                                   << std::endl;
+                        std::cout << bar.time << ", Open: " << bar.open << ", High: " << bar.high << ", Low: " << bar.low << ", Close: " << bar.close
+                                  << std::endl;
                 }
                 else if (-1 == have_position)
                 {
@@ -1953,17 +1910,20 @@ void TestCppClient::backTest(const Bar &bar)
                         total_value += (sel_price - buy_price) * quantity;
                         total_value -= commission;
                         service_fee += commission;
+                        sel_price > buy_price ? win_count++ : los_count++;
                         std::cout << bar.time << ", Close short: " << buy_price << ", Total value: " << total_value << ", Service fee: "
-                                  << service_fee << std::endl;
+                                  << service_fee << ", Win: " << win_count << ", Los: " << los_count << std::endl;
                         buy_price = bar.close;
                         place_buy_position_price = fast_line;
                         highest = bar.close;
                         have_position = 1;
                         std::cout << bar.time << ", Open long: " << buy_price << ", Total value: " << total_value << ", Service fee: " << service_fee
                                   << std::endl;
+                        std::cout << bar.time << ", Open: " << bar.open << ", High: " << bar.high << ", Low: " << bar.low << ", Close: " << bar.close
+                                  << std::endl;
                 }
         }
-        if (old_fast_line >= old_slow_line && fast_line < slow_line)
+        if (old_fast_line >= old_slow_line && fast_line < slow_line) // 快线下穿慢线
         {
                 if (0 == have_position)
                 {
@@ -1981,8 +1941,9 @@ void TestCppClient::backTest(const Bar &bar)
                         total_value += (sel_price - buy_price) * quantity;
                         total_value -= commission;
                         service_fee += commission;
+                        sel_price > buy_price ? win_count++ : los_count++;
                         std::cout << bar.time << ", Close long: " << sel_price << ", Total value: " << total_value << ", Service fee: " << service_fee
-                                  << std::endl;
+                                  << ", Win: " << win_count << ", Los: " << los_count << std::endl;
                         sel_price = bar.close;
                         place_sel_position_price = fast_line;
                         lowest = bar.close;
@@ -2268,7 +2229,8 @@ TestCppClient::tickNews(int tickerId, time_t timeStamp, const std::string &provi
 //! [smartcomponents]]
 void TestCppClient::smartComponents(int reqId, const SmartComponentsMap &theMap)
 {
-        printf("Smart components: (%lu):\n", theMap.size());
+        // printf("Smart components: (%lu):\n", theMap.size());
+        std::cout << "Smart components: " << theMap.size() << ":" << std::endl;
 
         for (SmartComponentsMap::const_iterator i = theMap.begin(); i != theMap.end(); i++)
         {
@@ -2435,15 +2397,19 @@ void TestCppClient::marketRule(int marketRuleId, const std::vector<PriceIncremen
 //! [pnl]
 void TestCppClient::pnl(int reqId, double dailyPnL, double unrealizedPnL, double realizedPnL)
 {
-        printf("PnL. ReqId: %d, daily PnL: %g, unrealized PnL: %g, realized PnL: %g\n", reqId, dailyPnL, unrealizedPnL, realizedPnL);
+        std::cout << "PnL. ReqId: " << reqId << ", daily PnL: " << dailyPnL << ", unrealized PnL: " << unrealizedPnL << ", realized PnL: "
+                  << realizedPnL << std::endl;
+        // printf("PnL. ReqId: %d, daily PnL: %g, unrealized PnL: %g, realized PnL: %g\n", reqId, dailyPnL, unrealizedPnL, realizedPnL);
 }
 //! [pnl]
 
 //! [pnlsingle]
 void TestCppClient::pnlSingle(int reqId, int pos, double dailyPnL, double unrealizedPnL, double realizedPnL, double value)
 {
-        printf("PnL Single. ReqId: %d, pos: %d, daily PnL: %g, unrealized PnL: %g, realized PnL: %g, value: %g\n", reqId, pos, dailyPnL,
-               unrealizedPnL, realizedPnL, value);
+        std::cout << "PnL Single. ReqId: " << reqId << ", pos: " << pos << ", daily PnL: " << dailyPnL << ", unrealized PnL: " << unrealizedPnL
+                  << ", realized PnL: " << realizedPnL << ", value: " << value << std::endl;
+        // printf("PnL Single. ReqId: %d, pos: %d, daily PnL: %g, unrealized PnL: %g, realized PnL: %g, value: %g\n", reqId, pos, dailyPnL,
+        //        unrealizedPnL, realizedPnL, value);
 }
 //! [pnlsingle]
 
