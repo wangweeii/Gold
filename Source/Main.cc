@@ -8,7 +8,7 @@
 
 
 #include <iostream>
-// #include <cstdio>
+#include <cstdio>
 #include <cstdlib>
 #include <chrono>
 #include <thread>
@@ -21,7 +21,6 @@ const unsigned SLEEP_TIME = 10;
 
 int main(int argc, const char *argv[])
 {
-
         const char *host = argc > 1 ? argv[1] : "";
         unsigned int port = argc > 2 ? atoi(argv[2]) : 0;
         if (port <= 0)
@@ -68,6 +67,5 @@ int main(int argc, const char *argv[])
         }
 
         printf("End of C++ Socket Client Test\n");
-
         return 0;
 }
