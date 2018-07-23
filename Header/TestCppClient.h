@@ -135,7 +135,7 @@ public:
         bool isConnected() const;
 
 private:
-        void backTest(const Bar &bar);
+        void EMACrossTest(const Bar &bar);
 
         double computeEMA(double *price, int tail, const int step);
 
@@ -291,7 +291,7 @@ private:
         int bar_count = 0;
 
         int beishu = 20;
-        double total_value = 50000;
+        double total_value = 9600;
         int quantity = 0;
         int commission = 40;
         double stop = 0.0012;
