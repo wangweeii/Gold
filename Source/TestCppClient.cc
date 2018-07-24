@@ -38,7 +38,7 @@
 #include <cstdint>
 #include <iomanip>
 
-const int PING_DEADLINE       = 2; // seconds
+const int PING_DEADLINE = 2; // seconds
 const int SLEEP_BETWEEN_PINGS = 30; // seconds
 
 ///////////////////////////////////////////////////////////
@@ -133,8 +133,8 @@ double TestCppClient::computeEMA(double *price, int tail, const int step)
 double TestCppClient::fast_sma()
 {
         int length = 10000;
-        int end    = tail % length;
-        int begin  = (end + length - FAST_STEP) % length;
+        int end = tail % length;
+        int begin = (end + length - FAST_STEP) % length;
 
         if (fast_total > 0)
         {
@@ -169,8 +169,8 @@ double TestCppClient::fast_sma()
 double TestCppClient::slow_sma()
 {
         int length = 10000;
-        int end    = tail % length;
-        int begin  = (end + length - SLOW_STEP) % length;
+        int end = tail % length;
+        int begin = (end + length - SLOW_STEP) % length;
 
         if (slow_total > 0)
         {
@@ -567,8 +567,8 @@ void TestCppClient::historicalDataRequests()
         /*** Requesting historical data ***/
         //! [reqhistoricaldata]
         std::time_t rawtime;
-        std::tm     *timeinfo;
-        char        queryTime[80];
+        std::tm *timeinfo;
+        char queryTime[80];
 
         std::time(&rawtime);
         timeinfo = std::localtime(&rawtime);
@@ -844,20 +844,17 @@ void TestCppClient::ocaSamples()
 void TestCppClient::conditionSamples()
 {
         //! [order_conditioning_activate]
-        Order                  lmt                 = OrderSamples::LimitOrder("BUY", 100, 10);
+        Order lmt = OrderSamples::LimitOrder("BUY", 100, 10);
         //Order will become active if conditioning criteria is met
-        PriceCondition         *priceCondition     = dynamic_cast<PriceCondition *>(OrderSamples::Price_Condition(208813720, "SMART", 600, false,
-                                                                                                                  false));
-        ExecutionCondition     *execCondition      = dynamic_cast<ExecutionCondition *>(OrderSamples::Execution_Condition("EUR.USD", "CASH",
-                                                                                                                          "IDEALPRO",
-                                                                                                                          true));
-        MarginCondition        *marginCondition    = dynamic_cast<MarginCondition *>(OrderSamples::Margin_Condition(30, true, false));
+        PriceCondition *priceCondition = dynamic_cast<PriceCondition *>(OrderSamples::Price_Condition(208813720, "SMART", 600, false, false));
+        ExecutionCondition *execCondition = dynamic_cast<ExecutionCondition *>(OrderSamples::Execution_Condition("EUR.USD", "CASH", "IDEALPRO",
+                                                                                                                 true));
+        MarginCondition *marginCondition = dynamic_cast<MarginCondition *>(OrderSamples::Margin_Condition(30, true, false));
         PercentChangeCondition *pctChangeCondition = dynamic_cast<PercentChangeCondition *>(OrderSamples::Percent_Change_Condition(15.0, 208813720,
                                                                                                                                    "SMART", true,
                                                                                                                                    true));
-        TimeCondition          *timeCondition      = dynamic_cast<TimeCondition *>(OrderSamples::Time_Condition("20160118 23:59:59", true, false));
-        VolumeCondition        *volumeCondition    = dynamic_cast<VolumeCondition *>(OrderSamples::Volume_Condition(208813720, "SMART", false, 100,
-                                                                                                                    true));
+        TimeCondition *timeCondition = dynamic_cast<TimeCondition *>(OrderSamples::Time_Condition("20160118 23:59:59", true, false));
+        VolumeCondition *volumeCondition = dynamic_cast<VolumeCondition *>(OrderSamples::Volume_Condition(208813720, "SMART", false, 100, true));
 
         lmt.conditions.push_back(std::shared_ptr<PriceCondition>(priceCondition));
         lmt.conditions.push_back(std::shared_ptr<ExecutionCondition>(execCondition));
@@ -1014,7 +1011,7 @@ void TestCppClient::financialAdvisorOrderSamples()
 
         //! [faordergroupequalquantity]
         Order faOrderGroupEQ = OrderSamples::LimitOrder("SELL", 200, 2000);
-        faOrderGroupEQ.faGroup  = "Group_Equal_Quantity";
+        faOrderGroupEQ.faGroup = "Group_Equal_Quantity";
         faOrderGroupEQ.faMethod = "EqualQuantity";
         m_pClient->placeOrder(m_orderId++, ContractSamples::SimpleFuture(), faOrderGroupEQ);
         //! [faordergroupequalquantity]
@@ -1022,11 +1019,11 @@ void TestCppClient::financialAdvisorOrderSamples()
 
         //! [faordergrouppctchange]
         Order faOrderGroupPC;
-        faOrderGroupPC.action       = "BUY";
-        faOrderGroupPC.orderType    = "MKT";
+        faOrderGroupPC.action = "BUY";
+        faOrderGroupPC.orderType = "MKT";
         // You should not specify any order quantity for PctChange allocation method
-        faOrderGroupPC.faGroup      = "Pct_Change";
-        faOrderGroupPC.faMethod     = "PctChange";
+        faOrderGroupPC.faGroup = "Pct_Change";
+        faOrderGroupPC.faMethod = "PctChange";
         faOrderGroupPC.faPercentage = "100";
         m_pClient->placeOrder(m_orderId++, ContractSamples::EurUsdFx(), faOrderGroupPC);
         //! [faordergrouppctchange]
@@ -1040,7 +1037,7 @@ void TestCppClient::financialAdvisorOrderSamples()
 
         //! [modelorder]
         Order modelOrder = OrderSamples::LimitOrder("BUY", 200, 100);
-        modelOrder.account   = "DF12345";
+        modelOrder.account = "DF12345";
         modelOrder.modelCode = "Technology";
         m_pClient->placeOrder(m_orderId++, ContractSamples::USStock(), modelOrder);
         //! [modelorder]
@@ -1298,8 +1295,8 @@ void TestCppClient::continuousFuturesOperations()
 
         //! [reqhistoricaldatacontfut]
         std::time_t rawtime;
-        std::tm     *timeinfo;
-        char        queryTime[80];
+        std::tm *timeinfo;
+        char queryTime[80];
 
         std::time(&rawtime);
         timeinfo = std::localtime(&rawtime);
@@ -1429,7 +1426,7 @@ void TestCppClient::currentTime(long time)
 {
         if (m_state == ST_PING_ACK)
         {
-                time_t    t         = (time_t) time;
+                time_t t = (time_t) time;
                 struct tm *timeinfo = localtime(&t);
                 std::cout << "The current date/time is: " << asctime(timeinfo) << std::endl;
                 // printf("The current date/time is: %s", asctime(timeinfo));
@@ -1777,6 +1774,8 @@ void TestCppClient::historicalData(TickerId reqId, const Bar &bar)
 
         old_fast_line = fast_line;
         old_slow_line = slow_line;
+        old_macd = last_macd;
+        last_macd = macd;
 
         // ++fast_tail;
         // fast_tail %= FAST_STEP;
@@ -1803,23 +1802,170 @@ void TestCppClient::historicalData(TickerId reqId, const Bar &bar)
                 slow_line = bar.close;
         }
         // std::cout << "The FAST EMA(8) is: " << fast_line << ", SLOW EMA(55) is: " << slow_line << ", Date: " << bar.time << std::endl;
+        macd = fast_line - slow_line;
 
         if (bar_count > 300)
         {
-                // std::cout << "Date: " << bar.time;
-                EMACrossTest(bar);
+                testEmaCross(bar);
+                // testMACD(bar);
         }
         previous_bar = current_bar;
-        current_bar  = bar;
+        current_bar = bar;
 }
 //! [historicaldata]
 
-//! [backTest]
-void TestCppClient::EMACrossTest(const Bar &bar)
+//! [testMACD]
+void TestCppClient::testMACD(const Bar &bar)
 {
-        quantity   = (int(total_value) / 5000) * 100000;
-        // commission = (int(total_value) * beishu / 100000) * 10;
-        commission = quantity / 10000;
+        // quantity = (int(total_value) * beishu / 10000) * 10000;
+        // commission = quantity / 10000;
+        if (1 == have_position)
+        {
+                if (bar.high > highest)
+                {
+                        highest = bar.high;
+                }
+                // 多单盈利超过设定值又回调一半则平仓
+                if ((highest - place_price) > stop && bar.close <= (highest + place_price) / 2)
+                {
+                        sel_price = (highest + place_price) / 2;
+                        have_position = 0;
+                        total_value += (sel_price - buy_price) * quantity;
+                        total_value -= commission;
+                        service_fee += commission;
+                        sel_price > buy_price ? win_count++ : los_count++;
+                        std::cout << std::fixed << std::setprecision(5) << bar.time << ", Stop long: " << sel_price << ", Account: " << total_value
+                                  << ", Service fee: " << service_fee << ", win: " << win_count << ", los: " << los_count << std::endl << std::endl;
+                }
+                // 多单未盈利直接止损
+                if ((bar.low - place_price) <= -stop)
+                {
+                        sel_price = place_price - stop;
+                        have_position = 0;
+                        total_value += (sel_price - buy_price) * quantity;
+                        total_value -= commission;
+                        service_fee += commission;
+                        sel_price > buy_price ? win_count++ : los_count++;
+                        std::cout << bar.time << ", STPLOSLNG: " << sel_price << ", Account: " << total_value << ", Service fee: " << service_fee
+                                  << ", Win: " << win_count << ", Los: " << los_count << std::endl << std::endl;
+                }
+        }
+        else if (-1 == have_position)
+        {
+                if (bar.low < lowest)
+                {
+                        lowest = bar.low;
+                }
+                // 空单盈利超过设定值又回调一半则平仓
+                if ((lowest - place_price) < -stop && bar.close >= (lowest + place_price) / 2)
+                {
+                        buy_price = (lowest + place_price) / 2;
+                        have_position = 0;
+                        total_value += (sel_price - buy_price) * quantity;
+                        total_value -= commission;
+                        service_fee += commission;
+                        sel_price > buy_price ? win_count++ : los_count++;
+                        std::cout << bar.time << ", STOP SHOT: " << buy_price << ", Account: " << total_value << ", Service fee: " << service_fee
+                                  << ", Win: " << win_count << ", Los: " << los_count << std::endl << std::endl;
+                }
+                // 空单未盈利直接止损
+                if ((bar.high - place_price) >= stop)
+                {
+                        buy_price = place_price + stop;
+                        have_position = 0;
+                        total_value += (sel_price - buy_price) * quantity;
+                        total_value -= commission;
+                        service_fee += commission;
+                        sel_price > buy_price ? win_count++ : los_count++;
+                        std::cout << bar.time << ", STPLOSHOT: " << buy_price << ", Account: " << total_value << ", Service fee: " << service_fee
+                                  << ", Win: " << win_count << ", Los: " << los_count << std::endl << std::endl;
+                }
+        }
+
+        // MACD减变增
+        if (old_macd > last_macd && last_macd <= macd)
+        {}
+        {
+                if (0 == have_position)
+                {
+                        quantity = (int(total_value) * beishu / 10000) * 10000;
+                        commission = quantity / 10000;
+                        buy_price = bar.close;
+                        place_price = bar.close;
+                        highest = bar.close;
+                        have_position = 1;
+                        std::cout << bar.time << ", OPEN LONG: " << buy_price << ", Account: " << total_value << ", Quantity: " << quantity
+                                  << ", Service fee: " << service_fee << ", OldMACD: " << old_macd << ", last_MACD: " << last_macd << ", MACD: "
+                                  << macd << std::endl;
+                        std::cout << bar.time << ", Open: " << bar.open << ", High: " << bar.high << ", Low: " << bar.low << ", Close: " << bar.close
+                                  << std::endl;
+                }
+                else if (-1 == have_position)
+                {
+                        buy_price = bar.close;
+                        have_position = 0;
+                        total_value += (sel_price - buy_price) * quantity;
+                        service_fee += commission;
+                        sel_price > buy_price ? win_count++ : los_count++;
+                        std::cout << bar.time << ", CLOS SHOT: " << buy_price << ", Account: " << total_value << ", Service fee: " << service_fee
+                                  << ", Win: " << win_count << ", Los: " << los_count << std::endl << std::endl;
+
+                        quantity = (int(total_value) * beishu / 10000) * 10000;
+                        commission = quantity / 10000;
+                        buy_price = bar.close;
+                        place_price = bar.close;
+                        highest = bar.close;
+                        have_position = 1;
+                        // std::cout << bar.time << ", OPEN LONG: " << buy_price << ", Account: " << total_value << ", Quantity: " << quantity
+                        //           << ", Service fee: " << service_fee << std::endl;
+                        std::cout << bar.time << ", OPEN LONG: " << buy_price << ", Account: " << total_value << ", Quantity: " << quantity
+                                  << ", Service fee: " << service_fee << ", OldMACD: " << old_macd << ", last_MACD: " << last_macd << ", MACD: "
+                                  << macd << std::endl;
+                        std::cout << bar.time << ", Open: " << bar.open << ", High: " << bar.high << ", Low: " << bar.low << ", Close: " << bar.close
+                                  << std::endl;
+                }
+        }
+        // MACD增变减
+        if (old_macd <= last_macd && last_macd > macd)
+        {
+                if (0 == have_position)
+                {
+                        quantity = (int(total_value) * beishu / 10000) * 10000;
+                        commission = quantity / 10000;
+                        sel_price = bar.close;
+                        place_price = bar.close;
+                        lowest = bar.close;
+                        have_position = -1;
+                        std::cout << bar.time << ", OPEN SHOT: " << buy_price << ", Account: " << total_value << ", Quantity: " << quantity
+                                  << ", Service fee: " << service_fee << std::endl;
+                }
+                else if (1 == have_position)
+                {
+                        sel_price = bar.close;
+                        have_position = 0;
+                        total_value += (sel_price - buy_price) * quantity;
+                        total_value -= commission;
+                        service_fee += commission;
+                        sel_price > buy_price ? win_count++ : los_count++;
+                        std::cout << bar.time << ", CLOS LONG: " << sel_price << ", Account: " << total_value << ", Service fee: " << service_fee
+                                  << ", Win: " << win_count << ", Los: " << los_count << std::endl << std::endl;
+
+                        quantity = (int(total_value) * beishu / 10000) * 10000;
+                        commission = quantity / 10000;
+                        sel_price = bar.close;
+                        place_price = bar.close;
+                        lowest = bar.close;
+                        have_position = -1;
+                        std::cout << bar.time << ", OPEN SHOT: " << sel_price << ", Account: " << total_value << ", Quantity: " << quantity
+                                  << ", Service fee: " << service_fee << std::endl;
+                }
+        }
+}
+//! [testMACD]
+
+//! [testEmaCross]
+void TestCppClient::testEmaCross(const Bar &bar)
+{
         if (1 == have_position) //已有多单
         {
                 if (bar.high > highest)
@@ -1827,29 +1973,29 @@ void TestCppClient::EMACrossTest(const Bar &bar)
                         highest = bar.high;
                 }
                 // 多单盈利超过设定值又回调一半则平仓
-                if ((highest - place_buy_position_price) > stop && bar.close <= (highest + place_buy_position_price) / 2)
+                if ((highest - place_price) > stop && bar.close <= (highest + place_price) / 2)
                 {
-                        sel_price     = (highest + place_buy_position_price) / 2;
+                        sel_price = (highest + place_price) / 2;
                         have_position = 0;
                         total_value += (sel_price - buy_price) * quantity;
                         total_value -= commission;
                         service_fee += commission;
                         sel_price > buy_price ? win_count++ : los_count++;
-                        std::cout << std::fixed << std::setprecision(5) << bar.time << ", Stop long: " << sel_price << ", Total value: "
-                                  << total_value << ", Service fee: " << service_fee << ", win: " << win_count << ", los: " << los_count << std::endl;
-                        std::cout << bar.time << ", Open: " << bar.open << ", High: " << bar.high << ", Low: " << bar.low << ", Close: " << bar.close
-                                  << std::endl << std::endl;
+                        std::cout << std::fixed << std::setprecision(5) << bar.time << ", Stop long: " << sel_price << ", Account: " << total_value
+                                  << ", Service fee: " << service_fee << ", win: " << win_count << ", los: " << los_count << std::endl << std::endl;
+                        // std::cout << bar.time << ", Open: " << bar.open << ", High: " << bar.high << ", Low: " << bar.low << ", Close: " << bar.close
+                        //           << std::endl << std::endl;
                 }
-                if ((bar.low - place_buy_position_price) <= -stop)
+                if ((bar.low - place_price) <= -stop)
                 {
-                        sel_price     = place_buy_position_price - stop;
+                        sel_price = place_price - stop;
                         have_position = 0;
                         total_value += (sel_price - buy_price) * quantity;
                         total_value -= commission;
                         service_fee += commission;
                         sel_price > buy_price ? win_count++ : los_count++;
-                        std::cout << bar.time << ", Stop loss long: " << sel_price << ", Total value: " << total_value << ", Service fee: "
-                                  << service_fee << ", Win: " << win_count << ", Los: " << los_count << std::endl << std::endl;
+                        std::cout << bar.time << ", Stop loss long: " << sel_price << ", Account: " << total_value << ", Service fee: " << service_fee
+                                  << ", Win: " << win_count << ", Los: " << los_count << std::endl << std::endl;
                 }
         }
         else if (-1 == have_position) //已有空单
@@ -1859,26 +2005,27 @@ void TestCppClient::EMACrossTest(const Bar &bar)
                         lowest = bar.low;
                 }
                 // 空单盈利超过设定值又回调一半则平仓
-                if ((lowest - place_sel_position_price) < -stop && bar.close >= (lowest + place_sel_position_price) / 2)
+                if ((lowest - place_price) < -stop && bar.close >= (lowest + place_price) / 2)
                 {
-                        buy_price     = (lowest + place_sel_position_price) / 2;
+                        buy_price = (lowest + place_price) / 2;
                         have_position = 0;
                         total_value += (sel_price - buy_price) * quantity;
                         total_value -= commission;
                         service_fee += commission;
                         sel_price > buy_price ? win_count++ : los_count++;
-                        std::cout << bar.time << ", Stop short: " << buy_price << ", Total value: " << total_value << ", Service fee: " << service_fee
+                        std::cout << bar.time << ", Stop short: " << buy_price << ", Account: " << total_value << ", Service fee: " << service_fee
                                   << ", Win: " << win_count << ", Los: " << los_count << std::endl << std::endl;
                 }
-                if ((bar.high - place_sel_position_price) >= stop)
+                // 空单未盈利直接止损
+                if ((bar.high - place_price) >= stop)
                 {
-                        buy_price     = place_sel_position_price + stop;
+                        buy_price = place_price + stop;
                         have_position = 0;
                         total_value += (sel_price - buy_price) * quantity;
                         total_value -= commission;
                         service_fee += commission;
                         sel_price > buy_price ? win_count++ : los_count++;
-                        std::cout << bar.time << ", Stop loss short: " << buy_price << ", Total value: " << total_value << ", Service fee: "
+                        std::cout << bar.time << ", Stop loss short: " << buy_price << ", Account: " << total_value << ", Service fee: "
                                   << service_fee << ", Win: " << win_count << ", Los: " << los_count << std::endl << std::endl;
                 }
         }
@@ -1886,67 +2033,73 @@ void TestCppClient::EMACrossTest(const Bar &bar)
         {
                 if (0 == have_position)
                 {
-                        buy_price                = bar.close;
-                        place_buy_position_price = fast_line;
-                        highest                  = bar.close;
-                        have_position            = 1;
-                        std::cout << bar.time << ", Open long: " << buy_price << ", Total value: " << total_value << ", Service fee: " << service_fee
-                                  << std::endl;
-                        std::cout << bar.time << ", Open: " << bar.open << ", High: " << bar.high << ", Low: " << bar.low << ", Close: " << bar.close
-                                  << std::endl;
+                        buy_price = bar.close;
+                        place_price = fast_line;
+                        highest = bar.close;
+                        have_position = 1;
+                        quantity = (int(total_value) * beishu / 10000) * 10000;
+                        commission = quantity / 10000;
+                        std::cout << bar.time << ", Open long: " << buy_price << ", Account: " << total_value << ", Quantity: " << quantity
+                                  << ", Service fee: " << service_fee << std::endl;
                 }
                 else if (-1 == have_position)
                 {
-                        buy_price     = bar.close;
+                        buy_price = bar.close;
                         have_position = 0;
                         total_value += (sel_price - buy_price) * quantity;
                         total_value -= commission;
                         service_fee += commission;
                         sel_price > buy_price ? win_count++ : los_count++;
-                        std::cout << bar.time << ", Close short: " << buy_price << ", Total value: " << total_value << ", Service fee: "
-                                  << service_fee << ", Win: " << win_count << ", Los: " << los_count << std::endl << std::endl;
-                        buy_price                = bar.close;
-                        place_buy_position_price = fast_line;
-                        highest                  = bar.close;
-                        have_position            = 1;
-                        std::cout << bar.time << ", Open long: " << buy_price << ", Total value: " << total_value << ", Service fee: " << service_fee
-                                  << std::endl;
-                        std::cout << bar.time << ", Open: " << bar.open << ", High: " << bar.high << ", Low: " << bar.low << ", Close: " << bar.close
-                                  << std::endl;
+                        std::cout << bar.time << ", Close short: " << buy_price << ", Account: " << total_value << ", Service fee: " << service_fee
+                                  << ", Win: " << win_count << ", Los: " << los_count << std::endl << std::endl;
+                        buy_price = bar.close;
+                        place_price = fast_line;
+                        highest = bar.close;
+                        have_position = 1;
+                        quantity = (int(total_value) * beishu / 10000) * 10000;
+                        commission = quantity / 10000;
+                        std::cout << bar.time << ", Open long: " << buy_price << ", Account: " << total_value << ", Quantity: " << quantity
+                                  << ", Service fee: " << service_fee << std::endl;
+                        // std::cout << bar.time << ", Open: " << bar.open << ", High: " << bar.high << ", Low: " << bar.low << ", Close: " << bar.close
+                        //           << std::endl;
                 }
         }
         if (old_fast_line >= old_slow_line && fast_line < slow_line) // 快线下穿慢线
         {
                 if (0 == have_position)
                 {
-                        sel_price                = bar.close;
-                        place_sel_position_price = fast_line;
-                        lowest                   = bar.close;
-                        have_position            = -1;
-                        std::cout << bar.time << ", Open short: " << sel_price << ", Total value: " << total_value << ", Service fee: " << service_fee
-                                  << std::endl;
+                        sel_price = bar.close;
+                        place_price = fast_line;
+                        lowest = bar.close;
+                        have_position = -1;
+                        quantity = (int(total_value) * beishu / 10000) * 10000;
+                        commission = quantity / 10000;
+                        std::cout << bar.time << ", Open short: " << sel_price << ", Account: " << total_value << ", Quantity: " << quantity
+                                  << ", Service fee: " << service_fee << std::endl;
                 }
                 else if (1 == have_position)
                 {
-                        sel_price     = bar.close;
+                        sel_price = bar.close;
                         have_position = 0;
                         total_value += (sel_price - buy_price) * quantity;
                         total_value -= commission;
                         service_fee += commission;
                         sel_price > buy_price ? win_count++ : los_count++;
-                        std::cout << bar.time << ", Close long: " << sel_price << ", Total value: " << total_value << ", Service fee: " << service_fee
+                        std::cout << bar.time << ", Close long: " << sel_price << ", Account: " << total_value << ", Service fee: " << service_fee
                                   << ", Win: " << win_count << ", Los: " << los_count << std::endl << std::endl;
-                        sel_price                = bar.close;
-                        place_sel_position_price = fast_line;
-                        lowest                   = bar.close;
-                        have_position            = -1;
-                        std::cout << bar.time << ", Open short: " << sel_price << ", Total value: " << total_value << ", Service fee: " << service_fee
-                                  << std::endl;
+                        sel_price = bar.close;
+                        place_price = fast_line;
+                        lowest = bar.close;
+                        have_position = -1;
+                        quantity = (int(total_value) * beishu / 10000) * 10000;
+                        commission = quantity / 10000;
+                        std::cout << bar.time << ", Open short: " << sel_price << ", Account: " << total_value << ", Quantity: " << quantity
+                                  << ", Service fee: " << service_fee << std::endl;
                 }
         }
         // std::cout << "Total account value is: " << total_value << ", Service fee is: " << service_fee << ", Date: " << bar.time << std::endl;
 }
-//! [backTest]
+//! [testEmaCross]
 
 //! [historicaldataend]
 void TestCppClient::historicalDataEnd(int reqId, const std::string &startDateStr, const std::string &endDateStr)
@@ -2179,7 +2332,7 @@ void TestCppClient::symbolSamples(int reqId, const std::vector<ContractDescripti
 
         for (unsigned int i = 0; i < contractDescriptions.size(); i++)
         {
-                Contract                 contract           = contractDescriptions[i].contract;
+                Contract contract = contractDescriptions[i].contract;
                 std::vector<std::string> derivativeSecTypes = contractDescriptions[i].derivativeSecTypes;
                 printf("Contract (%u): %ld %s %s %s %s, ", i, contract.conId, contract.symbol.c_str(), contract.secType.c_str(),
                        contract.primaryExchange.c_str(), contract.currency.c_str());
@@ -2278,7 +2431,7 @@ void TestCppClient::newsArticle(int requestId, int articleType, const std::strin
                 path = s + std::string("/MST$06f53098.pdf");
 #endif
                 std::vector<std::uint8_t> bytes = Utils::base64_decode(articleText);
-                std::ofstream             outfile(path, std::ios::out | std::ios::binary);
+                std::ofstream outfile(path, std::ios::out | std::ios::binary);
                 outfile.write((const char *) bytes.data(), bytes.size());
                 printf("Binary/pdf article was saved to: %s\n", path.c_str());
         }
@@ -2336,8 +2489,8 @@ void TestCppClient::historicalDataUpdate(TickerId reqId, const Bar &bar)
                 //           << ", Low: " << bar.low << ", Close: " << bar.close << std::endl;
                 old_fast_line = fast_line;
                 old_slow_line = slow_line;
-                fast_line     = fast_alpha * current_bar.close + fast_beta * old_fast_line;
-                slow_line     = slow_alpha * current_bar.close + slow_beta * old_slow_line;
+                fast_line = fast_alpha * current_bar.close + fast_beta * old_fast_line;
+                slow_line = slow_alpha * current_bar.close + slow_beta * old_slow_line;
                 std::cout << "The FAST EMA(8) is: " << fast_line << ", SLOW EMA(55) is: " << slow_line << std::endl;
                 // raw_price[++tail] = bar.close;
                 // previous_bar = current_bar;
