@@ -572,12 +572,15 @@ void TestCppClient::historicalDataRequests()
 
         std::time(&rawtime);
         timeinfo = std::localtime(&rawtime);
+        // timeinfo=std::localtime("20160127 23:59:59");
         std::strftime(queryTime, 80, "%Y%m%d %H:%M:%S", timeinfo);
 
         // m_pClient->reqHistoricalData(4003, ContractSamples::XAUUSD(), "", "2 Y", "15 mins", "MIDPOINT", 1, 1, true, TagValueListSPtr());
         // m_pClient->reqHistoricalData(4001, ContractSamples::GbpUsdFx(), "", "2 Y", "15 mins", "MIDPOINT", 1, 1, true, TagValueListSPtr());
-        // m_pClient->reqHistoricalData(4002, ContractSamples::EurUsdFx(), "", "2 Y", "15 mins", "MIDPOINT", 1, 1, true, TagValueListSPtr());
-        m_pClient->reqHistoricalData(4002, ContractSamples::EurUsdFx(), "", "2 W", "1 min", "MIDPOINT", 1, 1, true, TagValueListSPtr());
+        m_pClient->reqHistoricalData(4002, ContractSamples::EurUsdFx(), "", "2 Y", "15 mins", "MIDPOINT", 1, 1, true, TagValueListSPtr());
+        // m_pClient->reqHistoricalData(4002, ContractSamples::EurUsdFx(), "", "2 W", "1 min", "MIDPOINT", 1, 1, true, TagValueListSPtr());
+        // m_pClient->reqHistoricalData(4001, ContractSamples::EurUsdFx(), "20160729 23:45:00", "2 Y", "15 mins", "MIDPOINT", 1, 1, false, TagValueListSPtr());
+        // m_pClient->reqHistoricalData(4001, ContractSamples::EurUsdFx(), "2014", "1 Y", "15 mins", "MIDPOINT", 1, 1, false, TagValueListSPtr());
         // m_pClient->reqHistoricalData(4002, ContractSamples::AudUsdFx(), "", "2 Y", "15 mins", "MIDPOINT", 1, 1, true, TagValueListSPtr());
         //! [reqhistoricaldata]
         // m_pClient->reqHistoricalData(4001, ContractSamples::EurUsdFx(), queryTime, "1 M", "1 hour", "MIDPOINT", 1, 1, false, TagValueListSPtr());
