@@ -576,7 +576,7 @@ void TestCppClient::historicalDataRequests()
 
         // m_pClient->reqHistoricalData(4003, ContractSamples::XAUUSD(), "", "2 Y", "15 mins", "MIDPOINT", 1, 1, true, TagValueListSPtr());
         // m_pClient->reqHistoricalData(4001, ContractSamples::GbpUsdFx(), "", "2 Y", "15 mins", "MIDPOINT", 1, 1, true, TagValueListSPtr());
-        m_pClient->reqHistoricalData(4002, ContractSamples::EurUsdFx(), "", "2 Y", "15 mins", "MIDPOINT", 1, 1, true, TagValueListSPtr());
+        m_pClient->reqHistoricalData(4002, ContractSamples::EurUsdFx(), "", "2 W", "15 mins", "MIDPOINT", 1, 1, true, TagValueListSPtr());
         // m_pClient->reqHistoricalData(4002, ContractSamples::AudUsdFx(), "", "2 Y", "15 mins", "MIDPOINT", 1, 1, true, TagValueListSPtr());
         //! [reqhistoricaldata]
         // m_pClient->reqHistoricalData(4001, ContractSamples::EurUsdFx(), queryTime, "1 M", "1 hour", "MIDPOINT", 1, 1, false, TagValueListSPtr());
@@ -1981,6 +1981,10 @@ void TestCppClient::testEmaCross(const Bar &bar)
                         total_value -= commission;
                         service_fee += commission;
                         sel_price > buy_price ? win_count++ : los_count++;
+                        std::cout << "Highest: " << highest << ", place_price: " << place_price << ", sel_price: " << sel_price << ", buy_price: "
+                                  << buy_price << std::endl;
+                        std::cout << bar.time << ", Open: " << bar.open << ", High: " << bar.high << ", Low: " << bar.low << ", Close: " << bar.close
+                                  << std::endl;
                         std::cout << std::fixed << std::setprecision(5) << bar.time << ", Stop long: " << sel_price << ", Account: " << total_value
                                   << ", Service fee: " << service_fee << ", win: " << win_count << ", los: " << los_count << std::endl << std::endl;
                         // std::cout << bar.time << ", Open: " << bar.open << ", High: " << bar.high << ", Low: " << bar.low << ", Close: " << bar.close
@@ -1994,6 +1998,10 @@ void TestCppClient::testEmaCross(const Bar &bar)
                         total_value -= commission;
                         service_fee += commission;
                         sel_price > buy_price ? win_count++ : los_count++;
+                        std::cout << "Highest: " << highest << ", place_price: " << place_price << ", sel_price: " << sel_price << ", buy_price: "
+                                  << buy_price << std::endl;
+                        std::cout << bar.time << ", Open: " << bar.open << ", High: " << bar.high << ", Low: " << bar.low << ", Close: " << bar.close
+                                  << std::endl;
                         std::cout << bar.time << ", Stop loss long: " << sel_price << ", Account: " << total_value << ", Service fee: " << service_fee
                                   << ", Win: " << win_count << ", Los: " << los_count << std::endl << std::endl;
                 }
@@ -2013,6 +2021,10 @@ void TestCppClient::testEmaCross(const Bar &bar)
                         total_value -= commission;
                         service_fee += commission;
                         sel_price > buy_price ? win_count++ : los_count++;
+                        std::cout << "Lowest: " << lowest << ", place_price: " << place_price << ", sel_price: " << sel_price << ", buy_price: "
+                                  << buy_price << std::endl;
+                        std::cout << bar.time << ", Open: " << bar.open << ", High: " << bar.high << ", Low: " << bar.low << ", Close: " << bar.close
+                                  << std::endl;
                         std::cout << bar.time << ", Stop short: " << buy_price << ", Account: " << total_value << ", Service fee: " << service_fee
                                   << ", Win: " << win_count << ", Los: " << los_count << std::endl << std::endl;
                 }
@@ -2025,6 +2037,11 @@ void TestCppClient::testEmaCross(const Bar &bar)
                         total_value -= commission;
                         service_fee += commission;
                         sel_price > buy_price ? win_count++ : los_count++;
+                        std::cout << "bar.high - place_price: " << bar.high - place_price << std::endl;
+                        std::cout << "Lowest: " << lowest << ", place_price: " << place_price << ", sel_price: " << sel_price << ", buy_price: "
+                                  << buy_price << std::endl;
+                        std::cout << bar.time << ", Open: " << bar.open << ", High: " << bar.high << ", Low: " << bar.low << ", Close: " << bar.close
+                                  << std::endl;
                         std::cout << bar.time << ", Stop loss short: " << buy_price << ", Account: " << total_value << ", Service fee: "
                                   << service_fee << ", Win: " << win_count << ", Los: " << los_count << std::endl << std::endl;
                 }

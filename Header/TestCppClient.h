@@ -298,7 +298,7 @@ private:
         double total_value = 9600;
         int quantity = 0;
         int commission = 0;
-        double stop = 0.0019;
+        double stop = 0.0016;
 
         int win_count = 0;
         int los_count = 0;
