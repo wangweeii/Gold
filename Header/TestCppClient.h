@@ -135,7 +135,9 @@ public:
         bool isConnected() const;
 
 private:
-        void EMACrossTest(const Bar &bar);
+        void testMACD(const Bar &bar);
+
+        void testEmaCross(const Bar &bar);
 
         double computeEMA(double *price, int tail, const int step);
 
@@ -278,12 +280,14 @@ private:
         double slow_line = 0;
         double old_fast_line = 0;
         double old_slow_line = 0;
+        double macd = 0;
+        double last_macd = 0;
+        double old_macd = 0;
 
         int have_position = 0;
         double buy_price = 0;
         double sel_price = 0;
-        double place_buy_position_price = 0;
-        double place_sel_position_price = 0;
+        double place_price = 0;
         double highest = 0;
         double lowest = 0;
 
@@ -293,8 +297,8 @@ private:
         int beishu = 20;
         double total_value = 9600;
         int quantity = 0;
-        int commission = 40;
-        double stop = 0.0012;
+        int commission = 0;
+        double stop = 0.0019;
 
         int win_count = 0;
         int los_count = 0;
