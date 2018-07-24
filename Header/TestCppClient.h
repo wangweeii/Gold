@@ -257,19 +257,22 @@ private:
         bool        m_extraAuth;
         std::string m_bboExchange;
 
+        unsigned int fast_step = 8;
+        unsigned int slow_step = 55;
+
         double raw_price[10000];
-        int    tail = -1;
+        int    tail            = -1;
 
-        double fast_price[FAST_STEP] = {0};
-        int    fast_tail             = -1;
+        // double fast_price[FAST_STEP] = {0};
+        // int    fast_tail             = -1;
 
-        double slow_price[SLOW_STEP] = {0};
-        int    slow_tail             = -1;
+        // double slow_price[SLOW_STEP] = {0};
+        // int    slow_tail             = -1;
 
         Bar previous_bar, current_bar;
 
-        double fast_alpha = 2.0 / (FAST_STEP + 1);
-        double slow_alpha = 2.0 / (SLOW_STEP + 1);
+        double fast_alpha = 2.0 / (fast_step + 1);
+        double slow_alpha = 2.0 / (slow_step + 1);
         double fast_beta  = 1 - fast_alpha;
         double slow_beta  = 1 - slow_alpha;
 
@@ -300,7 +303,7 @@ private:
         double total_value = 9600;
         int    quantity    = 0;
         int    commission  = 0;
-        double stop        = 0.0006;
+        double stop        = 0.0016;
 
         int win_count = 0;
         int los_count = 0;
