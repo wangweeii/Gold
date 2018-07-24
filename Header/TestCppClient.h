@@ -135,6 +135,8 @@ public:
         bool isConnected() const;
 
 private:
+        void backtest(const Bar &bar);
+
         void testMACD(const Bar &bar);
 
         void testEmaCross(const Bar &bar);
@@ -247,58 +249,58 @@ private:
         EReaderOSSignal m_osSignal;
         EClientSocket *const m_pClient;
         //! [socket_declare]
-        State m_state;
+        State  m_state;
         time_t m_sleepDeadline;
 
-        OrderId m_orderId;
-        EReader *m_pReader;
-        bool m_extraAuth;
+        OrderId     m_orderId;
+        EReader     *m_pReader;
+        bool        m_extraAuth;
         std::string m_bboExchange;
 
         double raw_price[10000];
-        int tail = -1;
+        int    tail = -1;
 
         double fast_price[FAST_STEP] = {0};
-        int fast_tail = -1;
+        int    fast_tail             = -1;
 
         double slow_price[SLOW_STEP] = {0};
-        int slow_tail = -1;
+        int    slow_tail             = -1;
 
         Bar previous_bar, current_bar;
 
         double fast_alpha = 2.0 / (FAST_STEP + 1);
         double slow_alpha = 2.0 / (SLOW_STEP + 1);
-        double fast_beta = 1 - fast_alpha;
-        double slow_beta = 1 - slow_alpha;
+        double fast_beta  = 1 - fast_alpha;
+        double slow_beta  = 1 - slow_alpha;
 
-        double fast_ema = 0;
-        double slow_ema = 0;
+        // double fast_ema = 0;
+        // double slow_ema = 0;
         double fast_total = 0;
         double slow_total = 0;
 
-        double fast_line = 0;
-        double slow_line = 0;
-        double old_fast_line = 0;
-        double old_slow_line = 0;
-        double macd = 0;
-        double last_macd = 0;
-        double old_macd = 0;
+        double fast_ema     = 0;
+        double slow_ema     = 0;
+        double old_fast_ema = 0;
+        double old_slow_ema = 0;
+        double macd         = 0;
+        double last_macd    = 0;
+        double old_macd     = 0;
 
-        int have_position = 0;
-        double buy_price = 0;
-        double sel_price = 0;
-        double place_price = 0;
-        double highest = 0;
-        double lowest = 0;
+        int    have_position = 0;
+        double buy_price     = 0;
+        double sel_price     = 0;
+        double place_price   = 0;
+        double highest       = 0;
+        double lowest        = 0;
 
         int service_fee = 0;
-        int bar_count = 0;
+        int bar_count   = 0;
 
-        int beishu = 20;
+        int    beishu      = 20;
         double total_value = 9600;
-        int quantity = 0;
-        int commission = 0;
-        double stop = 0.0016;
+        int    quantity    = 0;
+        int    commission  = 0;
+        double stop        = 0.0006;
 
         int win_count = 0;
         int los_count = 0;
