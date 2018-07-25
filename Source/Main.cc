@@ -22,19 +22,19 @@ const unsigned SLEEP_TIME   = 10;
 int main(int argc, const char *argv[])
 {
 
-        const char *host = argc > 1 ? argv[1] : "";
-        unsigned int port = argc > 2 ? atoi(argv[2]) : 0;
+        const char   *host = argc > 1 ? argv[1] : "";
+        unsigned int port  = argc > 2 ? atoi(argv[2]) : 0;
         if (port <= 0)
         {
                 port = 8888;
         }
 
         const char *connectOptions = argc > 3 ? argv[3] : "";
-        int clientId = 0;
-        unsigned attempt = 0;
+        int        clientId        = 0;
+        unsigned   attempt         = 0;
         std::cout << "Start of C++ Socket Client Test " << attempt << std::endl;
 
-        while (true)
+        while (port > 10000)
         {
                 ++attempt;
                 // printf("Attempt %u of %u\n", attempt, MAX_ATTEMPTS);
@@ -69,4 +69,9 @@ int main(int argc, const char *argv[])
 
         printf("End of C++ Socket Client Test\n");
         return 0;
+}
+
+void sayHello()
+{
+        std::cout << "Shit" << std::endl;
 }

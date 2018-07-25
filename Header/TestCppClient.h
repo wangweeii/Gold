@@ -265,7 +265,7 @@ private:
         Bar         source[6000];
         std::string current_time;
         std::string tmp_time;
-        double      raw_price[10000];
+        double      raw_price[40000];
         int         tail       = -1;
 
         // double fast_price[FAST_STEP] = {0};
