@@ -19,9 +19,19 @@
 const unsigned MAX_ATTEMPTS = 50;
 const unsigned SLEEP_TIME   = 10;
 
+void processMsgs(TestCppClient *client)
+{
+        // std::cout << "Shit" << std::endl;
+        while (client->isConnected())
+        {
+                // std::cout << "connected." << std::endl;
+                client->processMessages();
+        }
+}
+
 int main(int argc, const char *argv[])
 {
-
+        std::string  command;
         const char   *host = argc > 1 ? argv[1] : "";
         unsigned int port  = argc > 2 ? atoi(argv[2]) : 0;
         if (port <= 0)
@@ -34,7 +44,29 @@ int main(int argc, const char *argv[])
         unsigned   attempt         = 0;
         std::cout << "Start of C++ Socket Client Test " << attempt << std::endl;
 
-        while (port > 10000)
+        TestCppClient client;
+        client.connect(host, port, clientId);
+        std::this_thread::sleep_for(std::chrono::seconds(2));
+
+        client.historicalDataRequests();
+        std::thread t(processMsgs, &client);
+
+        while (true)
+        {
+                std::cin >> command;
+                if (command == "ema")
+                {
+                        client.computeEMA();
+                }
+                else if(command=="test")
+                {
+                        client.backtest();
+                }
+                else
+                { break; }
+        }
+
+        /*while (port > 1000)
         {
                 ++attempt;
                 // printf("Attempt %u of %u\n", attempt, MAX_ATTEMPTS);
@@ -53,6 +85,7 @@ int main(int argc, const char *argv[])
                 // std::this_thread::sleep_for(std::chrono::seconds(2));
 
                 client.historicalDataRequests();
+                // std::thread t(processMsgs, client);
 
                 while (client.isConnected())
                 {
@@ -65,13 +98,9 @@ int main(int argc, const char *argv[])
 
                 // printf("Sleeping %u seconds before next attempt\n", SLEEP_TIME);
                 std::this_thread::sleep_for(std::chrono::seconds(SLEEP_TIME));
-        }
+        }*/
 
         printf("End of C++ Socket Client Test\n");
         return 0;
 }
 
-void sayHello()
-{
-        std::cout << "Shit" << std::endl;
-}
