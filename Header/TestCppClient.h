@@ -134,12 +134,13 @@ public:
 
         bool isConnected() const;
 
-private:
         void computeEMA();
 
         void backtest();
 
         void testMACD(const Bar &bar);
+
+private:
 
         void testEmaCross(const Bar &bar);
 
@@ -262,10 +263,10 @@ private:
         unsigned int fast_step = 8;
         unsigned int slow_step = 55;
 
-        Bar         source[6000];
+        Bar         source[80000];
         std::string current_time;
         std::string tmp_time;
-        double      raw_price[40000];
+        double      raw_price[10000];
         int         tail       = -1;
 
         // double fast_price[FAST_STEP] = {0};
