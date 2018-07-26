@@ -258,8 +258,6 @@ private:
         double    fast[LENGTH];
         double    slow[LENGTH];
 
-        std::string current_time;
-
         unsigned int fast_step = 8;
         unsigned int slow_step = 55;
 

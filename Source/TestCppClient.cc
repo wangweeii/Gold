@@ -99,10 +99,14 @@ void TestCppClient::historicalDataRequests(int number)
 //! [historicaldata]
 void TestCppClient::historicalData(TickerId reqId, const Bar &bar)
 {
-        if (current_time < bar.time)
+        if (bar_count == -1)
         {
                 source[++bar_count] = &bar;
-                current_time = bar.time;
+        }
+        else if (source[bar_count]->time < bar.time)
+        {
+                source[++bar_count] = &bar;
+                // current_time = bar.time;
                 // std::cout << "HistoricalData. ReqId: " << reqId << ", Date: " << bar.time << ", Open: " << bar.open << ", High: " << bar.high
                 //           << ", Low: " << bar.low << ", Close: " << bar.close << std::endl;
         }
@@ -114,8 +118,8 @@ void TestCppClient::historicalDataEnd(int reqId, const std::string &startDateStr
 {
         // if (reqId == 5678)
         // {
-                std::cout << "HistoricalDataEnd. ReqId: " << reqId << " - Start Date: " << startDateStr << ", End Date: " << endDateStr << std::endl;
-                // computeEMA();
+        std::cout << "HistoricalDataEnd. ReqId: " << reqId << " - Start Date: " << startDateStr << ", End Date: " << endDateStr << std::endl;
+        // computeEMA();
         // }
 }
 //! [historicaldataend]
@@ -128,7 +132,7 @@ void TestCppClient::historicalDataUpdate(TickerId reqId, const Bar &bar)
                 return;
         }
 
-        if (current_time != bar.time)
+        if (source[bar_count]->time != bar.time)
         {
                 std::cout << "HistoricalUpdate. ReqId: " << reqId << ", Date: " << source[bar_count]->time << ", Open: " << source[bar_count]->open
                           << ", High: " << source[bar_count]->high << ", Low: " << source[bar_count]->low << ", Close: " << source[bar_count]->close
@@ -141,7 +145,7 @@ void TestCppClient::historicalDataUpdate(TickerId reqId, const Bar &bar)
                 slow[bar_count] = slow_ema;
                 std::cout << "The FAST EMA(8) is: " << fast_ema << ", SLOW EMA(55) is: " << slow_ema << std::endl;
                 source[++bar_count] = &bar;
-                current_time = bar.time;
+                // current_time = bar.time;
                 // std::cout << "HistoricalUpdate. ReqId: " << reqId << ", Date: " << bar.time << ", Open: " << bar.open << ", High: " << bar.high
                 //           << ", Low: " << bar.low << ", Close: " << bar.close << std::endl;
 
@@ -209,8 +213,8 @@ void TestCppClient::computeEMA()
         {
                 fast[i] = fast_alpha * source[i]->close + fast_beta * fast[i - 1];
                 slow[i] = slow_alpha * source[i]->close + slow_beta * slow[i - 1];
-                current_time = source[i]->time;
-                std::cout << current_time << ", FastEMA: " << fast[i] << ", SlowEMA: " << slow[i] << std::endl;
+
+                std::cout << source[i]->time << ", FastEMA: " << fast[i] << ", SlowEMA: " << slow[i] << std::endl;
         }
         std::cout << "EMA compute completed." << std::endl;
         backTest();
@@ -624,8 +628,8 @@ void TestCppClient::processMessages()
                 case ST_MARKETDATATYPE:marketDataType();
                         break;
                 case ST_MARKETDATATYPE_ACK:break;
-                // case ST_HISTORICALDATAREQUESTS:historicalDataRequests();
-                //         break;
+                        // case ST_HISTORICALDATAREQUESTS:historicalDataRequests();
+                        //         break;
                 case ST_HISTORICALDATAREQUESTS_ACK:break;
                 case ST_OPTIONSOPERATIONS:optionsOperations();
                         break;
