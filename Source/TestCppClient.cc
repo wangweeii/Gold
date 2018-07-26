@@ -96,6 +96,75 @@ void TestCppClient::historicalDataRequests(int number)
         m_state = ST_HISTORICALDATAREQUESTS_ACK;
 }
 
+void TestCppClient::orderOperations()
+{
+        /*** Requesting the next valid id ***/
+        //! [reqids]
+        //The parameter is always ignored.
+        m_pClient->reqIds(-1);
+        //! [reqids]
+        //! [reqallopenorders]
+        m_pClient->reqAllOpenOrders();
+        //! [reqallopenorders]
+        //! [reqautoopenorders]
+        m_pClient->reqAutoOpenOrders(true);
+        //! [reqautoopenorders]
+        //! [reqopenorders]
+        m_pClient->reqOpenOrders();
+        //! [reqopenorders]
+
+        /*** Placing/modifying an order - remember to ALWAYS increment the nextValidId after placing an order so it can be used for the next one! ***/
+        //! [order_submission]
+        m_pClient->placeOrder(m_orderId++, ContractSamples::USStock(), OrderSamples::LimitOrder("SELL", 1, 50));
+        //! [order_submission]
+
+        //m_pClient->placeOrder(m_orderId++, ContractSamples::OptionAtBox(), OrderSamples::Block("BUY", 50, 20));
+        //m_pClient->placeOrder(m_orderId++, ContractSamples::OptionAtBox(), OrderSamples::BoxTop("SELL", 10));
+        //m_pClient->placeOrder(m_orderId++, ContractSamples::FutureComboContract(), OrderSamples::ComboLimitOrder("SELL", 1, 1, false));
+        //m_pClient->placeOrder(m_orderId++, ContractSamples::StockComboContract(), OrderSamples::ComboMarketOrder("BUY", 1, false));
+        //m_pClient->placeOrder(m_orderId++, ContractSamples::OptionComboContract(), OrderSamples::ComboMarketOrder("BUY", 1, true));
+        //m_pClient->placeOrder(m_orderId++, ContractSamples::StockComboContract(), OrderSamples::LimitOrderForComboWithLegPrices("BUY", 1, std::vector<double>(10, 5), true));
+        //m_pClient->placeOrder(m_orderId++, ContractSamples::USStock(), OrderSamples::Discretionary("SELL", 1, 45, 0.5));
+        //m_pClient->placeOrder(m_orderId++, ContractSamples::OptionAtBox(), OrderSamples::LimitIfTouched("BUY", 1, 30, 34));
+        //m_pClient->placeOrder(m_orderId++, ContractSamples::USStock(), OrderSamples::LimitOnClose("SELL", 1, 34));
+        //m_pClient->placeOrder(m_orderId++, ContractSamples::USStock(), OrderSamples::LimitOnOpen("BUY", 1, 35));
+        //m_pClient->placeOrder(m_orderId++, ContractSamples::USStock(), OrderSamples::MarketIfTouched("BUY", 1, 35));
+        //m_pClient->placeOrder(m_orderId++, ContractSamples::USStock(), OrderSamples::MarketOnClose("SELL", 1));
+        //m_pClient->placeOrder(m_orderId++, ContractSamples::USStock(), OrderSamples::MarketOnOpen("BUY", 1));
+        //m_pClient->placeOrder(m_orderId++, ContractSamples::USStock(), OrderSamples::MarketOrder("SELL", 1));
+        //m_pClient->placeOrder(m_orderId++, ContractSamples::USStock(), OrderSamples::MarketToLimit("BUY", 1));
+        //m_pClient->placeOrder(m_orderId++, ContractSamples::OptionAtIse(), OrderSamples::MidpointMatch("BUY", 1));
+        //m_pClient->placeOrder(m_orderId++, ContractSamples::USStock(), OrderSamples::Stop("SELL", 1, 34.4));
+        //m_pClient->placeOrder(m_orderId++, ContractSamples::USStock(), OrderSamples::StopLimit("BUY", 1, 35, 33));
+        //m_pClient->placeOrder(m_orderId++, ContractSamples::USStock(), OrderSamples::StopWithProtection("SELL", 1, 45));
+        //m_pClient->placeOrder(m_orderId++, ContractSamples::USStock(), OrderSamples::SweepToFill("BUY", 1, 35));
+        //m_pClient->placeOrder(m_orderId++, ContractSamples::USStock(), OrderSamples::TrailingStop("SELL", 1, 0.5, 30));
+        //m_pClient->placeOrder(m_orderId++, ContractSamples::USStock(), OrderSamples::TrailingStopLimit("BUY", 1, 2, 5, 50));
+
+        //! [place order with cashQty]
+        m_pClient->placeOrder(m_orderId++, ContractSamples::USStockAtSmart(), OrderSamples::LimitOrderWithCashQty("BUY", 1, 30, 5000));
+        //! [place order with cashQty]
+
+        std::this_thread::sleep_for(std::chrono::seconds(1));
+
+        /*** Cancel one order ***/
+        //! [cancelorder]
+        m_pClient->cancelOrder(m_orderId - 1);
+        //! [cancelorder]
+
+        /*** Cancel all orders for all accounts ***/
+        //! [reqglobalcancel]
+        m_pClient->reqGlobalCancel();
+        //! [reqglobalcancel]
+
+        /*** Request the day's executions ***/
+        //! [reqexecutions]
+        m_pClient->reqExecutions(10001, ExecutionFilter());
+        //! [reqexecutions]
+
+        m_state = ST_ORDEROPERATIONS_ACK;
+}
+
 //! [historicaldata]
 void TestCppClient::historicalData(TickerId reqId, const Bar &bar)
 {
@@ -137,19 +206,13 @@ void TestCppClient::historicalDataUpdate(TickerId reqId, const Bar &bar)
                 std::cout << "HistoricalUpdate. ReqId: " << reqId << ", Date: " << source[bar_count]->time << ", Open: " << source[bar_count]->open
                           << ", High: " << source[bar_count]->high << ", Low: " << source[bar_count]->low << ", Close: " << source[bar_count]->close
                           << std::endl;
-                old_fast_ema = fast[bar_count - 1];
-                old_slow_ema = slow[bar_count - 1];
-                fast_ema     = fast_alpha * source[bar_count]->close + fast_beta * old_fast_ema;
-                slow_ema     = slow_alpha * source[bar_count]->close + slow_beta * old_slow_ema;
-                fast[bar_count] = fast_ema;
-                slow[bar_count] = slow_ema;
-                std::cout << "The FAST EMA(8) is: " << fast_ema << ", SLOW EMA(55) is: " << slow_ema << std::endl;
+                fast[bar_count] = fast_alpha * source[bar_count]->close + fast_beta * fast[bar_count - 1];
+                slow[bar_count] = slow_alpha * source[bar_count]->close + slow_beta * slow[bar_count - 1];
+                std::cout << "The FAST EMA(8) is: " << fast[bar_count] << ", SLOW EMA(55) is: " << slow[bar_count] << std::endl;
                 source[++bar_count] = &bar;
-                // current_time = bar.time;
-                // std::cout << "HistoricalUpdate. ReqId: " << reqId << ", Date: " << bar.time << ", Open: " << bar.open << ", High: " << bar.high
-                //           << ", Low: " << bar.low << ", Close: " << bar.close << std::endl;
 
-                if (old_fast_ema < old_slow_ema && fast_ema >= slow_ema) // 快线上穿慢线
+                // 快线上穿慢线
+                if (fast[bar_count - 1] < slow[bar_count - 1] && fast[bar_count] >= slow[bar_count])
                 {
                         if (0 == have_position)
                         {
@@ -167,7 +230,9 @@ void TestCppClient::historicalDataUpdate(TickerId reqId, const Bar &bar)
                                 //           << std::endl;
                         }
                 }
-                if (old_fast_ema >= old_slow_ema && fast_ema < slow_ema) // 快线下穿慢线
+
+                // 快线下穿慢线
+                if (fast[bar_count - 1] >= slow[bar_count - 1] && fast[bar_count] < slow[bar_count])
                 {
                         if (0 == have_position)
                         {
@@ -186,24 +251,84 @@ void TestCppClient::historicalDataUpdate(TickerId reqId, const Bar &bar)
         }
         else
         {
+                if (1 == have_position) //已有多单
+                {
+                        if (bar.high > highest)
+                        {
+                                highest = bar.high;
+                        }
+                        // 多单盈利超过设定值又回调一半则平仓
+                        if ((highest - place_price) > stop && bar.close <= (highest + place_price) / 2)
+                        {
+                                std::cout << std::fixed << std::setprecision(5) << bar.time << ", STOP LONG: " << sel_price << ", Account: " << total_value
+                                          << ", ServiceFee: " << service_fee << ", Win: " << win_count << ", Los: " << los_count << std::endl << std::endl;
+                                // std::cout << "Highest: " << highest << ", place_price: " << place_price << ", sel_price: " << sel_price << ", buy_price: "
+                                //           << buy_price << std::endl;
+                                // std::cout << bar.time << ", Open: " << bar.open << ", High: " << bar.high << ", Low: " << bar.low << ", Close: " << bar.close
+                                //           << std::endl << std::endl;
+                        }
+                        // 多单未盈利直接止损
+                        if ((bar.low - place_price) <= -stop)
+                        {
+                                // std::cout << "Highest: " << highest << ", place_price: " << place_price << ", sel_price: " << sel_price << ", buy_price: "
+                                //           << buy_price << std::endl;
+                                // std::cout << bar.time << ", Open: " << bar.open << ", High: " << bar.high << ", Low: " << bar.low << ", Close: " << bar.close
+                                //           << std::endl;
+                                std::cout << bar.time << ", LOSS LONG: " << sel_price << ", Account: " << total_value << ", ServiceFee: " << service_fee
+                                          << ", Win: " << win_count << ", Los: " << los_count << std::endl << std::endl;
+                        }
+                }
+                else if (-1 == have_position) //已有空单
+                {
+                        if (bar.low < lowest)
+                        {
+                                lowest = bar.low;
+                        }
+                        // 空单盈利超过设定值又回调一半则平仓
+                        if ((lowest - place_price) < -stop && bar.close >= (lowest + place_price) / 2)
+                        {
+                                // std::cout << "Lowest: " << lowest << ", place_price: " << place_price << ", sel_price: " << sel_price << ", buy_price: "
+                                //           << buy_price << std::endl;
+                                // std::cout << bar.time << ", Open: " << bar.open << ", High: " << bar.high << ", Low: " << bar.low << ", Close: " << bar.close
+                                //           << std::endl;
+                                std::cout << bar.time << ", STOPSHORT: " << buy_price << ", Account: " << total_value << ", ServiceFee: " << service_fee
+                                          << ", Win: " << win_count << ", Los: " << los_count << std::endl << std::endl;
+                        }
+                        // 空单未盈利直接止损
+                        if ((bar.high - place_price) >= stop)
+                        {
+                                // std::cout << "bar.high - place_price: " << bar.high - place_price << std::endl;
+                                // std::cout << "Lowest: " << lowest << ", place_price: " << place_price << ", sel_price: " << sel_price << ", buy_price: "
+                                //           << buy_price << std::endl;
+                                // std::cout << bar.time << ", Open: " << bar.open << ", High: " << bar.high << ", Low: " << bar.low << ", Close: " << bar.close
+                                //           << std::endl;
+                                std::cout << bar.time << ", LOSSSHORT: " << buy_price << ", Account: " << total_value << ", ServiceFee: "
+                                          << service_fee << ", Win: " << win_count << ", Los: " << los_count << std::endl << std::endl;
+                        }
+                }
                 source[bar_count] = &bar;
         }
+        // std::cout << "HistoricalUpdate. ReqId: " << reqId << ", Date: " << bar.time << ", Open: " << bar.open << ", High: " << bar.high
+        //           << ", Low: " << bar.low << ", Close: " << bar.close << std::endl;
 }
 //! [historicalDataUpdate]
 
+//! [backTest]
 void TestCppClient::backTest()
 {
         std::cout << "Begin to back test." << bar_count << std::endl;
         for (int i = 300; i < bar_count; i++)
         {
-                old_fast_ema = fast[i - 1];
-                old_slow_ema = slow[i - 1];
-                fast_ema     = fast[i];
-                slow_ema     = slow[i];
+                // old_fast_ema = fast[i - 1];
+                // old_slow_ema = slow[i - 1];
+                // fast_ema     = fast[i];
+                // slow_ema     = slow[i];
                 testEmaCross(*source[i]);
         }
 }
+//! [backTest]
 
+//! [computeEMA]
 void TestCppClient::computeEMA()
 {
         std::cout << "Begin to compute EMA." << bar_count << std::endl;
@@ -219,6 +344,7 @@ void TestCppClient::computeEMA()
         std::cout << "EMA compute completed." << std::endl;
         backTest();
 }
+//! [computeEMA]
 
 //! [testEmaCross]
 void TestCppClient::testEmaCross(const Bar &bar)
@@ -302,12 +428,12 @@ void TestCppClient::testEmaCross(const Bar &bar)
                                   << service_fee << ", Win: " << win_count << ", Los: " << los_count << std::endl << std::endl;
                 }
         }
-        if (old_fast_ema < old_slow_ema && fast_ema >= slow_ema) // 快线上穿慢线
+        if (fast[bar_count-1]< slow[bar_count-1]&& fast[bar_count]>= slow[bar_count]) // 快线上穿慢线
         {
                 if (0 == have_position)
                 {
                         buy_price     = bar.close;
-                        place_price   = fast_ema;
+                        place_price   = fast[bar_count];
                         highest       = bar.close;
                         have_position = 1;
                         quantity      = (int(total_value) * beishu / 10000) * 10000;
@@ -326,7 +452,7 @@ void TestCppClient::testEmaCross(const Bar &bar)
                         std::cout << bar.time << ", CLOSSHORT: " << buy_price << ", Account: " << total_value << ", ServiceFee: " << service_fee
                                   << ", Win: " << win_count << ", Los: " << los_count << std::endl << std::endl;
                         buy_price     = bar.close;
-                        place_price   = fast_ema;
+                        place_price   = fast[bar_count];
                         highest       = bar.close;
                         have_position = 1;
                         quantity      = (int(total_value) * beishu / 10000) * 10000;
@@ -337,12 +463,12 @@ void TestCppClient::testEmaCross(const Bar &bar)
                         //           << std::endl;
                 }
         }
-        if (old_fast_ema >= old_slow_ema && fast_ema < slow_ema) // 快线下穿慢线
+        if (fast[bar_count-1]>= slow[bar_count-1]&& fast[bar_count]< slow[bar_count]) // 快线下穿慢线
         {
                 if (0 == have_position)
                 {
                         sel_price     = bar.close;
-                        place_price   = fast_ema;
+                        place_price   = fast[bar_count];
                         lowest        = bar.close;
                         have_position = -1;
                         quantity      = (int(total_value) * beishu / 10000) * 10000;
@@ -361,7 +487,7 @@ void TestCppClient::testEmaCross(const Bar &bar)
                         std::cout << bar.time << ", Close long: " << sel_price << ", Account: " << total_value << ", ServiceFee: " << service_fee
                                   << ", Win: " << win_count << ", Los: " << los_count << std::endl << std::endl;
                         sel_price     = bar.close;
-                        place_price   = fast_ema;
+                        place_price   = fast[bar_count];
                         lowest        = bar.close;
                         have_position = -1;
                         quantity      = (int(total_value) * beishu / 10000) * 10000;
@@ -1118,75 +1244,6 @@ void TestCppClient::accountOperations()
         //! [reqpositionsmulti]
 
         m_state = ST_ACCOUNTOPERATIONS_ACK;
-}
-
-void TestCppClient::orderOperations()
-{
-        /*** Requesting the next valid id ***/
-        //! [reqids]
-        //The parameter is always ignored.
-        m_pClient->reqIds(-1);
-        //! [reqids]
-        //! [reqallopenorders]
-        m_pClient->reqAllOpenOrders();
-        //! [reqallopenorders]
-        //! [reqautoopenorders]
-        m_pClient->reqAutoOpenOrders(true);
-        //! [reqautoopenorders]
-        //! [reqopenorders]
-        m_pClient->reqOpenOrders();
-        //! [reqopenorders]
-
-        /*** Placing/modifying an order - remember to ALWAYS increment the nextValidId after placing an order so it can be used for the next one! ***/
-        //! [order_submission]
-        m_pClient->placeOrder(m_orderId++, ContractSamples::USStock(), OrderSamples::LimitOrder("SELL", 1, 50));
-        //! [order_submission]
-
-        //m_pClient->placeOrder(m_orderId++, ContractSamples::OptionAtBox(), OrderSamples::Block("BUY", 50, 20));
-        //m_pClient->placeOrder(m_orderId++, ContractSamples::OptionAtBox(), OrderSamples::BoxTop("SELL", 10));
-        //m_pClient->placeOrder(m_orderId++, ContractSamples::FutureComboContract(), OrderSamples::ComboLimitOrder("SELL", 1, 1, false));
-        //m_pClient->placeOrder(m_orderId++, ContractSamples::StockComboContract(), OrderSamples::ComboMarketOrder("BUY", 1, false));
-        //m_pClient->placeOrder(m_orderId++, ContractSamples::OptionComboContract(), OrderSamples::ComboMarketOrder("BUY", 1, true));
-        //m_pClient->placeOrder(m_orderId++, ContractSamples::StockComboContract(), OrderSamples::LimitOrderForComboWithLegPrices("BUY", 1, std::vector<double>(10, 5), true));
-        //m_pClient->placeOrder(m_orderId++, ContractSamples::USStock(), OrderSamples::Discretionary("SELL", 1, 45, 0.5));
-        //m_pClient->placeOrder(m_orderId++, ContractSamples::OptionAtBox(), OrderSamples::LimitIfTouched("BUY", 1, 30, 34));
-        //m_pClient->placeOrder(m_orderId++, ContractSamples::USStock(), OrderSamples::LimitOnClose("SELL", 1, 34));
-        //m_pClient->placeOrder(m_orderId++, ContractSamples::USStock(), OrderSamples::LimitOnOpen("BUY", 1, 35));
-        //m_pClient->placeOrder(m_orderId++, ContractSamples::USStock(), OrderSamples::MarketIfTouched("BUY", 1, 35));
-        //m_pClient->placeOrder(m_orderId++, ContractSamples::USStock(), OrderSamples::MarketOnClose("SELL", 1));
-        //m_pClient->placeOrder(m_orderId++, ContractSamples::USStock(), OrderSamples::MarketOnOpen("BUY", 1));
-        //m_pClient->placeOrder(m_orderId++, ContractSamples::USStock(), OrderSamples::MarketOrder("SELL", 1));
-        //m_pClient->placeOrder(m_orderId++, ContractSamples::USStock(), OrderSamples::MarketToLimit("BUY", 1));
-        //m_pClient->placeOrder(m_orderId++, ContractSamples::OptionAtIse(), OrderSamples::MidpointMatch("BUY", 1));
-        //m_pClient->placeOrder(m_orderId++, ContractSamples::USStock(), OrderSamples::Stop("SELL", 1, 34.4));
-        //m_pClient->placeOrder(m_orderId++, ContractSamples::USStock(), OrderSamples::StopLimit("BUY", 1, 35, 33));
-        //m_pClient->placeOrder(m_orderId++, ContractSamples::USStock(), OrderSamples::StopWithProtection("SELL", 1, 45));
-        //m_pClient->placeOrder(m_orderId++, ContractSamples::USStock(), OrderSamples::SweepToFill("BUY", 1, 35));
-        //m_pClient->placeOrder(m_orderId++, ContractSamples::USStock(), OrderSamples::TrailingStop("SELL", 1, 0.5, 30));
-        //m_pClient->placeOrder(m_orderId++, ContractSamples::USStock(), OrderSamples::TrailingStopLimit("BUY", 1, 2, 5, 50));
-
-        //! [place order with cashQty]
-        m_pClient->placeOrder(m_orderId++, ContractSamples::USStockAtSmart(), OrderSamples::LimitOrderWithCashQty("BUY", 1, 30, 5000));
-        //! [place order with cashQty]
-
-        std::this_thread::sleep_for(std::chrono::seconds(1));
-
-        /*** Cancel one order ***/
-        //! [cancelorder]
-        m_pClient->cancelOrder(m_orderId - 1);
-        //! [cancelorder]
-
-        /*** Cancel all orders for all accounts ***/
-        //! [reqglobalcancel]
-        m_pClient->reqGlobalCancel();
-        //! [reqglobalcancel]
-
-        /*** Request the day's executions ***/
-        //! [reqexecutions]
-        m_pClient->reqExecutions(10001, ExecutionFilter());
-        //! [reqexecutions]
-
-        m_state = ST_ORDEROPERATIONS_ACK;
 }
 
 void TestCppClient::ocaSamples()

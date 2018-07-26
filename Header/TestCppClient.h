@@ -134,6 +134,8 @@ public:
 
         bool isConnected() const;
 
+        void checkTradeSignal();
+
         void computeEMA();
 
         void backTest();
@@ -252,7 +254,7 @@ private:
         bool        m_extraAuth;
         std::string m_bboExchange;
 
-        static const int LENGTH = 20000;
+        const int LENGTH = 20000;
 
         const Bar *source[LENGTH];
         double    fast[LENGTH];
@@ -266,13 +268,10 @@ private:
         double fast_beta  = 1 - fast_alpha;
         double slow_beta  = 1 - slow_alpha;
 
-        double fast_ema     = 0;
-        double slow_ema     = 0;
-        double old_fast_ema = 0;
-        double old_slow_ema = 0;
-        double macd         = 0;
-        double last_macd    = 0;
-        double old_macd     = 0;
+        // double fast_ema     = 0;
+        // double slow_ema     = 0;
+        // double old_fast_ema = 0;
+        // double old_slow_ema = 0;
 
         int    have_position = 0;
         double buy_price     = 0;
@@ -292,6 +291,10 @@ private:
 
         int win_count = 0;
         int los_count = 0;
+
+        double macd      = 0;
+        double last_macd = 0;
+        double old_macd  = 0;
 };
 //! [ewrapperimpl]
 

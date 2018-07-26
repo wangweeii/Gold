@@ -19,12 +19,18 @@
 const unsigned MAX_ATTEMPTS = 50;
 const unsigned SLEEP_TIME   = 10;
 
-void processMsgs(TestCppClient *client)
+void sendRequests(TestCppClient *client)
 {
-        // std::cout << "Shit" << std::endl;
         while (client->isConnected())
         {
-                // std::cout << "connected." << std::endl;
+                client->checkTradeSignal();
+        }
+}
+
+void processMsgs(TestCppClient *client)
+{
+        while (client->isConnected())
+        {
                 client->processMessages();
         }
 }
@@ -47,10 +53,12 @@ int main(int argc, const char *argv[])
         TestCppClient client;
         client.connect(host, port, clientId);
         std::this_thread::sleep_for(std::chrono::seconds(2));
+        client.accountOperations();
 
         // client.historicalDataRequests(6);
-        client.accountOperations();
         std::thread t(processMsgs, &client);
+        std::thread trade(sendRequests,&client);
+
         for (int i = 3; i < 7; ++i)
         {
                 client.historicalDataRequests(i);
