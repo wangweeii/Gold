@@ -260,14 +260,16 @@ private:
         bool        m_extraAuth;
         std::string m_bboExchange;
 
-        unsigned int fast_step = 8;
-        unsigned int slow_step = 55;
+        static const int LENGTH = 9000;
 
-        Bar         source[80000];
+        const Bar *source[LENGTH];
+        double    fast[LENGTH];
+        double    slow[LENGTH];
+
         std::string current_time;
         std::string tmp_time;
-        double      raw_price[10000];
-        int         tail       = -1;
+        double      raw_price[1000];
+        int         tail        = -1;
 
         // double fast_price[FAST_STEP] = {0};
         // int    fast_tail             = -1;
@@ -276,6 +278,9 @@ private:
         // int    slow_tail             = -1;
 
         Bar previous_bar, current_bar;
+
+        unsigned int fast_step = 8;
+        unsigned int slow_step = 55;
 
         double fast_alpha = 2.0 / (fast_step + 1);
         double slow_alpha = 2.0 / (slow_step + 1);
@@ -303,7 +308,7 @@ private:
         double lowest        = 0;
 
         int service_fee = 0;
-        int bar_count   = 0;
+        int bar_count   = -1;
 
         int    beishu      = 20;
         double total_value = 9600;
