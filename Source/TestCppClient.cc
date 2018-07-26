@@ -63,7 +63,7 @@ void TestCppClient::historicalDataRequests()
         // m_pClient->reqHistoricalData(4001, ContractSamples::EurUsdFx(), "20140801 00:00:00", "2 Y", "15 mins", "MIDPOINT", 1, 1, false, TagValueListSPtr());
         // m_pClient->reqHistoricalData(4001, ContractSamples::EurUsdFx(), "20160801 00:00:00", "2 Y", "15 mins", "MIDPOINT", 1, 1, false, TagValueListSPtr());
         // m_pClient->reqHistoricalData(4002, ContractSamples::EurUsdFx(), "20180801 00:00:00", "2 Y", "15 mins", "MIDPOINT", 1, 1, false, TagValueListSPtr());
-        m_pClient->reqHistoricalData(4002, ContractSamples::EurUsdFx(), "", "3 M", "15 mins", "MIDPOINT", 1, 1, false, TagValueListSPtr());
+        m_pClient->reqHistoricalData(5678, ContractSamples::EurUsdFx(), "", "3 M", "15 mins", "MIDPOINT", 1, 1, false, TagValueListSPtr());
         // m_pClient->reqHistoricalData(4002, ContractSamples::EurUsdFx(), "20180701 00:00:00", "2 W", "15 mins", "MIDPOINT", 1, 1, true, TagValueListSPtr());
         // m_pClient->reqHistoricalData(4001, ContractSamples::EurUsdFx(), "2014", "1 Y", "15 mins", "MIDPOINT", 1, 1, false, TagValueListSPtr());
         // m_pClient->reqHistoricalData(4002, ContractSamples::AudUsdFx(), "", "2 Y", "15 mins", "MIDPOINT", 1, 1, true, TagValueListSPtr());
@@ -85,9 +85,9 @@ void TestCppClient::historicalData(TickerId reqId, const Bar &bar)
         {
                 source[++bar_count] = &bar;
                 current_time = bar.time;
+                current_bar = bar;
                 std::cout << "HistoricalData. ReqId: " << reqId << ", Date: " << bar.time << ", Open: " << bar.open << ", High: " << bar.high
                           << ", Low: " << bar.low << ", Close: " << bar.close << std::endl;
-                current_bar = bar;
         }
 }
 //! [historicaldata]
@@ -107,7 +107,10 @@ void TestCppClient::historicalDataEnd(int reqId, const std::string &startDateStr
         // tail--;
         // std::cout << current_time << "DATA END---FastSMA: " << fast_sma() << ", SlowSMA: " << slow_sma() << std::endl;
         std::cout << "HistoricalDataEnd. ReqId: " << reqId << " - Start Date: " << startDateStr << ", End Date: " << endDateStr << std::endl;
-        computeEMA();
+        if (reqId == 5678)
+        {
+                computeEMA();
+        }
 }
 //! [historicaldataend]
 
@@ -119,14 +122,19 @@ void TestCppClient::historicalDataUpdate(TickerId reqId, const Bar &bar)
                 return;
         }
 
-        if (current_bar.time != bar.time)
+        if (current_time != bar.time)
         {
                 std::cout << "HistoricalUpdate. ReqId: " << reqId << ", Date: " << current_bar.time << ", Open: " << current_bar.open << ", High: "
                           << current_bar.high << ", Low: " << current_bar.low << ", Close: " << current_bar.close << std::endl;
-                old_fast_ema = fast_ema;
-                old_slow_ema = slow_ema;
+                old_fast_ema= fast[bar_count-1];
+                old_slow_ema=slow[bar_count-1];
                 fast_ema     = fast_alpha * current_bar.close + fast_beta * old_fast_ema;
                 slow_ema     = slow_alpha * current_bar.close + slow_beta * old_slow_ema;
+
+
+
+                // old_fast_ema = fast_ema;
+                // old_slow_ema = slow_ema;
                 std::cout << "The FAST EMA(8) is: " << fast_ema << ", SLOW EMA(55) is: " << slow_ema << std::endl;
                 // raw_price[++tail] = bar.close;
                 // previous_bar = current_bar;
@@ -178,7 +186,7 @@ void TestCppClient::computeEMA()
                 std::cout << current_time << ", FastEMA: " << fast[i] << ", SlowEMA: " << slow[i] << std::endl;
         }
         std::cout << "EMA compute completed." << std::endl;
-        backtest();
+        // backtest();
 }
 
 //! [testEmaCross]

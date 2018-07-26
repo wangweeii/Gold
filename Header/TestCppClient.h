@@ -141,10 +141,9 @@ public:
         void testMACD(const Bar &bar);
 
 private:
+        void trade();
 
         void testEmaCross(const Bar &bar);
-
-        double computeEMA(double *price, int tail, const int step);
 
         double fast_sma();
 
