@@ -15,8 +15,6 @@ struct Bar
         double wap;
         long long volume;
         int count;
-        double fast_ema;
-        double slow_ema;
 };
 
 #endif
