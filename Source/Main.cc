@@ -48,8 +48,14 @@ int main(int argc, const char *argv[])
         client.connect(host, port, clientId);
         std::this_thread::sleep_for(std::chrono::seconds(2));
 
-        client.historicalDataRequests();
+        // client.historicalDataRequests(6);
+        client.accountOperations();
         std::thread t(processMsgs, &client);
+        for (int i = 3; i < 7; ++i)
+        {
+                client.historicalDataRequests(i);
+                std::this_thread::sleep_for(std::chrono::seconds(10));
+        }
 
         while (true)
         {
@@ -60,7 +66,7 @@ int main(int argc, const char *argv[])
                 }
                 else if (command == "test")
                 {
-                        client.backtest();
+                        client.backTest();
                 }
                 else if (command == "exit")
                 {
