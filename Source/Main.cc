@@ -58,12 +58,15 @@ int main(int argc, const char *argv[])
                 {
                         client.computeEMA();
                 }
-                else if(command=="test")
+                else if (command == "test")
                 {
                         client.backtest();
                 }
-                else
-                { break; }
+                else if (command == "exit")
+                {
+                        std::cout << "Exit.";
+                        break;
+                }
         }
 
         /*while (port > 1000)
