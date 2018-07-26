@@ -130,26 +130,19 @@ public:
 
         void disconnect() const;
 
-        void historicalDataRequests();
+        void historicalDataRequests(int number);
 
         bool isConnected() const;
 
         void computeEMA();
 
-        void backtest();
+        void backTest();
 
         void testMACD(const Bar &bar);
 
 private:
-        void trade();
 
         void testEmaCross(const Bar &bar);
-
-        double fast_sma();
-
-        double slow_sma();
-
-        // bool isActive();
 
         void pnlOperation();
 
@@ -259,24 +252,13 @@ private:
         bool        m_extraAuth;
         std::string m_bboExchange;
 
-        static const int LENGTH = 9000;
+        static const int LENGTH = 20000;
 
         const Bar *source[LENGTH];
         double    fast[LENGTH];
         double    slow[LENGTH];
 
         std::string current_time;
-        std::string tmp_time;
-        double      raw_price[1000];
-        int         tail        = -1;
-
-        // double fast_price[FAST_STEP] = {0};
-        // int    fast_tail             = -1;
-
-        // double slow_price[SLOW_STEP] = {0};
-        // int    slow_tail             = -1;
-
-        Bar previous_bar, current_bar;
 
         unsigned int fast_step = 8;
         unsigned int slow_step = 55;
@@ -285,11 +267,6 @@ private:
         double slow_alpha = 2.0 / (slow_step + 1);
         double fast_beta  = 1 - fast_alpha;
         double slow_beta  = 1 - slow_alpha;
-
-        // double fast_ema = 0;
-        // double slow_ema = 0;
-        double fast_total = 0;
-        double slow_total = 0;
 
         double fast_ema     = 0;
         double slow_ema     = 0;
