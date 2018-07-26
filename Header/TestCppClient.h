@@ -144,7 +144,7 @@ public:
 
 private:
 
-        void testEmaCross(const Bar &bar);
+        void testEmaCross(int i);
 
         void pnlOperation();
 
@@ -254,7 +254,7 @@ private:
         bool        m_extraAuth;
         std::string m_bboExchange;
 
-        const int LENGTH = 20000;
+        static const int LENGTH = 150000;
 
         const Bar *source[LENGTH];
         double    fast[LENGTH];
@@ -267,11 +267,6 @@ private:
         double slow_alpha = 2.0 / (slow_step + 1);
         double fast_beta  = 1 - fast_alpha;
         double slow_beta  = 1 - slow_alpha;
-
-        // double fast_ema     = 0;
-        // double slow_ema     = 0;
-        // double old_fast_ema = 0;
-        // double old_slow_ema = 0;
 
         int    have_position = 0;
         double buy_price     = 0;

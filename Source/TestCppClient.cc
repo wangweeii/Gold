@@ -58,31 +58,54 @@ void TestCppClient::historicalDataRequests(int number)
         switch (number)
         {
                 case 0:
-                        m_pClient->reqHistoricalData(4001, ContractSamples::EurUsdFx(), "20080801 00:00:00", "2 W", "15 mins", "MIDPOINT", 1, 1,
+                        m_pClient->reqHistoricalData(4000, ContractSamples::EurUsdFx(), "20100101 00:00:00", "1 Y", "15 mins", "MIDPOINT", 1, 1,
                                                      false, TagValueListSPtr());
+                        break;
                 case 1:
-                        // m_pClient->reqHistoricalData(4003, ContractSamples::XAUUSD(), "", "2 Y", "15 mins", "MIDPOINT", 1, 1, true, TagValueListSPtr());
-                        // m_pClient->reqHistoricalData(4001, ContractSamples::GbpUsdFx(), "", "2 Y", "15 mins", "MIDPOINT", 1, 1, true, TagValueListSPtr());
-                        m_pClient->reqHistoricalData(4002, ContractSamples::EurUsdFx(), "20100701 00:00:00", "2 Y", "15 mins", "MIDPOINT", 1, 1,
+                        m_pClient->reqHistoricalData(4001, ContractSamples::EurUsdFx(), "20110101 00:00:00", "1 Y", "15 mins", "MIDPOINT", 1, 1,
                                                      false, TagValueListSPtr());
+                        break;
                 case 2:
-                        m_pClient->reqHistoricalData(4003, ContractSamples::EurUsdFx(), "20120701 00:00:00", "2 Y", "15 mins", "MIDPOINT", 1, 1,
+                        m_pClient->reqHistoricalData(4002, ContractSamples::EurUsdFx(), "20120101 00:00:00", "1 Y", "15 mins", "MIDPOINT", 1, 1,
                                                      false, TagValueListSPtr());
+                        break;
                 case 3:
-                        m_pClient->reqHistoricalData(4005, ContractSamples::EurUsdFx(), "20180301 00:00:00", "2 M", "15 mins", "MIDPOINT", 1, 1,
+                        m_pClient->reqHistoricalData(4003, ContractSamples::EurUsdFx(), "20130101 00:00:00", "1 Y", "15 mins", "MIDPOINT", 1, 1,
                                                      false, TagValueListSPtr());
+                        break;
                 case 4:
-                        m_pClient->reqHistoricalData(4006, ContractSamples::EurUsdFx(), "20180501 00:00:00", "2 M", "15 mins", "MIDPOINT", 1, 1,
+                        m_pClient->reqHistoricalData(4004, ContractSamples::EurUsdFx(), "20140101 00:00:00", "1 Y", "15 mins", "MIDPOINT", 1, 1,
                                                      false, TagValueListSPtr());
+                        break;
                 case 5:
-                        m_pClient->reqHistoricalData(4007, ContractSamples::EurUsdFx(), "20180701 00:00:00", "2 M", "15 mins", "MIDPOINT", 1, 1,
+                        m_pClient->reqHistoricalData(4005, ContractSamples::EurUsdFx(), "20150101 00:00:00", "1 Y", "15 mins", "MIDPOINT", 1, 1,
                                                      false, TagValueListSPtr());
+                        break;
                 case 6:
-                        m_pClient->reqHistoricalData(5678, ContractSamples::EurUsdFx(), "", "2 M", "15 mins", "MIDPOINT", 1, 1, false,
+                        m_pClient->reqHistoricalData(4006, ContractSamples::EurUsdFx(), "20160101 00:00:00", "1 Y", "15 mins", "MIDPOINT", 1, 1,
+                                                     false, TagValueListSPtr());
+                        break;
+                case 7:
+                        m_pClient->reqHistoricalData(4007, ContractSamples::EurUsdFx(), "20170101 00:00:00", "1 Y", "15 mins", "MIDPOINT", 1, 1,
+                                                     false, TagValueListSPtr());
+                        break;
+                case 8:
+                        m_pClient->reqHistoricalData(4008, ContractSamples::EurUsdFx(), "20180101 00:00:00", "1 Y", "15 mins", "MIDPOINT", 1, 1,
+                                                     false, TagValueListSPtr());
+                        break;
+                case 9:
+                        m_pClient->reqHistoricalData(4009, ContractSamples::EurUsdFx(), "", "1 Y", "15 mins", "MIDPOINT", 1, 1, false,
                                                      TagValueListSPtr());
+                        break;
+                        // case 7:
+                        //         m_pClient->reqHistoricalData(4007, ContractSamples::EurUsdFx(), "20180101 00:00:00", "1 Y", "15 mins", "MIDPOINT", 1, 1,
+                        //                                      false, TagValueListSPtr());
+                        //         break;
                 default:break;
                         // m_pClient->reqHistoricalData(4001, ContractSamples::EurUsdFx(), "2014", "1 Y", "15 mins", "MIDPOINT", 1, 1, false, TagValueListSPtr());
                         // m_pClient->reqHistoricalData(4002, ContractSamples::AudUsdFx(), "", "2 Y", "15 mins", "MIDPOINT", 1, 1, true, TagValueListSPtr());
+                        // m_pClient->reqHistoricalData(4003, ContractSamples::XAUUSD(), "", "2 Y", "15 mins", "MIDPOINT", 1, 1, true, TagValueListSPtr());
+                        // m_pClient->reqHistoricalData(4001, ContractSamples::GbpUsdFx(), "", "2 Y", "15 mins", "MIDPOINT", 1, 1, true, TagValueListSPtr());
 
                         //! [reqhistoricaldata]
                         // m_pClient->reqHistoricalData(4001, ContractSamples::EurUsdFx(), queryTime, "1 M", "1 hour", "MIDPOINT", 1, 1, false, TagValueListSPtr());
@@ -171,13 +194,14 @@ void TestCppClient::historicalData(TickerId reqId, const Bar &bar)
         if (bar_count == -1)
         {
                 source[++bar_count] = &bar;
+                // std::cout << "HistoricalData. ReqId: " << reqId << ", Date: " << bar.time << ", Open: " << bar.open << ", High: " << bar.high
+                //           << ", Low: " << bar.low << ", Close: " << source[bar_count]->close << std::endl;
         }
         else if (source[bar_count]->time < bar.time)
         {
                 source[++bar_count] = &bar;
-                // current_time = bar.time;
                 // std::cout << "HistoricalData. ReqId: " << reqId << ", Date: " << bar.time << ", Open: " << bar.open << ", High: " << bar.high
-                //           << ", Low: " << bar.low << ", Close: " << bar.close << std::endl;
+                //           << ", Low: " << bar.low << ", Close: " << source[bar_count]->close << std::endl;
         }
 }
 //! [historicaldata]
@@ -185,10 +209,15 @@ void TestCppClient::historicalData(TickerId reqId, const Bar &bar)
 //! [historicaldataend]
 void TestCppClient::historicalDataEnd(int reqId, const std::string &startDateStr, const std::string &endDateStr)
 {
-        // if (reqId == 5678)
+        // if (reqId == 4009)
         // {
-        std::cout << "HistoricalDataEnd. ReqId: " << reqId << " - Start Date: " << startDateStr << ", End Date: " << endDateStr << std::endl;
-        // computeEMA();
+                std::cout << "HistoricalDataEnd. ReqId: " << reqId << " - Start Date: " << startDateStr << ", End Date: " << endDateStr << std::endl;
+                computeEMA();
+        // }
+        // for (int i = 0; i < bar_count; i++)
+        // {
+        //         std::cout << source[i]->time << ", Open: " << source[i]->open << ", High: " << source[i]->high << ", Low: " << source[i]->low
+        //                   << ", Close: " << source[i]->close << std::endl;
         // }
 }
 //! [historicaldataend]
@@ -260,8 +289,10 @@ void TestCppClient::historicalDataUpdate(TickerId reqId, const Bar &bar)
                         // 多单盈利超过设定值又回调一半则平仓
                         if ((highest - place_price) > stop && bar.close <= (highest + place_price) / 2)
                         {
-                                std::cout << std::fixed << std::setprecision(5) << bar.time << ", STOP LONG: " << sel_price << ", Account: " << total_value
-                                          << ", ServiceFee: " << service_fee << ", Win: " << win_count << ", Los: " << los_count << std::endl << std::endl;
+                                std::cout << std::fixed << std::setprecision(5) << bar.time << ", STOP LONG: " << sel_price << ", Account: "
+                                          << total_value
+                                          << ", ServiceFee: " << service_fee << ", Win: " << win_count << ", Los: " << los_count << std::endl
+                                          << std::endl;
                                 // std::cout << "Highest: " << highest << ", place_price: " << place_price << ", sel_price: " << sel_price << ", buy_price: "
                                 //           << buy_price << std::endl;
                                 // std::cout << bar.time << ", Open: " << bar.open << ", High: " << bar.high << ", Low: " << bar.low << ", Close: " << bar.close
@@ -274,7 +305,8 @@ void TestCppClient::historicalDataUpdate(TickerId reqId, const Bar &bar)
                                 //           << buy_price << std::endl;
                                 // std::cout << bar.time << ", Open: " << bar.open << ", High: " << bar.high << ", Low: " << bar.low << ", Close: " << bar.close
                                 //           << std::endl;
-                                std::cout << bar.time << ", LOSS LONG: " << sel_price << ", Account: " << total_value << ", ServiceFee: " << service_fee
+                                std::cout << bar.time << ", LOSS LONG: " << sel_price << ", Account: " << total_value << ", ServiceFee: "
+                                          << service_fee
                                           << ", Win: " << win_count << ", Los: " << los_count << std::endl << std::endl;
                         }
                 }
@@ -291,7 +323,8 @@ void TestCppClient::historicalDataUpdate(TickerId reqId, const Bar &bar)
                                 //           << buy_price << std::endl;
                                 // std::cout << bar.time << ", Open: " << bar.open << ", High: " << bar.high << ", Low: " << bar.low << ", Close: " << bar.close
                                 //           << std::endl;
-                                std::cout << bar.time << ", STOPSHORT: " << buy_price << ", Account: " << total_value << ", ServiceFee: " << service_fee
+                                std::cout << bar.time << ", STOPSHORT: " << buy_price << ", Account: " << total_value << ", ServiceFee: "
+                                          << service_fee
                                           << ", Win: " << win_count << ", Los: " << los_count << std::endl << std::endl;
                         }
                         // 空单未盈利直接止损
@@ -313,50 +346,55 @@ void TestCppClient::historicalDataUpdate(TickerId reqId, const Bar &bar)
 }
 //! [historicalDataUpdate]
 
-//! [backTest]
-void TestCppClient::backTest()
-{
-        std::cout << "Begin to back test." << bar_count << std::endl;
-        for (int i = 300; i < bar_count; i++)
-        {
-                // old_fast_ema = fast[i - 1];
-                // old_slow_ema = slow[i - 1];
-                // fast_ema     = fast[i];
-                // slow_ema     = slow[i];
-                testEmaCross(*source[i]);
-        }
-}
-//! [backTest]
-
 //! [computeEMA]
 void TestCppClient::computeEMA()
 {
         std::cout << "Begin to compute EMA." << bar_count << std::endl;
         fast[0] = source[0]->close;
         slow[0] = source[0]->close;
+        std::cout << "source[0]: " << source[0]->close << std::endl;
+        std::cout << "fast[0]: " << fast[0] << ", slow[0]: " << slow[0] << std::endl;
         for (int i = 1; i <= bar_count; i++)
         {
                 fast[i] = fast_alpha * source[i]->close + fast_beta * fast[i - 1];
                 slow[i] = slow_alpha * source[i]->close + slow_beta * slow[i - 1];
 
-                std::cout << source[i]->time << ", FastEMA: " << fast[i] << ", SlowEMA: " << slow[i] << std::endl;
+                // std::cout << source[i]->time << ", FastEMA: " << fast[i] << ", SlowEMA: " << slow[i] << std::endl;
         }
         std::cout << "EMA compute completed." << std::endl;
         backTest();
 }
 //! [computeEMA]
 
-//! [testEmaCross]
-void TestCppClient::testEmaCross(const Bar &bar)
+//! [backTest]
+void TestCppClient::backTest()
 {
+        std::cout << "Begin to back test." << bar_count << std::endl;
+        total_value = 9600;
+        for (int i = 300; i < bar_count; i++)
+        {
+                // old_fast_ema = fast[i - 1];
+                // old_slow_ema = slow[i - 1];
+                // fast_ema     = fast[i];
+                // slow_ema     = slow[i];
+                testEmaCross(i);
+        }
+}
+//! [backTest]
+
+//! [testEmaCross]
+void TestCppClient::testEmaCross(int i)
+{
+        // std::cout << source[i]->time << ", Open: " << source[i]->open << ", High: " << source[i]->high << ", Low: " << source[i]->low << ", Close: "
+        //           << source[i]->close << std::endl;
         if (1 == have_position) //已有多单
         {
-                if (bar.high > highest)
+                if (source[i]->high > highest)
                 {
-                        highest = bar.high;
+                        highest = source[i]->high;
                 }
                 // 多单盈利超过设定值又回调一半则平仓
-                if ((highest - place_price) > stop && bar.close <= (highest + place_price) / 2)
+                if ((highest - place_price) > stop && source[i]->close <= (highest + place_price) / 2)
                 {
                         sel_price     = (highest + place_price) / 2;
                         have_position = 0;
@@ -364,38 +402,40 @@ void TestCppClient::testEmaCross(const Bar &bar)
                         total_value -= commission;
                         service_fee += commission;
                         sel_price > buy_price ? win_count++ : los_count++;
-                        std::cout << std::fixed << std::setprecision(5) << bar.time << ", STOP LONG: " << sel_price << ", Account: " << total_value
-                                  << ", ServiceFee: " << service_fee << ", Win: " << win_count << ", Los: " << los_count << std::endl << std::endl;
+                        std::cout << std::fixed << std::setprecision(5) << source[i]->time << ", STOP LONG: " << sel_price << ", Account: "
+                                  << total_value
+                                  << ", ServiceFee: " << service_fee << ", WIN: " << win_count << ", LOS: " << los_count << std::endl << std::endl;
                         // std::cout << "Highest: " << highest << ", place_price: " << place_price << ", sel_price: " << sel_price << ", buy_price: "
                         //           << buy_price << std::endl;
                         // std::cout << bar.time << ", Open: " << bar.open << ", High: " << bar.high << ", Low: " << bar.low << ", Close: " << bar.close
                         //           << std::endl << std::endl;
                 }
                 // 多单未盈利直接止损
-                if ((bar.low - place_price) <= -stop)
+                if ((source[i]->low - place_price) <= -stop)
                 {
                         sel_price     = place_price - stop;
                         have_position = 0;
                         total_value += (sel_price - buy_price) * quantity;
                         total_value -= commission;
                         service_fee += commission;
-                        sel_price > buy_price ? win_count++ : los_count++;
+                        los_count++;
                         // std::cout << "Highest: " << highest << ", place_price: " << place_price << ", sel_price: " << sel_price << ", buy_price: "
                         //           << buy_price << std::endl;
                         // std::cout << bar.time << ", Open: " << bar.open << ", High: " << bar.high << ", Low: " << bar.low << ", Close: " << bar.close
                         //           << std::endl;
-                        std::cout << bar.time << ", LOSS LONG: " << sel_price << ", Account: " << total_value << ", ServiceFee: " << service_fee
-                                  << ", Win: " << win_count << ", Los: " << los_count << std::endl << std::endl;
+                        std::cout << source[i]->time << ", LOSS LONG: " << sel_price << ", Account: " << total_value << ", ServiceFee: "
+                                  << service_fee
+                                  << ", WIN: " << win_count << ", LOS: " << los_count << std::endl << std::endl;
                 }
         }
         else if (-1 == have_position) //已有空单
         {
-                if (bar.low < lowest)
+                if (source[i]->low < lowest)
                 {
-                        lowest = bar.low;
+                        lowest = source[i]->low;
                 }
                 // 空单盈利超过设定值又回调一半则平仓
-                if ((lowest - place_price) < -stop && bar.close >= (lowest + place_price) / 2)
+                if ((lowest - place_price) < -stop && source[i]->close >= (lowest + place_price) / 2)
                 {
                         buy_price     = (lowest + place_price) / 2;
                         have_position = 0;
@@ -407,92 +447,93 @@ void TestCppClient::testEmaCross(const Bar &bar)
                         //           << buy_price << std::endl;
                         // std::cout << bar.time << ", Open: " << bar.open << ", High: " << bar.high << ", Low: " << bar.low << ", Close: " << bar.close
                         //           << std::endl;
-                        std::cout << bar.time << ", STOPSHORT: " << buy_price << ", Account: " << total_value << ", ServiceFee: " << service_fee
+                        std::cout << source[i]->time << ", STOPSHORT: " << buy_price << ", Account: " << total_value << ", ServiceFee: "
+                                  << service_fee
                                   << ", Win: " << win_count << ", Los: " << los_count << std::endl << std::endl;
                 }
                 // 空单未盈利直接止损
-                if ((bar.high - place_price) >= stop)
+                if ((source[i]->high - place_price) >= stop)
                 {
                         buy_price     = place_price + stop;
                         have_position = 0;
                         total_value += (sel_price - buy_price) * quantity;
                         total_value -= commission;
                         service_fee += commission;
-                        sel_price > buy_price ? win_count++ : los_count++;
+                        los_count++;
                         // std::cout << "bar.high - place_price: " << bar.high - place_price << std::endl;
                         // std::cout << "Lowest: " << lowest << ", place_price: " << place_price << ", sel_price: " << sel_price << ", buy_price: "
                         //           << buy_price << std::endl;
                         // std::cout << bar.time << ", Open: " << bar.open << ", High: " << bar.high << ", Low: " << bar.low << ", Close: " << bar.close
                         //           << std::endl;
-                        std::cout << bar.time << ", LOSSSHORT: " << buy_price << ", Account: " << total_value << ", ServiceFee: "
-                                  << service_fee << ", Win: " << win_count << ", Los: " << los_count << std::endl << std::endl;
+                        std::cout << source[i]->time << ", LOSSSHORT: " << buy_price << ", Account: " << total_value << ", ServiceFee: "
+                                  << service_fee << ", WIN: " << win_count << ", LOS: " << los_count << std::endl << std::endl;
                 }
         }
-        if (fast[bar_count-1]< slow[bar_count-1]&& fast[bar_count]>= slow[bar_count]) // 快线上穿慢线
+        if (fast[i - 1] < slow[i - 1] && fast[i] >= slow[i]) // 快线上穿慢线
         {
                 if (0 == have_position)
                 {
-                        buy_price     = bar.close;
-                        place_price   = fast[bar_count];
-                        highest       = bar.close;
+                        buy_price     = source[i]->close;
+                        place_price   = fast[i];
+                        highest       = source[i]->close;
                         have_position = 1;
                         quantity      = (int(total_value) * beishu / 10000) * 10000;
                         commission    = quantity / 10000;
-                        std::cout << bar.time << ", OPON LONG: " << buy_price << ", Account: " << total_value << ", Quantity: " << quantity
+                        std::cout << source[i]->time << ", OPON LONG: " << buy_price << ", Account: " << total_value << ", Quantity: " << quantity
                                   << ", ServiceFee: " << service_fee << std::endl;
                 }
                 else if (-1 == have_position)
                 {
-                        buy_price     = bar.close;
+                        buy_price     = source[i]->close;
                         have_position = 0;
                         total_value += (sel_price - buy_price) * quantity;
                         total_value -= commission;
                         service_fee += commission;
                         sel_price > buy_price ? win_count++ : los_count++;
-                        std::cout << bar.time << ", CLOSSHORT: " << buy_price << ", Account: " << total_value << ", ServiceFee: " << service_fee
-                                  << ", Win: " << win_count << ", Los: " << los_count << std::endl << std::endl;
-                        buy_price     = bar.close;
-                        place_price   = fast[bar_count];
-                        highest       = bar.close;
+                        std::cout << source[i]->time << ", CLOS SHOT: " << buy_price << ", Account: " << total_value << ", ServiceFee: "
+                                  << service_fee << ", WIN: " << win_count << ", LOS: " << los_count << std::endl << std::endl;
+                        buy_price     = source[i]->close;
+                        place_price   = fast[i];
+                        highest       = source[i]->close;
                         have_position = 1;
                         quantity      = (int(total_value) * beishu / 10000) * 10000;
                         commission    = quantity / 10000;
-                        std::cout << bar.time << ", OPEN LONG: " << buy_price << ", Account: " << total_value << ", Quantity: " << quantity
+                        std::cout << source[i]->time << ", OPEN LONG: " << buy_price << ", Account: " << total_value << ", Quantity: " << quantity
                                   << ", ServiceFee: " << service_fee << std::endl;
                         // std::cout << bar.time << ", Open: " << bar.open << ", High: " << bar.high << ", Low: " << bar.low << ", Close: " << bar.close
                         //           << std::endl;
                 }
         }
-        if (fast[bar_count-1]>= slow[bar_count-1]&& fast[bar_count]< slow[bar_count]) // 快线下穿慢线
+        if (fast[i - 1] >= slow[i - 1] && fast[i] < slow[i]) // 快线下穿慢线
         {
                 if (0 == have_position)
                 {
-                        sel_price     = bar.close;
-                        place_price   = fast[bar_count];
-                        lowest        = bar.close;
+                        sel_price     = source[i]->close;
+                        place_price   = fast[i];
+                        lowest        = source[i]->close;
                         have_position = -1;
                         quantity      = (int(total_value) * beishu / 10000) * 10000;
                         commission    = quantity / 10000;
-                        std::cout << bar.time << ", Open short: " << sel_price << ", Account: " << total_value << ", Quantity: " << quantity
+                        std::cout << source[i]->time << ", OPEN SHOT: " << sel_price << ", Account: " << total_value << ", Quantity: " << quantity
                                   << ", ServiceFee: " << service_fee << std::endl;
                 }
                 else if (1 == have_position)
                 {
-                        sel_price     = bar.close;
+                        sel_price     = source[i]->close;
                         have_position = 0;
                         total_value += (sel_price - buy_price) * quantity;
                         total_value -= commission;
                         service_fee += commission;
                         sel_price > buy_price ? win_count++ : los_count++;
-                        std::cout << bar.time << ", Close long: " << sel_price << ", Account: " << total_value << ", ServiceFee: " << service_fee
-                                  << ", Win: " << win_count << ", Los: " << los_count << std::endl << std::endl;
-                        sel_price     = bar.close;
-                        place_price   = fast[bar_count];
-                        lowest        = bar.close;
+                        std::cout << source[i]->time << ", CLOS LONG: " << sel_price << ", Account: " << total_value << ", ServiceFee: "
+                                  << service_fee << ", WIN: " << win_count << ", LOS: " << los_count << std::endl << std::endl;
+                        sel_price     = source[i]->close;
+                        place_price   = fast[i];
+                        lowest        = source[i]->close;
                         have_position = -1;
                         quantity      = (int(total_value) * beishu / 10000) * 10000;
                         commission    = quantity / 10000;
-                        std::cout << bar.time << ", Open short: " << sel_price << ", Account: " << total_value << ", Quantity: " << quantity
+                        std::cout << source[i]->time << ", OPEN SHOT: " << sel_price << ", Account: " << total_value << ", Quantity: " << quantity
                                   << ", ServiceFee: " << service_fee << std::endl;
                 }
         }
