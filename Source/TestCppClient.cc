@@ -97,6 +97,10 @@ void TestCppClient::historicalDataRequests(int number)
                         m_pClient->reqHistoricalData(4009, ContractSamples::EurUsdFx(), "", "1 Y", "15 mins", "MIDPOINT", 1, 1, false,
                                                      TagValueListSPtr());
                         break;
+                case 10:
+                        m_pClient->reqHistoricalData(4010, ContractSamples::EurUsdFx(), "", "2 Y", "15 mins", "MIDPOINT", 1, 1, false,
+                                                     TagValueListSPtr());
+                        break;
                         // case 7:
                         //         m_pClient->reqHistoricalData(4007, ContractSamples::EurUsdFx(), "20180101 00:00:00", "1 Y", "15 mins", "MIDPOINT", 1, 1,
                         //                                      false, TagValueListSPtr());
@@ -194,14 +198,14 @@ void TestCppClient::historicalData(TickerId reqId, const Bar &bar)
         if (bar_count == -1)
         {
                 source[++bar_count] = &bar;
-                // std::cout << "HistoricalData. ReqId: " << reqId << ", Date: " << bar.time << ", Open: " << bar.open << ", High: " << bar.high
-                //           << ", Low: " << bar.low << ", Close: " << source[bar_count]->close << std::endl;
+                std::cout << "HistoricalData. ReqId: " << reqId << ", Date: " << bar.time << ", Open: " << bar.open << ", High: " << bar.high
+                          << ", Low: " << bar.low << ", Close: " << source[bar_count]->close << std::endl;
         }
         else if (source[bar_count]->time < bar.time)
         {
                 source[++bar_count] = &bar;
-                // std::cout << "HistoricalData. ReqId: " << reqId << ", Date: " << bar.time << ", Open: " << bar.open << ", High: " << bar.high
-                //           << ", Low: " << bar.low << ", Close: " << source[bar_count]->close << std::endl;
+                std::cout << "HistoricalData. ReqId: " << reqId << ", Date: " << bar.time << ", Open: " << bar.open << ", High: " << bar.high
+                          << ", Low: " << bar.low << ", Close: " << source[bar_count]->close << std::endl;
         }
 }
 //! [historicaldata]
@@ -211,8 +215,8 @@ void TestCppClient::historicalDataEnd(int reqId, const std::string &startDateStr
 {
         // if (reqId == 4009)
         // {
-                std::cout << "HistoricalDataEnd. ReqId: " << reqId << " - Start Date: " << startDateStr << ", End Date: " << endDateStr << std::endl;
-                computeEMA();
+        std::cout << "HistoricalDataEnd. ReqId: " << reqId << " - Start Date: " << startDateStr << ", End Date: " << endDateStr << std::endl;
+        // computeEMA();
         // }
         // for (int i = 0; i < bar_count; i++)
         // {
@@ -2701,3 +2705,14 @@ void TestCppClient::tickByTickMidPoint(int reqId, time_t time, double midPoint)
         printf("Tick-By-Tick. ReqId: %d, TickType: MidPoint, Time: %s, MidPoint: %g\n", reqId, ctime(&time), midPoint);
 }
 //! [tickbytickmidpoint]
+
+void TestCppClient::setStep(int step_fast, int step_slow)
+{
+        fast_step = step_fast;
+        slow_step = step_slow;
+
+        double fast_alpha = 2.0 / (fast_step + 1);
+        double slow_alpha = 2.0 / (slow_step + 1);
+        double fast_beta  = 1 - fast_alpha;
+        double slow_beta  = 1 - slow_alpha;
+}

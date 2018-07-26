@@ -37,8 +37,9 @@ void processMsgs(TestCppClient *client)
 
 int main(int argc, const char *argv[])
 {
-        // std::string  command;
-        int          command;
+        std::string  command;
+        int          number;
+        int          number2;
         const char   *host = argc > 1 ? argv[1] : "";
         unsigned int port  = argc > 2 ? atoi(argv[2]) : 0;
         if (port <= 0)
@@ -62,19 +63,29 @@ int main(int argc, const char *argv[])
 
         // for (int i = 9; i < 10; ++i)
         // {
-        //         client.historicalDataRequests(i);
+        client.historicalDataRequests(10);
         //         std::this_thread::sleep_for(std::chrono::seconds(10));
         // }
 
         while (true)
         {
+                std::cout << "input two step: " << std::endl;
+                std::cin >> number >> number2;
+                client.setStep(number, number2);
+                std::cout << "input your command: " << std::endl;
                 std::cin >> command;
-                if (command < 10)
+                if (command == "ema")
                 {
-                        client.historicalDataRequests(command);
+                        client.computeEMA();
                 }
-                else
+                else if (command == "get")
                 {
+                        client.historicalDataRequests(10);
+                        // client.backTest();
+                }
+                else if (command == "exit")
+                {
+                        std::cout << "Exit.";
                         break;
                 }
                 // switch (command)
@@ -89,19 +100,6 @@ int main(int argc, const char *argv[])
                 //                 break;
                 //         case 9:client.historicalDataRequests(9);
                 //         default:break;
-                // }
-                // if (command == "ema")
-                // {
-                //         client.computeEMA();
-                // }
-                // else if (command == "test")
-                // {
-                //         client.backTest();
-                // }
-                // else if (command == "exit")
-                // {
-                //         std::cout << "Exit.";
-                //         break;
                 // }
         }
 

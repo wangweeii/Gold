@@ -139,6 +139,7 @@ public:
         void computeEMA();
 
         void backTest();
+        void setStep(int step_fast,int step_slow);
 
         void testMACD(const Bar &bar);
 
@@ -261,7 +262,7 @@ private:
         double    slow[LENGTH];
 
         unsigned int fast_step = 8;
-        unsigned int slow_step = 55;
+        unsigned int slow_step = 60;
 
         double fast_alpha = 2.0 / (fast_step + 1);
         double slow_alpha = 2.0 / (slow_step + 1);
