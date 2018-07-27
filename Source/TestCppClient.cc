@@ -98,7 +98,7 @@ void TestCppClient::historicalDataRequests(int number)
                                                      TagValueListSPtr());
                         break;
                 case 10:
-                        m_pClient->reqHistoricalData(4010, ContractSamples::EurUsdFx(), "", "2 Y", "15 mins", "MIDPOINT", 1, 1, false,
+                        m_pClient->reqHistoricalData(4010, ContractSamples::EurUsdFx(), "", "1 M", "15 mins", "MIDPOINT", 1, 1, false,
                                                      TagValueListSPtr());
                         break;
                         // case 7:
