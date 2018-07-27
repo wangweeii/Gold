@@ -52,6 +52,8 @@ int main(int argc, const char *argv[])
         unsigned   attempt         = 0;
         std::cout << "Start of C++ Socket Client Test " << attempt << std::endl;
 
+
+
         TestCppClient client;
         client.connect(host, port, clientId);
         std::this_thread::sleep_for(std::chrono::seconds(2));
@@ -61,11 +63,11 @@ int main(int argc, const char *argv[])
         std::thread t(processMsgs, &client);
         // std::thread trade(sendRequests,&client);
 
-        // for (int i = 9; i < 10; ++i)
-        // {
-        client.historicalDataRequests(10);
-        //         std::this_thread::sleep_for(std::chrono::seconds(10));
-        // }
+        for (int i = 8; i < 10; ++i)
+        {
+        client.historicalDataRequests(i);
+                std::this_thread::sleep_for(std::chrono::seconds(20));
+        }
 
         while (true)
         {
