@@ -19,12 +19,18 @@
 const unsigned MAX_ATTEMPTS = 50;
 const unsigned SLEEP_TIME   = 10;
 
+// void sendRequests(TestCppClient *client)
+// {
+//         while (client->isConnected())
+//         {
+//                 client->checkTradeSignal();
+//         }
+// }
+
 void processMsgs(TestCppClient *client)
 {
-        // std::cout << "Shit" << std::endl;
         while (client->isConnected())
         {
-                // std::cout << "connected." << std::endl;
                 client->processMessages();
         }
 }
@@ -32,6 +38,8 @@ void processMsgs(TestCppClient *client)
 int main(int argc, const char *argv[])
 {
         std::string  command;
+        int          number;
+        int          number2;
         const char   *host = argc > 1 ? argv[1] : "";
         unsigned int port  = argc > 2 ? atoi(argv[2]) : 0;
         if (port <= 0)
@@ -47,32 +55,52 @@ int main(int argc, const char *argv[])
         TestCppClient client;
         client.connect(host, port, clientId);
         std::this_thread::sleep_for(std::chrono::seconds(2));
+        client.accountOperations();
 
         // client.historicalDataRequests(6);
-        client.accountOperations();
         std::thread t(processMsgs, &client);
-        for (int i = 3; i < 7; ++i)
-        {
-                client.historicalDataRequests(i);
-                std::this_thread::sleep_for(std::chrono::seconds(10));
-        }
+        // std::thread trade(sendRequests,&client);
+
+        // for (int i = 9; i < 10; ++i)
+        // {
+        client.historicalDataRequests(10);
+        //         std::this_thread::sleep_for(std::chrono::seconds(10));
+        // }
 
         while (true)
         {
+                std::cout << "input two step: " << std::endl;
+                std::cin >> number >> number2;
+                client.setStep(number, number2);
+                std::cout << "input your command: " << std::endl;
                 std::cin >> command;
                 if (command == "ema")
                 {
                         client.computeEMA();
                 }
-                else if (command == "test")
+                else if (command == "get")
                 {
-                        client.backTest();
+                        client.historicalDataRequests(10);
+                        // client.backTest();
                 }
                 else if (command == "exit")
                 {
                         std::cout << "Exit.";
                         break;
                 }
+                // switch (command)
+                // {
+                //         case 1:client.computeEMA();
+                //                 break;
+                //         case 2:client.backTest();
+                //                 break;
+                //         case 7:client.historicalDataRequests(7);
+                //                 break;
+                //         case 8:client.historicalDataRequests(8);
+                //                 break;
+                //         case 9:client.historicalDataRequests(9);
+                //         default:break;
+                // }
         }
 
         /*while (port > 1000)
