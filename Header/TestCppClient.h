@@ -255,7 +255,7 @@ private:
         bool        m_extraAuth;
         std::string m_bboExchange;
 
-        static const int LENGTH = 5000;
+        static const int LENGTH = 50000;
 
         const Bar *source[LENGTH];
         double    fast[LENGTH];

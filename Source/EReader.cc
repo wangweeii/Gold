@@ -1,16 +1,16 @@
 /* Copyright (C) 2018 Interactive Brokers LLC. All rights reserved. This code is subject to the terms
  * and conditions of the IB API Non-Commercial License or the IB API Commercial License, as applicable. */
 
-#include "../Header/StdAfx.h"
-#include "../Header/Contract.h"
-#include "../Header/EDecoder.h"
-#include "../Header/EMutex.h"
-#include "../Header/EReader.h"
-#include "../Header/EClientSocket.h"
-#include "../Header/EPosixClientSocketPlatform.h"
-#include "../Header/EReaderSignal.h"
-#include "../Header/EMessage.h"
-#include "../Header/DefaultEWrapper.h"
+#include "StdAfx.h"
+#include "Contract.h"
+#include "EDecoder.h"
+#include "EMutex.h"
+#include "EReader.h"
+#include "EClientSocket.h"
+#include "EPosixClientSocketPlatform.h"
+#include "EReaderSignal.h"
+#include "EMessage.h"
+#include "DefaultEWrapper.h"
 
 #define IN_BUF_SIZE_DEFAULT 8192
 

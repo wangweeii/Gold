@@ -1,8 +1,8 @@
 /* Copyright (C) 2018 Interactive Brokers LLC. All rights reserved. This code is subject to the terms
  * and conditions of the IB API Non-Commercial License or the IB API Commercial License, as applicable. */
-#include "../Header/StdAfx.h"
+#include "StdAfx.h"
+#include "Utils.h"
 
-#include "../Header/Utils.h"
 #include <iostream>
 
 static const std::string base64_chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"

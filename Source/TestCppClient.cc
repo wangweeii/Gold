@@ -1,33 +1,30 @@
 /* Copyright (C) 2018 Interactive Brokers LLC. All rights reserved. This code is subject to the terms
  * and conditions of the IB API Non-Commercial License or the IB API Commercial License, as applicable. */
 
-#include "../Header/StdAfx.h"
-
-#include "../Header/TestCppClient.h"
-
-#include "../Header/EClientSocket.h"
-#include "../Header/EPosixClientSocketPlatform.h"
-
-#include "../Header/Contract.h"
-#include "../Header/Order.h"
-#include "../Header/OrderState.h"
-#include "../Header/Execution.h"
-#include "../Header/CommissionReport.h"
-#include "../Header/ContractSamples.h"
-#include "../Header/OrderSamples.h"
-#include "../Header/ScannerSubscription.h"
-#include "../Header/ScannerSubscriptionSamples.h"
-#include "../Header/executioncondition.h"
-#include "../Header/PriceCondition.h"
-#include "../Header/MarginCondition.h"
-#include "../Header/PercentChangeCondition.h"
-#include "../Header/TimeCondition.h"
-#include "../Header/VolumeCondition.h"
-#include "../Header/AvailableAlgoParams.h"
-#include "../Header/FAMethodSamples.h"
-#include "../Header/CommonDefs.h"
-#include "../Header/AccountSummaryTags.h"
-#include "../Header/Utils.h"
+#include "StdAfx.h"
+#include "TestCppClient.h"
+#include "EClientSocket.h"
+#include "EPosixClientSocketPlatform.h"
+#include "Contract.h"
+#include "Order.h"
+#include "OrderState.h"
+#include "Execution.h"
+#include "CommissionReport.h"
+#include "ContractSamples.h"
+#include "OrderSamples.h"
+#include "ScannerSubscription.h"
+#include "ScannerSubscriptionSamples.h"
+#include "executioncondition.h"
+#include "PriceCondition.h"
+#include "MarginCondition.h"
+#include "PercentChangeCondition.h"
+#include "TimeCondition.h"
+#include "VolumeCondition.h"
+#include "AvailableAlgoParams.h"
+#include "FAMethodSamples.h"
+#include "CommonDefs.h"
+#include "AccountSummaryTags.h"
+#include "Utils.h"
 
 #include <cstdio>
 #include <chrono>
@@ -45,62 +42,70 @@ const int SLEEP_BETWEEN_PINGS = 30; // seconds
 // member funcs
 void TestCppClient::historicalDataRequests(int number)
 {
-        /*** Requesting historical data ***/
-        //! [reqhistoricaldata]
-        // std::time_t rawtime;
-        // std::tm     *timeinfo;
-        // char        queryTime[80];
-
-        // std::time(&rawtime);
-        // timeinfo = std::localtime(&rawtime);
-        // timeinfo=std::localtime("20160127 23:59:59");
-        // std::strftime(queryTime, 80, "%Y%m%d %H:%M:%S", timeinfo);
+        std::cout << "Request data of " << number << std::endl;
         switch (number)
         {
-                case 0:
-                        m_pClient->reqHistoricalData(4000, ContractSamples::EurUsdFx(), "20100101 00:00:00", "1 Y", "15 mins", "MIDPOINT", 1, 1,
-                                                     false, TagValueListSPtr());
-                        break;
-                case 1:
-                        m_pClient->reqHistoricalData(4001, ContractSamples::EurUsdFx(), "20110101 00:00:00", "1 Y", "15 mins", "MIDPOINT", 1, 1,
-                                                     false, TagValueListSPtr());
-                        break;
-                case 2:
-                        m_pClient->reqHistoricalData(4002, ContractSamples::EurUsdFx(), "20120101 00:00:00", "1 Y", "15 mins", "MIDPOINT", 1, 1,
-                                                     false, TagValueListSPtr());
-                        break;
-                case 3:
-                        m_pClient->reqHistoricalData(4003, ContractSamples::EurUsdFx(), "20130101 00:00:00", "1 Y", "15 mins", "MIDPOINT", 1, 1,
-                                                     false, TagValueListSPtr());
-                        break;
-                case 4:
-                        m_pClient->reqHistoricalData(4004, ContractSamples::EurUsdFx(), "20140101 00:00:00", "1 Y", "15 mins", "MIDPOINT", 1, 1,
-                                                     false, TagValueListSPtr());
-                        break;
                 case 5:
-                        m_pClient->reqHistoricalData(4005, ContractSamples::EurUsdFx(), "20150101 00:00:00", "1 Y", "15 mins", "MIDPOINT", 1, 1,
+                        m_pClient->reqHistoricalData(4005, ContractSamples::EurUsdFx(), "20060101 00:00:00", "8 M", "15 mins", "MIDPOINT", 1, 1,
                                                      false, TagValueListSPtr());
                         break;
                 case 6:
-                        m_pClient->reqHistoricalData(4006, ContractSamples::EurUsdFx(), "20160101 00:00:00", "1 Y", "15 mins", "MIDPOINT", 1, 1,
+                        m_pClient->reqHistoricalData(4006, ContractSamples::EurUsdFx(), "20070101 00:00:00", "1 Y", "15 mins", "MIDPOINT", 1, 1,
                                                      false, TagValueListSPtr());
                         break;
                 case 7:
-                        m_pClient->reqHistoricalData(4007, ContractSamples::EurUsdFx(), "20170101 00:00:00", "1 Y", "15 mins", "MIDPOINT", 1, 1,
+                        m_pClient->reqHistoricalData(4007, ContractSamples::EurUsdFx(), "20080101 00:00:00", "1 Y", "15 mins", "MIDPOINT", 1, 1,
                                                      false, TagValueListSPtr());
                         break;
                 case 8:
-                        m_pClient->reqHistoricalData(4008, ContractSamples::EurUsdFx(), "20180101 00:00:00", "1 Y", "15 mins", "MIDPOINT", 1, 1,
+                        m_pClient->reqHistoricalData(4008, ContractSamples::EurUsdFx(), "20090101 00:00:00", "1 Y", "15 mins", "MIDPOINT", 1, 1,
                                                      false, TagValueListSPtr());
                         break;
                 case 9:
-                        m_pClient->reqHistoricalData(4009, ContractSamples::EurUsdFx(), "", "1 Y", "15 mins", "MIDPOINT", 1, 1, false,
-                                                     TagValueListSPtr());
+                        m_pClient->reqHistoricalData(4009, ContractSamples::EurUsdFx(), "20100101 00:00:00", "1 Y", "15 mins", "MIDPOINT", 1, 1,
+                                                     false, TagValueListSPtr());
                         break;
                 case 10:
-                        m_pClient->reqHistoricalData(4010, ContractSamples::EurUsdFx(), "", "1 M", "15 mins", "MIDPOINT", 1, 1, false,
-                                                     TagValueListSPtr());
+                        m_pClient->reqHistoricalData(4010, ContractSamples::EurUsdFx(), "20110101 00:00:00", "1 Y", "15 mins", "MIDPOINT", 1, 1,
+                                                     false, TagValueListSPtr());
                         break;
+                case 11:
+                        m_pClient->reqHistoricalData(4011, ContractSamples::EurUsdFx(), "20120101 00:00:00", "1 Y", "15 mins", "MIDPOINT", 1, 1,
+                                                     false, TagValueListSPtr());
+                        break;
+                case 12:
+                        m_pClient->reqHistoricalData(4012, ContractSamples::EurUsdFx(), "20130101 00:00:00", "1 Y", "15 mins", "MIDPOINT", 1, 1,
+                                                     false, TagValueListSPtr());
+                        break;
+                case 13:
+                        m_pClient->reqHistoricalData(4013, ContractSamples::EurUsdFx(), "20140101 00:00:00", "1 Y", "15 mins", "MIDPOINT", 1, 1,
+                                                     false, TagValueListSPtr());
+                        break;
+                case 14:
+                        m_pClient->reqHistoricalData(4014, ContractSamples::EurUsdFx(), "20150101 00:00:00", "1 Y", "15 mins", "MIDPOINT", 1, 1,
+                                                     false, TagValueListSPtr());
+                        break;
+                case 15:
+                        m_pClient->reqHistoricalData(4015, ContractSamples::EurUsdFx(), "20160101 00:00:00", "1 Y", "15 mins", "MIDPOINT", 1, 1,
+                                                     false, TagValueListSPtr());
+                        break;
+                case 16:
+                        m_pClient->reqHistoricalData(4016, ContractSamples::EurUsdFx(), "20170101 00:00:00", "1 Y", "15 mins", "MIDPOINT", 1, 1,
+                                                     false, TagValueListSPtr());
+                        break;
+                case 17:
+                        m_pClient->reqHistoricalData(4017, ContractSamples::EurUsdFx(), "20180101 00:00:00", "1 Y", "15 mins", "MIDPOINT", 1, 1,
+                                                     false, TagValueListSPtr());
+                        break;
+                case 18:
+                        m_pClient->reqHistoricalData(4018, ContractSamples::EurUsdFx(), "20180701 00:00:00", "1 M", "15 mins", "MIDPOINT", 1, 1,
+                                                     false, TagValueListSPtr());
+                        break;
+                case 19:
+                        m_pClient->reqHistoricalData(4019, ContractSamples::EurUsdFx(), "", "1 M", "15 mins", "MIDPOINT", 1, 1,
+                                                     false, TagValueListSPtr());
+                        break;
+
                         // case 7:
                         //         m_pClient->reqHistoricalData(4007, ContractSamples::EurUsdFx(), "20180101 00:00:00", "1 Y", "15 mins", "MIDPOINT", 1, 1,
                         //                                      false, TagValueListSPtr());
@@ -213,16 +218,14 @@ void TestCppClient::historicalData(TickerId reqId, const Bar &bar)
 //! [historicaldataend]
 void TestCppClient::historicalDataEnd(int reqId, const std::string &startDateStr, const std::string &endDateStr)
 {
-        // if (reqId == 4009)
-        // {
+        FILE     *fp = fopen("eurusd", "a+");
+        for (int i   = 0; i <= bar_count; ++i)
+        {
+                fprintf(fp, "%s %f %f %f %f\n", source[i]->time.c_str(), source[i]->open, source[i]->high, source[i]->low, source[i]->close);
+        }
+        fclose(fp);
+        bar_count = -1;
         std::cout << "HistoricalDataEnd. ReqId: " << reqId << " - Start Date: " << startDateStr << ", End Date: " << endDateStr << std::endl;
-        // computeEMA();
-        // }
-        // for (int i = 0; i < bar_count; i++)
-        // {
-        //         std::cout << source[i]->time << ", Open: " << source[i]->open << ", High: " << source[i]->high << ", Low: " << source[i]->low
-        //                   << ", Close: " << source[i]->close << std::endl;
-        // }
 }
 //! [historicaldataend]
 

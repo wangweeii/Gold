@@ -1,16 +1,16 @@
 /* Copyright (C) 2018 Interactive Brokers LLC. All rights reserved. This code is subject to the terms
  * and conditions of the IB API Non-Commercial License or the IB API Commercial License, as applicable. */
 
-#include "../Header/StdAfx.h"
-#include "../Header/OrderCondition.h"
-#include "../Header/executioncondition.h"
-#include "../Header/MarginCondition.h"
-#include "../Header/TimeCondition.h"
-#include "../Header/PercentChangeCondition.h"
-#include "../Header/PriceCondition.h"
-#include "../Header/VolumeCondition.h"
-#include "../Header/EDecoder.h"
-#include "../Header/EClient.h"
+#include "StdAfx.h"
+#include "OrderCondition.h"
+#include "executioncondition.h"
+#include "MarginCondition.h"
+#include "TimeCondition.h"
+#include "PercentChangeCondition.h"
+#include "PriceCondition.h"
+#include "VolumeCondition.h"
+#include "EDecoder.h"
+#include "EClient.h"
 
 const char *OrderCondition::readExternal(const char *ptr, const char *endPtr)
 {

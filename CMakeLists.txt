@@ -1,14 +1,19 @@
 cmake_minimum_required(VERSION 2.8)
 project(Gold)
 
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 14)
 #add_compile_options(-std=c++11)
-#SET(CMAKE_CXX_FLAGS -pthread)
 
-file(GLOB SOURCE "Source/*.cc" "Header/*.h")
+#set(PROJECT_LINK_LIBS libhello.a)
+#link_directories(/Users/vv/lib)
 
+include_directories(Header)
+
+file(GLOB SOURCE "Source/*.cc")
 add_executable(Gold ${SOURCE})
-
+target_link_libraries(Gold Threads::Threads)# ${PROJECT_LINK_LIBS} ${PYTHON_LIBRARIES})
 find_package(Threads REQUIRED)
 
-target_link_libraries(Gold Threads::Threads)
+#find_package(PythonLibs REQUIRED)
+#include_directories(${PYTHON_INCLUDE_DIRS})
+#target_link_libraries(Gold Threads::Threads ${PYTHON_LIBRARIES})

@@ -1,24 +1,21 @@
 /* Copyright (C) 2018 Interactive Brokers LLC. All rights reserved. This code is subject to the terms
  * and conditions of the IB API Non-Commercial License or the IB API Commercial License, as applicable. */
 
-#include "../Header/StdAfx.h"
-
-#include "../Header/EPosixClientSocketPlatform.h"
-
-#include "../Header/EClient.h"
-
-#include "../Header/EWrapper.h"
-#include "../Header/TwsSocketClientErrors.h"
-#include "../Header/Contract.h"
-#include "../Header/Order.h"
-#include "../Header/OrderState.h"
-#include "../Header/Execution.h"
-#include "../Header/ScannerSubscription.h"
-#include "../Header/CommissionReport.h"
-#include "../Header/EDecoder.h"
-#include "../Header/EMessage.h"
-#include "../Header/ETransport.h"
-#include "../Header/FamilyCode.h"
+#include "StdAfx.h"
+#include "EPosixClientSocketPlatform.h"
+#include "EClient.h"
+#include "EWrapper.h"
+#include "TwsSocketClientErrors.h"
+#include "Contract.h"
+#include "Order.h"
+#include "OrderState.h"
+#include "Execution.h"
+#include "ScannerSubscription.h"
+#include "CommissionReport.h"
+#include "EDecoder.h"
+#include "EMessage.h"
+#include "ETransport.h"
+#include "FamilyCode.h"
 
 #include <sstream>
 #include <iomanip>

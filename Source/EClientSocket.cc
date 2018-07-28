@@ -1,17 +1,15 @@
 /* Copyright (C) 2018 Interactive Brokers LLC. All rights reserved. This code is subject to the terms
  * and conditions of the IB API Non-Commercial License or the IB API Commercial License, as applicable. */
 
-#include "../Header/StdAfx.h"
-
-#include "../Header/EPosixClientSocketPlatform.h"
-#include "../Header/EClientSocket.h"
-
-#include "../Header/TwsSocketClientErrors.h"
-#include "../Header/EWrapper.h"
-#include "../Header/EDecoder.h"
-#include "../Header/EReaderSignal.h"
-#include "../Header/EReader.h"
-#include "../Header/EMessage.h"
+#include "StdAfx.h"
+#include "EPosixClientSocketPlatform.h"
+#include "EClientSocket.h"
+#include "TwsSocketClientErrors.h"
+#include "EWrapper.h"
+#include "EDecoder.h"
+#include "EReaderSignal.h"
+#include "EReader.h"
+#include "EMessage.h"
 
 #include <string.h>
 #include <assert.h>

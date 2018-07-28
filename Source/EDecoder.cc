@@ -1,24 +1,25 @@
 /* Copyright (C) 2018 Interactive Brokers LLC. All rights reserved. This code is subject to the terms
  * and conditions of the IB API Non-Commercial License or the IB API Commercial License, as applicable. */
 
-#include "../Header/StdAfx.h"
 #include <assert.h>
 #include <string>
 #include <bitset>
-#include "../Header/EWrapper.h"
-#include "../Header/Order.h"
-#include "../Header/Contract.h"
-#include "../Header/OrderState.h"
-#include "../Header/Execution.h"
-#include "../Header/FamilyCode.h"
-#include "../Header/CommissionReport.h"
-#include "../Header/TwsSocketClientErrors.h"
-#include "../Header/EDecoder.h"
-#include "../Header/EClientMsgSink.h"
-#include "../Header/PriceIncrement.h"
 #include <string.h>
 #include <cstdlib>
 #include <sstream>
+
+#include "StdAfx.h"
+#include "EWrapper.h"
+#include "Order.h"
+#include "Contract.h"
+#include "OrderState.h"
+#include "Execution.h"
+#include "FamilyCode.h"
+#include "CommissionReport.h"
+#include "TwsSocketClientErrors.h"
+#include "EDecoder.h"
+#include "EClientMsgSink.h"
+#include "PriceIncrement.h"
 
 EDecoder::EDecoder(int serverVersion, EWrapper *callback, EClientMsgSink *clientMsgSink)
 {

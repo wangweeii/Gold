@@ -1,10 +1,10 @@
 /* Copyright (C) 2018 Interactive Brokers LLC. All rights reserved. This code is subject to the terms
  * and conditions of the IB API Non-Commercial License or the IB API Commercial License, as applicable. */
 
-#include "../Header/StdAfx.h"
-#include "../Header/ContractCondition.h"
-#include "../Header/EDecoder.h"
-#include "../Header/EClient.h"
+#include "StdAfx.h"
+#include "ContractCondition.h"
+#include "EDecoder.h"
+#include "EClient.h"
 
 std::string ContractCondition::toString()
 {

@@ -1,10 +1,8 @@
 /* Copyright (C) 2018 Interactive Brokers LLC. All rights reserved. This code is subject to the terms
  * and conditions of the IB API Non-Commercial License or the IB API Commercial License, as applicable. */
-#include "../Header/StdAfx.h"
-
-#include "../Header/ContractSamples.h"
-
-#include "../Header/Contract.h"
+#include "StdAfx.h"
+#include "ContractSamples.h"
+#include "Contract.h"
 
 /*
 * Contracts can be defined in multiple ways. The TWS/IB Gateway will always perform a query on the available contracts

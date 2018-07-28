@@ -13,8 +13,8 @@
 #include <chrono>
 #include <thread>
 
-#include "../Header/StdAfx.h"
-#include "../Header/TestCppClient.h"
+#include "StdAfx.h"
+#include "TestCppClient.h"
 
 const unsigned MAX_ATTEMPTS = 50;
 const unsigned SLEEP_TIME   = 10;
@@ -52,38 +52,36 @@ int main(int argc, const char *argv[])
         unsigned   attempt         = 0;
         std::cout << "Start of C++ Socket Client Test " << attempt << std::endl;
 
-
-
         TestCppClient client;
         client.connect(host, port, clientId);
         std::this_thread::sleep_for(std::chrono::seconds(2));
         client.accountOperations();
 
         // client.historicalDataRequests(6);
-        std::thread t(processMsgs, &client);
+        // std::thread t(processMsgs, &client);
         // std::thread trade(sendRequests,&client);
 
-        for (int i = 8; i < 10; ++i)
-        {
-        client.historicalDataRequests(i);
-                std::this_thread::sleep_for(std::chrono::seconds(20));
-        }
 
         while (true)
         {
-                std::cout << "input two step: " << std::endl;
-                std::cin >> number >> number2;
-                client.setStep(number, number2);
                 std::cout << "input your command: " << std::endl;
                 std::cin >> command;
                 if (command == "ema")
                 {
+                        std::cout << "input two step: " << std::endl;
+                        std::cin >> number >> number2;
+                        client.setStep(number, number2);
                         client.computeEMA();
                 }
                 else if (command == "get")
                 {
-                        client.historicalDataRequests(10);
-                        // client.backTest();
+                        std::cout << "Please input the number of year begin:" << std::endl;
+                        std::cin >> number;
+                        for (int i = number; i < 20; ++i)
+                        {
+                                client.historicalDataRequests(i);
+                                std::this_thread::sleep_for(std::chrono::seconds(30));
+                        }
                 }
                 else if (command == "exit")
                 {

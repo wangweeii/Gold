@@ -1,9 +1,8 @@
 /* Copyright (C) 2018 Interactive Brokers LLC. All rights reserved. This code is subject to the terms
  * and conditions of the IB API Non-Commercial License or the IB API Commercial License, as applicable. */
-#include "../Header/StdAfx.h"
-
-#include "../Header/ScannerSubscription.h"
-#include "../Header/ScannerSubscriptionSamples.h"
+#include "StdAfx.h"
+#include "ScannerSubscription.h"
+#include "ScannerSubscriptionSamples.h"
 
 ScannerSubscription ScannerSubscriptionSamples::HotUSStkByVolume()
 {

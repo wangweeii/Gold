@@ -1,9 +1,9 @@
 /* Copyright (C) 2018 Interactive Brokers LLC. All rights reserved. This code is subject to the terms
  * and conditions of the IB API Non-Commercial License or the IB API Commercial License, as applicable. */
 
-#include "../Header/StdAfx.h"
-#include "../Header/EMessage.h"
-#include "../Header/ESocket.h"
+#include "StdAfx.h"
+#include "EMessage.h"
+#include "ESocket.h"
 
 #include <assert.h>
 
