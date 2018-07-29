@@ -7,6 +7,7 @@
 
 #define FAST_STEP 8
 #define SLOW_STEP 55
+#define LINES 326587
 
 #include "EWrapper.h"
 #include "EReaderOSSignal.h"
@@ -138,14 +139,15 @@ public:
 
         void computeEMA();
 
-        void backTest();
-        void setStep(int step_fast,int step_slow);
+        void backTest(std::string begin);
+
+        void setStep(int step_fast, int step_slow);
 
         void testMACD(const Bar &bar);
 
 private:
 
-        void testEmaCross(int i);
+        void testEmaCross(int i, double high, double low, double close, std::string time);
 
         void pnlOperation();
 
@@ -257,9 +259,16 @@ private:
 
         static const int LENGTH = 50000;
 
-        const Bar *source[LENGTH];
-        double    fast[LENGTH];
-        double    slow[LENGTH];
+        char        date_time[18];
+        const Bar   *source[LENGTH];
+        // double      fast[LENGTH];
+        // double      slow[LENGTH];
+        // const Bar   *source[LINES];
+        double      fast[LINES];
+        double      slow[LINES];
+        std::string current_time;
+
+        double bar_open, bar_high, bar_low, bar_close;
 
         unsigned int fast_step = 8;
         unsigned int slow_step = 60;
@@ -268,6 +277,11 @@ private:
         double slow_alpha = 2.0 / (slow_step + 1);
         double fast_beta  = 1 - fast_alpha;
         double slow_beta  = 1 - slow_alpha;
+
+        // double fast_ema     = 0;
+        // double slow_ema     = 0;
+        // double old_fast_ema = 0;
+        // double old_slow_ema = 0;
 
         int    have_position = 0;
         double buy_price     = 0;

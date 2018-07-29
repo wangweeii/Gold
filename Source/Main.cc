@@ -38,6 +38,8 @@ void processMsgs(TestCppClient *client)
 int main(int argc, const char *argv[])
 {
         std::string  command;
+        std::string  begin;
+        std::string  end   = "2019";
         int          number;
         int          number2;
         const char   *host = argc > 1 ? argv[1] : "";
@@ -57,31 +59,33 @@ int main(int argc, const char *argv[])
         std::this_thread::sleep_for(std::chrono::seconds(2));
         client.accountOperations();
 
-        // client.historicalDataRequests(6);
-        // std::thread t(processMsgs, &client);
+        std::thread t(processMsgs, &client);
+        std::this_thread::sleep_for(std::chrono::seconds(2));
+        // client.historicalDataRequests(2005);
         // std::thread trade(sendRequests,&client);
+        // client.historicalDataRequests(19);
 
 
         while (true)
         {
                 std::cout << "input your command: " << std::endl;
                 std::cin >> command;
-                if (command == "ema")
+                if (command == "test")
                 {
-                        std::cout << "input two step: " << std::endl;
-                        std::cin >> number >> number2;
+                        std::cout << "input three step: " << std::endl;
+                        std::cin >> number >> number2 >> begin;
                         client.setStep(number, number2);
-                        client.computeEMA();
+                        client.backTest(begin);
                 }
                 else if (command == "get")
                 {
                         std::cout << "Please input the number of year begin:" << std::endl;
                         std::cin >> number;
-                        for (int i = number; i < 20; ++i)
-                        {
-                                client.historicalDataRequests(i);
-                                std::this_thread::sleep_for(std::chrono::seconds(30));
-                        }
+                        // for (int i = number; i < 2020; ++i)
+                        // {
+                                client.historicalDataRequests(number);
+                                // std::this_thread::sleep_for(std::chrono::seconds(120));
+                        // }
                 }
                 else if (command == "exit")
                 {
