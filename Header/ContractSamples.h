@@ -21,6 +21,8 @@ public:
 
         static Contract GbpUsdFx();
 
+        static Contract GbpJpyFx();
+
         static Contract XAUUSD();
 
         static Contract Index();
