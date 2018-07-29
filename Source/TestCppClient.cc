@@ -93,18 +93,21 @@ void TestCppClient::historicalDataRequests(int number)
                         m_pClient->reqHistoricalData(2016, ContractSamples::EurUsdFx(), "20180101 00:00:00", "1 M", "1 min", "MIDPOINT", 1, 1,
                                                      false, TagValueListSPtr());
                         break;
-                // case 2017:
-                //         m_pClient->reqHistoricalData(2017, ContractSamples::EurUsdFx(), "20180101 00:00:00", "1 Y", "15 mins", "MIDPOINT", 1, 1,
-                //                                      false, TagValueListSPtr());
-                //         break;
-                // case 2018:
-                //         m_pClient->reqHistoricalData(2018, ContractSamples::EurUsdFx(), "20180701 00:00:00", "6 M", "15 mins", "MIDPOINT", 1, 1,
-                //                                      false, TagValueListSPtr());
-                //         break;
-                // case 2019:
-                //         m_pClient->reqHistoricalData(2019, ContractSamples::EurUsdFx(), "", "1 Y", "1 min", "MIDPOINT", 1, 1,
-                //                                      false, TagValueListSPtr());
-                //         break;
+                case 2017:
+                        m_pClient->reqHistoricalTicks(2017, ContractSamples::EurUsdFx(), "20180725 00:00:00", "", 1000, "MIDPOINT", 1, true,
+                                                      TagValueListSPtr());
+                        break;
+                        //         m_pClient->reqHistoricalData(2017, ContractSamples::EurUsdFx(), "20180101 00:00:00", "1 Y", "15 mins", "MIDPOINT", 1, 1,
+                        //                                      false, TagValueListSPtr());
+                        //         break;
+                        // case 2018:
+                        //         m_pClient->reqHistoricalData(2018, ContractSamples::EurUsdFx(), "20180701 00:00:00", "6 M", "15 mins", "MIDPOINT", 1, 1,
+                        //                                      false, TagValueListSPtr());
+                        //         break;
+                        // case 2019:
+                        //         m_pClient->reqHistoricalData(2019, ContractSamples::EurUsdFx(), "", "1 Y", "1 min", "MIDPOINT", 1, 1,
+                        //                                      false, TagValueListSPtr());
+                        //         break;
 
                         // case 7:
                         //         m_pClient->reqHistoricalData(4007, ContractSamples::EurUsdFx(), "20180101 00:00:00", "1 Y", "15 mins", "MIDPOINT", 1, 1,
@@ -2354,7 +2357,6 @@ void
 TestCppClient::accountSummary(int reqId, const std::string &account, const std::string &tag, const std::string &value, const std::string &currency)
 {
         // total_value = atof(value.c_str());
-        std::cout << total_value << std::endl;
         printf("Acct Summary. ReqId: %d, Account: %s, Tag: %s, Value: %s, Currency: %s\n", reqId, account.c_str(), tag.c_str(), value.c_str(),
                currency.c_str());
 }
@@ -2679,7 +2681,9 @@ void TestCppClient::historicalTicks(int reqId, const std::vector<HistoricalTick>
         for (HistoricalTick tick : ticks)
         {
                 std::time_t t = tick.time;
-                std::cout << "Historical tick. ReqId: " << reqId << ", time: " << ctime(&t) << ", price: " << tick.price << ", size: " << tick.size
+                // std::cout << "Historical tick. ReqId: " << reqId << ", time: " << ctime(&t) << ", price: " << tick.price << ", size: " << tick.size
+                //           << std::endl;
+                std::cout << "Historical tick. ReqId: " << reqId << ", time: " << ctime(&t) << ", price: " << tick.price << ", tick: " << ++bar_count
                           << std::endl;
         }
 }

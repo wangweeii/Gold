@@ -57,11 +57,11 @@ int main(int argc, const char *argv[])
         TestCppClient client;
         client.connect(host, port, clientId);
         std::this_thread::sleep_for(std::chrono::seconds(2));
-        client.accountOperations();
+        // client.accountOperations();
+        client.historicalDataRequests(2017);
 
         std::thread t(processMsgs, &client);
         std::this_thread::sleep_for(std::chrono::seconds(2));
-        // client.historicalDataRequests(2005);
         // std::thread trade(sendRequests,&client);
         // client.historicalDataRequests(19);
 
