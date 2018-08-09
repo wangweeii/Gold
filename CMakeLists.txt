@@ -7,9 +7,9 @@ set(CMAKE_CXX_STANDARD 14)
 #set(PROJECT_LINK_LIBS libhello.a)
 #link_directories(/Users/vv/lib)
 
-include_directories(Header)
+include_directories(include)
 
-file(GLOB SOURCE "Source/*.cc")
+file(GLOB SOURCE "source/*.cc" "api/*.cc")
 add_executable(Gold ${SOURCE})
 target_link_libraries(Gold Threads::Threads)# ${PROJECT_LINK_LIBS} ${PYTHON_LIBRARIES})
 find_package(Threads REQUIRED)
