@@ -9,7 +9,7 @@ set(CMAKE_CXX_STANDARD 14)
 
 include_directories(include)
 
-file(GLOB SOURCE "source/*.cc" "api/*.cc")
+file(GLOB SOURCE "source/*.cc" "test/*.*")
 add_executable(Gold ${SOURCE})
 target_link_libraries(Gold Threads::Threads)# ${PROJECT_LINK_LIBS} ${PYTHON_LIBRARIES})
 find_package(Threads REQUIRED)
