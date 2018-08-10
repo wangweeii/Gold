@@ -16,7 +16,3 @@ add_executable(Gold ${SOURCE})
 target_link_libraries(Gold Threads::Threads)# ${PROJECT_LINK_LIBS} ${PYTHON_LIBRARIES})
 
 find_package(Threads REQUIRED)
-
-#find_package(PythonLibs REQUIRED)
-#include_directories(${PYTHON_INCLUDE_DIRS})
-#target_link_libraries(Gold Threads::Threads ${PYTHON_LIBRARIES})
