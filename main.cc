@@ -8,35 +8,23 @@
 
 int main(int argc, char **argv)
 {
-        FILE       *fp   = fopen("d:/EURUSD.csv", "r");
-        char       line[60];
-        char       symbol[50];
-        char       year[50];
-        char       time[50];
-        double     bid, ask;
-        const char delim = ',';
-        char       *result;
+        FILE *fp   = fopen("d:/EURUSD.csv", "r");
+        char line[60];
+        char delim = ',';
+        char *result;
 
-
-        // fscanf(fp, "%s %s", symbol, year);
-        // printf("%s %s", symbol, year);
-        // fscanf(fp, "%s,%s,%s", symbol, year, time);
-        // printf("%s %s %s", symbol, year, time);
-        for (int i = 0; i < 5; ++i)
+        while (fgets(line, 60, fp))
         {
-                fgets(line, 60, fp);
-                // fscanf(fp, "%s,%s %s,%lf,%lf", symbol, year, time, &bid, &ask);
-                printf("%s", line);
-                // printf("%s %s %s %f %f\n", symbol, year, time, bid, ask);
+                // printf("%d %s", strlen(line), line);
+                line[strlen(line) - 1] = 0;
+                // printf("%d %s\n", strlen(line), line);
                 result = strtok(line, &delim);
                 while (result)
                 {
-                        printf("%s---", result);
+                        printf("%s\t", result);
                         result = strtok(NULL, &delim);
                 }
                 printf("\n");
         }
-        // fgets(line, 50, fp);
-        // printf("%s\n", line);
         return 0;
 }
