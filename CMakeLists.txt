@@ -9,9 +9,9 @@ set(CMAKE_CXX_STANDARD 14)
 
 include_directories(include)
 
-file(GLOB SOURCE "source/*.cc")
+#file(GLOB SOURCE "source/*.cc")
 
-add_executable(Gold ${SOURCE} db.cc main.cc)
+add_executable(Gold main.cc)
 
 #target_link_libraries(Gold Threads::Threads)# ${PROJECT_LINK_LIBS} ${PYTHON_LIBRARIES})
 
