@@ -38,30 +38,55 @@ void insert2db(FILE *fp)
 int main(int argc, char **argv)
 {
         //FILE        *fp = fopen("d:/tick/EURUSD.csv", "r");
-        //FILE *fp = fopen("/Users/vv/Downloads/tick/EURUSD-2009-05.csv", "r");
+        FILE *fp = fopen("/Users/vv/Downloads/tick/EURUSD-2009-05.csv", "r");
         //insert2db(fp);
-        //fclose(fp);
 
         MYSQL *db = mysql_init(nullptr);
         if (mysql_real_connect(db, "127.0.0.1", "root", "", "test", 3306, nullptr, 0))
         {
-                printf("Yeah!\n");
-                sql = "select * from eurusd;";
+                printf("Connect Success\n");
+        }
+
+        /*sql = "select * from eurusd;";
+        if (mysql_real_query(db, sql.c_str(), strlen(sql.c_str())))
+        {
+                printf("Query Error!!!\n");
+        }
+        else
+        {
+                MYSQL_RES *res = mysql_store_result(db);
+                MYSQL_ROW row  = mysql_fetch_row(res);
+                for (int  i    = 0; i < mysql_num_fields(res); ++i)
+                {
+                        printf("%s ", row[i]);
+                }
+        }*/
+
+        //while (fgets(line, 60, fp))
+        for (int i = 0; i < 100; i++)
+        {
+                fgets(line, 60, fp);
+                line[strlen(line) - 1] = 0;
+                //std::cout << line << std::endl;
+                result = strtok(line, ",");
+                // 拼装SQL语句
+                result = strtok(nullptr, ",");
+                sql    = "insert into eurusd(time, bid, ask) values('";
+                sql += result + "', ";
+                result = strtok(nullptr, ",");
+                sql += result + ", ";
+                result = strtok(nullptr, ",");
+                sql += result + ");";
+
+                // 执行SQL语句
                 if (mysql_real_query(db, sql.c_str(), strlen(sql.c_str())))
                 {
-                        printf("Query Error!!!\n");
+                        printf("Insert Error!!\n");
+                        break;
                 }
-                else
-                {
-                        MYSQL_RES *res = mysql_store_result(db);
-                        MYSQL_ROW row  = mysql_fetch_row(res);
-                        for (int  i    = 0; i < mysql_num_fields(res); ++i)
-                        {
-                                printf("%s ", row[i]);
-                        }
-                }
-                mysql_close(db);
         }
+        mysql_close(db);
+        fclose(fp);
 
         printf("Shit");
         return 0;
