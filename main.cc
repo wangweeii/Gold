@@ -8,20 +8,20 @@
 
 int main(int argc, char **argv)
 {
-        FILE       *fp     = fopen("d:/EURUSD.csv", "r");
-        char       line[60];
-        const char delim   = ',';
-        char       *result = nullptr;
+        FILE *fp = fopen("d:/tick/EURUSD.csv", "r");
+        char line[60];
+        char *result;
 
         while (fgets(line, 60, fp))
         {
-                // printf("%s", line);
-                result = strtok(line, &delim);
+                line[strlen(line) - 1] = 0;
+                result = strtok(line, ",");
                 while (result)
                 {
                         printf("%s ", result);
-                        result = strtok(nullptr, &delim);
+                        result = strtok(nullptr, ",");
                 }
+                printf("\n");
         }
 
         fclose(fp);
