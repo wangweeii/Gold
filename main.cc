@@ -15,7 +15,7 @@ int main(int argc, char **argv)
 
         while (fgets(line, 60, fp))
         {
-                printf("%s", line);
+                // printf("%s", line);
                 result = strtok(line, &delim);
                 while (result)
                 {
