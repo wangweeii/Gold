@@ -22,7 +22,13 @@ int main(int argc, char **argv)
                 time   = strtok(nullptr, ",");
                 Bid    = strtok(nullptr, ",");
                 Ask    = strtok(nullptr, ",");
-                printf("%s-%s: %g %g\n", symbol.c_str(), time.c_str(), atof(Bid.c_str()), atof(Ask.c_str()));
+                // time += ", ";
+                // time += Bid;
+                // time += ", ";
+                // time += Ask;
+                // symbol = time + ", " + Bid + ", " + Ask;
+                // printf("%s-%s: %g %g\n", symbol.c_str(), time.c_str(), atof(Bid.c_str()), atof(Ask.c_str()));
+                std::cout << time;
         }
 
         fclose(fp);
