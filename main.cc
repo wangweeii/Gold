@@ -5,34 +5,64 @@
 #include <iostream>
 #include <cstring>
 #include <cstdio>
+#include "mysql.h"
+//#include "include/mysql.h"
+
+char        line[60];
+std::string sql;
+std::string result;
+
+void insert2db(FILE *fp)
+{
+        //while (fgets(line, 60, fp))
+        for (int i = 0; i < 5; i++)
+        {
+                fgets(line, 60, fp);// 从CSV文件中读取一行
+                line[strlen(line) - 1] = 0;// 去掉行尾换行符
+                result = strtok(line, ",");// 获取第一串字符'EURUSD'并丢掉
+
+                // 拼装SQL语句
+                result = strtok(nullptr, ",");
+                sql    = "insert into eurusd(result, bid, ask) values('";
+                sql += result + "', ";
+                result = strtok(nullptr, ",");
+                sql += result + ", ";
+                result = strtok(nullptr, ",");
+                sql += result + ");";
+
+                // 插入数据库
+                std::cout << sql << std::endl;
+        }
+}
 
 int main(int argc, char **argv)
 {
-        FILE        *fp = fopen("d:/tick/EURUSD.csv", "r");
-        char        line[60];
-        std::string symbol;
-        std::string time;
-        std::string Bid;
-        std::string Ask;
+        //FILE        *fp = fopen("d:/tick/EURUSD.csv", "r");
+        //FILE *fp = fopen("/Users/vv/Downloads/tick/EURUSD-2009-05.csv", "r");
+        //insert2db(fp);
+        //fclose(fp);
 
-        while (fgets(line, 60, fp))
+        MYSQL *db = mysql_init(nullptr);
+        if (mysql_real_connect(db, "127.0.0.1", "root", "", "test", 3306, nullptr, 0))
         {
-                std::cout << line;
-                // line[strlen(line) - 1] = 0;
-                symbol = strtok(line, ",");
-                time   = strtok(nullptr, ",");
-                Bid    = strtok(nullptr, ",");
-                Ask    = strtok(nullptr, ",");
-                // time += ", ";
-                // time += Bid;
-                // time += ", ";
-                // time += Ask;
-                // symbol = time + ", " + Bid + ", " + Ask;
-                // printf("%s-%s: %g %g\n", symbol.c_str(), time.c_str(), atof(Bid.c_str()), atof(Ask.c_str()));
-                // std::cout << time;
+                printf("Yeah!\n");
+                sql = "select * from eurusd;";
+                if (mysql_real_query(db, sql.c_str(), strlen(sql.c_str())))
+                {
+                        printf("Query Error!!!\n");
+                }
+                else
+                {
+                        MYSQL_RES *res = mysql_store_result(db);
+                        MYSQL_ROW row  = mysql_fetch_row(res);
+                        for (int  i    = 0; i < mysql_num_fields(res); ++i)
+                        {
+                                printf("%s ", row[i]);
+                        }
+                }
+                mysql_close(db);
         }
 
-        fclose(fp);
         printf("Shit");
         return 0;
 }
