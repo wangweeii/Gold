@@ -17,6 +17,7 @@ int main(int argc, char **argv)
 
         while (fgets(line, 60, fp))
         {
+                std::cout << line;
                 // line[strlen(line) - 1] = 0;
                 symbol = strtok(line, ",");
                 time   = strtok(nullptr, ",");
@@ -28,7 +29,7 @@ int main(int argc, char **argv)
                 // time += Ask;
                 // symbol = time + ", " + Bid + ", " + Ask;
                 // printf("%s-%s: %g %g\n", symbol.c_str(), time.c_str(), atof(Bid.c_str()), atof(Ask.c_str()));
-                std::cout << time;
+                // std::cout << time;
         }
 
         fclose(fp);
