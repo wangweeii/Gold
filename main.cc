@@ -3,46 +3,21 @@
 //
 
 #include <iostream>
-#include <cstring>
-#include <cstdio>
+//#include <cstring>
+#include <dirent.h>
 #include "mysql.h"
 
-char        line[60];
-std::string sql;
-std::string result;
+char          line[60];
+std::string   sql;
+std::string   result;
+//std::string   file = "/Users/vv/Downloads/tick/";
+struct dirent *ent;
+DIR           *dir;
 
-void insert2db(FILE *fp, MYSQL *db)
-{
-        // while (fgets(line, 60, fp))
-        for (int i = 0; i < 5; i++)
-        {
-                fgets(line, 60, fp);// 从CSV文件中读取一行
-                line[strlen(line) - 1] = 0;// 去掉行尾换行符
-                result = strtok(line, ",");// 获取第一串字符'EURUSD'并丢掉
-
-                // 拼装SQL语句
-                sql    = "insert into eurusd(result, bid, ask) values('";
-                result = strtok(nullptr, ",");
-                sql += result + "', ";
-                result = strtok(nullptr, ",");
-                sql += result + ", ";
-                result = strtok(nullptr, ",");
-                sql += result + ");";
-
-                // 插入数据库
-                std::cout << sql << std::endl;
-                if (mysql_real_query(db, sql.c_str(), strlen(sql.c_str())))
-                {
-                        printf("Insert Error: %s\n", mysql_error(db));
-                        break;
-                }
-        }
-}
-
+void insert2db(FILE *fp, MYSQL *db);
 
 int main(int argc, char *argv[])
 {
-        FILE  *fp = fopen("/Users/vv/Downloads/tick/EURUSD-2009-05.csv", "r");
         MYSQL *db = mysql_init(nullptr);
 
         if (mysql_real_connect(db, "127.0.0.1", "root", "", "test", 3306, nullptr, 0))
@@ -52,10 +27,10 @@ int main(int argc, char *argv[])
         else
         {
                 printf("Error: %s\n", mysql_error(db));
+                return -1;
         }
 
-        insert2db(fp, db);
-
+        /*
         sql = "select * from eurusd;";
         if (mysql_real_query(db, sql.c_str(), strlen(sql.c_str())))
         {
@@ -65,15 +40,71 @@ int main(int argc, char *argv[])
         {
                 MYSQL_RES *res = mysql_store_result(db);
                 MYSQL_ROW row  = mysql_fetch_row(res);
-                for (int  i    = 0; i < mysql_num_fields(res); ++i)
+                while (row)
                 {
-                        printf("%s ", row[i]);
+                        for (int i = 1; i < mysql_num_fields(res); ++i)
+                        {
+                                //printf("%s, ", row[i]);
+                        }
+                        //printf("\n");
+                        row        = mysql_fetch_row(res);
                 }
+        }
+         */
+
+
+        // 读取目录
+        if ((dir = opendir("/Users/vv/Downloads/tick")) != nullptr)
+        {
+                // 读取文件名
+                while ((ent = readdir(dir)) != nullptr)
+                {
+                        if (ent->d_namlen > 4)
+                        {
+                                std::string file = "/Users/vv/Downloads/tick/";
+                                file += ent->d_name;
+                                FILE *fp = fopen(file.c_str(), "r");
+                                //FILE *fp = fopen("/Users/vv/Downloads/tick/EURUSD-2017-09.csv", "r");
+                                insert2db(fp, db);
+                                fclose(fp);
+                                printf("Insert %s data end\n", ent->d_name);
+                        }
+                }
+                closedir(dir);
+        }
+        else
+        {
+                printf("Open directory error!!\n");
         }
 
         mysql_close(db);
-        fclose(fp);
-
-        printf("Shit");
         return 0;
 }
+
+void insert2db(FILE *fp, MYSQL *db)
+{
+        //for (int i = 0; i < 2; i++)
+        while (fgets(line, 60, fp))
+        {
+                fgets(line, 60, fp);// 从CSV文件中读取一行
+                line[strlen(line) - 1] = ',';// 去掉行尾换行符
+                result = strtok(line, ",");// 获取第一串字符'EURUSD'并丢掉
+
+                // 拼装SQL语句
+                sql    = "insert into eurusd(time, bid, ask) values('";
+                result = strtok(nullptr, ",");
+                sql += result + "', ";
+                result = strtok(nullptr, ",");
+                sql += result + ", ";
+                result = strtok(nullptr, ",");
+                sql += result + ");";
+
+                // 插入数据库
+                if (mysql_real_query(db, sql.c_str(), strlen(sql.c_str())))
+                {
+                        printf("Insert Error: %s\n", mysql_error(db));
+                        break;
+                }
+        }
+}
+
