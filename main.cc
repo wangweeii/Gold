@@ -6,7 +6,6 @@
 #include <cstring>
 #include <cstdio>
 #include "mysql.h"
-//#include "include/mysql.h"
 
 char        line[60];
 std::string sql;
@@ -35,16 +34,22 @@ void insert2db(FILE *fp)
         }
 }
 
-int main(int argc, char **argv)
+int main(int argc, char *argv[])
 {
         //FILE        *fp = fopen("d:/tick/EURUSD.csv", "r");
-        FILE *fp = fopen("/Users/vv/Downloads/tick/EURUSD-2009-05.csv", "r");
+        // FILE *fp = fopen("/Users/vv/Downloads/tick/EURUSD-2009-05.csv", "r");
         //insert2db(fp);
 
         MYSQL *db = mysql_init(nullptr);
         if (mysql_real_connect(db, "127.0.0.1", "root", "", "test", 3306, nullptr, 0))
         {
                 printf("Connect Success\n");
+                mysql_close(db);
+                printf("Close database!\n");
+        }
+        else
+        {
+                printf("Error!!\n");
         }
 
         /*sql = "select * from eurusd;";
@@ -62,6 +67,7 @@ int main(int argc, char **argv)
                 }
         }*/
 
+        /*
         //while (fgets(line, 60, fp))
         for (int i = 0; i < 100; i++)
         {
@@ -85,8 +91,9 @@ int main(int argc, char **argv)
                         break;
                 }
         }
-        mysql_close(db);
-        fclose(fp);
+         */
+        // mysql_close(db);
+        // fclose(fp);
 
         printf("Shit");
         return 0;
