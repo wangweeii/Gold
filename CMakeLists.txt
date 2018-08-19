@@ -9,6 +9,6 @@ link_directories(/Users/vv/lib)
 
 include_directories(mariadb)
 
-add_executable(Gold main.cc)
+add_executable(Gold main.cc main.h)
 
 target_link_libraries(Gold ${PROJECT_LINK_LIBS})

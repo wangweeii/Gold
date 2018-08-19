@@ -15,6 +15,7 @@ struct dirent *ent;
 DIR           *dir;
 
 void insert2db(FILE *fp, MYSQL *db);
+void read_file(DIR *dir);
 
 int main(int argc, char *argv[])
 {
@@ -79,6 +80,17 @@ int main(int argc, char *argv[])
 
         mysql_close(db);
         return 0;
+}
+
+void read_file(DIR *dir)
+{
+        while ((ent=readdir(dir))!= nullptr)
+        {
+                if (ent->d_namlen>4)
+                {
+                        std::string file=;
+                }
+        }
 }
 
 void insert2db(FILE *fp, MYSQL *db)
