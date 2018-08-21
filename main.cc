@@ -3,7 +3,7 @@
 //
 
 #include <iostream>
-//#include <cstring>
+#include <cstring>
 #include <dirent.h>
 #include "mysql.h"
 
@@ -15,7 +15,7 @@ struct dirent *ent;
 DIR           *dir;
 
 void insert2db(FILE *fp, MYSQL *db);
-void read_file(DIR *dir);
+void read_file(DIR *dir, MYSQL *db);
 
 int main(int argc, char *argv[])
 {
@@ -60,7 +60,7 @@ int main(int argc, char *argv[])
                 // 读取文件名
                 while ((ent = readdir(dir)) != nullptr)
                 {
-                        if (ent->d_namlen > 4)
+                        if (strlen(ent->d_name) > 4)
                         {
                                 std::string file = "/Users/vv/Downloads/tick/";
                                 file += ent->d_name;
@@ -82,15 +82,21 @@ int main(int argc, char *argv[])
         return 0;
 }
 
-void read_file(DIR *dir)
+void read_file(DIR *dir, MYSQL *db)
 {
         while ((ent=readdir(dir))!= nullptr)
         {
-                if (ent->d_namlen>4)
+                if (strlen(ent->d_name) > 4)
                 {
-                        std::string file=;
+                        std::string file = "/home/vv/Downloads/tick/";
+                        file += ent->d_name;
+                        FILE *fp = fopen(file.c_str(), "r");
+                        insert2db(fp, db);
+                        fclose(fp);
+                        printf("Insert %s data end\n", ent->d_name);
                 }
         }
+        closedir(dir);
 }
 
 void insert2db(FILE *fp, MYSQL *db)
