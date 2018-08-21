@@ -15,7 +15,7 @@ struct dirent *ent;
 DIR           *dir;
 
 void insert2db(FILE *fp, MYSQL *db);
-void read_file(DIR *dir, MYSQL *db);
+void file2db(DIR *dir, MYSQL *db);
 
 int main(int argc, char *argv[])
 {
@@ -57,21 +57,7 @@ int main(int argc, char *argv[])
         // 读取目录
         if ((dir = opendir("/Users/vv/Downloads/tick")) != nullptr)
         {
-                // 读取文件名
-                while ((ent = readdir(dir)) != nullptr)
-                {
-                        if (strlen(ent->d_name) > 4)
-                        {
-                                std::string file = "/Users/vv/Downloads/tick/";
-                                file += ent->d_name;
-                                FILE *fp = fopen(file.c_str(), "r");
-                                //FILE *fp = fopen("/Users/vv/Downloads/tick/EURUSD-2017-09.csv", "r");
-                                insert2db(fp, db);
-                                fclose(fp);
-                                printf("Insert %s data end\n", ent->d_name);
-                        }
-                }
-                closedir(dir);
+                file2db(dir,db);
         }
         else
         {
@@ -82,8 +68,9 @@ int main(int argc, char *argv[])
         return 0;
 }
 
-void read_file(DIR *dir, MYSQL *db)
+void file2db(DIR *dir, MYSQL *db)
 {
+        // 读取文件名
         while ((ent=readdir(dir))!= nullptr)
         {
                 if (strlen(ent->d_name) > 4)
