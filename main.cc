@@ -10,12 +10,12 @@
 char          line[60];
 std::string   sql;
 std::string   result;
-//std::string   file = "/Users/vv/Downloads/tick/";
 struct dirent *ent;
-DIR           *dir;
+//std::string   file = "/Users/vv/Downloads/tick/";
 
 void insert2db(FILE *fp, MYSQL *db);
-void file2db(DIR *dir, MYSQL *db);
+void file2db(const char *dictionary, MYSQL *db);
+void query(MYSQL *db, const char *sql);
 
 int main(int argc, char *argv[])
 {
@@ -31,59 +31,57 @@ int main(int argc, char *argv[])
                 return -1;
         }
 
-        /*
-        sql = "select * from eurusd;";
-        if (mysql_real_query(db, sql.c_str(), strlen(sql.c_str())))
-        {
-                printf("Query Error!!!\n");
-        }
-        else
-        {
-                MYSQL_RES *res = mysql_store_result(db);
-                MYSQL_ROW row  = mysql_fetch_row(res);
-                while (row)
-                {
-                        for (int i = 1; i < mysql_num_fields(res); ++i)
-                        {
-                                //printf("%s, ", row[i]);
-                        }
-                        //printf("\n");
-                        row        = mysql_fetch_row(res);
-                }
-        }
-         */
-
-
-        // 读取目录
-        if ((dir = opendir("/Users/vv/Downloads/tick")) != nullptr)
-        {
-                file2db(dir,db);
-        }
-        else
-        {
-                printf("Open directory error!!\n");
-        }
+        file2db("/home/vv/Downloads/test", db);
 
         mysql_close(db);
         return 0;
 }
 
-void file2db(DIR *dir, MYSQL *db)
+void query(MYSQL *db, const char *sql)
 {
-        // 读取文件名
-        while ((ent=readdir(dir))!= nullptr)
+        if (mysql_real_query(db, sql, strlen(sql)))
         {
-                if (strlen(ent->d_name) > 4)
+                printf("Query Error!!!\n");
+        }
+        else {
+                MYSQL_RES *res = mysql_store_result(db);
+                MYSQL_ROW row  = mysql_fetch_row(res);
+                while (row)
                 {
-                        std::string file = "/home/vv/Downloads/tick/";
-                        file += ent->d_name;
-                        FILE *fp = fopen(file.c_str(), "r");
-                        insert2db(fp, db);
-                        fclose(fp);
-                        printf("Insert %s data end\n", ent->d_name);
+                        for (int i = 0; i < mysql_num_fields(res); ++i) {
+                                printf("A line\n");
+                        }
+                        row = mysql_fetch_row(res);
                 }
         }
-        closedir(dir);
+}
+
+void file2db(const char *dictionary, MYSQL *db)
+{
+        // 读取目录
+        DIR *dir;
+        if ((dir = opendir(dictionary)) != nullptr)
+        {
+                printf("Begin to insert into database.\n");
+                // 读取文件名
+                while ((ent=readdir(dir))!= nullptr)
+                {
+                        if (strlen(ent->d_name) > 4)
+                        {
+                                std::string file = "/home/vv/Downloads/tick/";
+                                file += ent->d_name;
+                                FILE *fp = fopen(file.c_str(), "r");
+                                insert2db(fp, db);
+                                fclose(fp);
+                                printf("Insert %s data end\n", ent->d_name);
+                        }
+                }
+                closedir(dir);
+        }
+        else
+        {
+                printf("Open directory error!!\n");
+        }
 }
 
 void insert2db(FILE *fp, MYSQL *db)
