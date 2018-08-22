@@ -31,7 +31,8 @@ int main(int argc, char *argv[])
                 return -1;
         }
 
-        file2db("/home/vv/Downloads/test", db);
+        // file2db("/home/vv/Downloads/test", db);
+        query(db, "select * from eurusd;");
 
         mysql_close(db);
         return 0;
@@ -49,8 +50,10 @@ void query(MYSQL *db, const char *sql)
                 while (row)
                 {
                         for (int i = 0; i < mysql_num_fields(res); ++i) {
-                                printf("A line\n");
+                                // printf("A line\n");
+                                printf("%s ",row[i]);
                         }
+                        printf("\n");
                         row = mysql_fetch_row(res);
                 }
         }
