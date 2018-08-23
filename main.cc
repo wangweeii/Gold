@@ -31,8 +31,8 @@ int main(int argc, char *argv[])
                 return -1;
         }
 
-        // file2db("/home/vv/Downloads/test", db);
-        query(db, "select id, time, bid, ask, (bid + ask) / 2 as midpoint from eurusd;");
+        file2db("/home/vv/Downloads/tick", db);
+        // query(db, "select id, time, bid, ask, (bid + ask) / 2 as midpoint from eurusd;");
 
         mysql_close(db);
         return 0;
@@ -111,11 +111,13 @@ void insert2db(FILE *fp, MYSQL *db)
                 if (mysql_real_query(db, sql.c_str(), strlen(sql.c_str())))
                 {
                         printf("Insert Error: %s\n", mysql_error(db));
+                        sql = "rollback";
+                        mysql_real_query(db, sql.c_str(), strlen(sql.c_str()));
                         break;
-                } else
+                }/*else
                 {
                         printf("%s\n", sql.c_str());
-                }
+                }*/
         }
         // 结束事务
         sql = "commit";
