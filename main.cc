@@ -50,7 +50,6 @@ void query(MYSQL *db, const char *sql)
                 while (row)
                 {
                         for (int i = 0; i < mysql_num_fields(res); ++i) {
-                                // printf("A line\n");
                                 printf("%s ",row[i]);
                         }
                         printf("\n");
@@ -89,16 +88,17 @@ void file2db(const char *dictionary, MYSQL *db)
 
 void insert2db(FILE *fp, MYSQL *db)
 {
-        //for (int i = 0; i < 2; i++)
+        // 开始事务
         sql = "begin";
         mysql_real_query(db, sql.c_str(), strlen(sql.c_str()));
+
         while (fgets(line, 60, fp))
         {
                 fgets(line, 60, fp);// 从CSV文件中读取一行
                 line[strlen(line) - 1] = ',';// 去掉行尾换行符
                 result = strtok(line, ",");// 获取第一串字符'EURUSD'并丢掉
 
-                // 拼装SQL语句
+                // 拼接SQL语句
                 sql    = "insert into eurusd(time, bid, ask) values('";
                 result = strtok(nullptr, ",");
                 sql += result + "', ";
@@ -117,6 +117,7 @@ void insert2db(FILE *fp, MYSQL *db)
                         printf("%s\n", sql.c_str());
                 }
         }
+        // 结束事务
         sql = "commit";
         mysql_real_query(db, sql.c_str(), strlen(sql.c_str()));
 }
