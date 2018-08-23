@@ -3,7 +3,7 @@ project(Gold)
 
 set(CMAKE_CXX_STANDARD 11)
 
-set(PROJECT_LINK_LIBS libmariadb.so.3)
+set(PROJECT_LINK_LIBS libmariadb.so)
 
 link_directories(/home/vv/Lib)
 

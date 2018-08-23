@@ -32,7 +32,7 @@ int main(int argc, char *argv[])
         }
 
         // file2db("/home/vv/Downloads/test", db);
-        query(db, "select * from eurusd;");
+        query(db, "select id, time, bid, ask, (bid + ask) / 2 as midpoint from eurusd;");
 
         mysql_close(db);
         return 0;
@@ -90,6 +90,8 @@ void file2db(const char *dictionary, MYSQL *db)
 void insert2db(FILE *fp, MYSQL *db)
 {
         //for (int i = 0; i < 2; i++)
+        sql = "begin";
+        mysql_real_query(db, sql.c_str(), strlen(sql.c_str()));
         while (fgets(line, 60, fp))
         {
                 fgets(line, 60, fp);// 从CSV文件中读取一行
@@ -110,7 +112,12 @@ void insert2db(FILE *fp, MYSQL *db)
                 {
                         printf("Insert Error: %s\n", mysql_error(db));
                         break;
+                } else
+                {
+                        printf("%s\n", sql.c_str());
                 }
         }
+        sql = "commit";
+        mysql_real_query(db, sql.c_str(), strlen(sql.c_str()));
 }
 
