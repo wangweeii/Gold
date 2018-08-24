@@ -31,10 +31,11 @@ int main(int argc, char *argv[])
                 return -1;
         }
 
-        file2db("/home/vv/Downloads/tick", db);
-        // query(db, "select id, time, bid, ask, (bid + ask) / 2 as midpoint from eurusd;");
+        // file2db("/home/vv/Downloads/tick", db);
+        query(db, "select id, time, bid, ask from eurusd where id<30;");
 
         mysql_close(db);
+        printf("Connect Closed.\n");
         return 0;
 }
 

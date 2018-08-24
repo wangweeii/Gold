@@ -1,0 +1,7 @@
+[
+{
+  "directory": "/home/vv/Code/Gold/build",
+  "command": "/bin/g++   -I/home/vv/Code/Gold/mariadb    -o CMakeFiles/Gold.dir/main.cc.o -c /home/vv/Code/Gold/main.cc",
+  "file": "/home/vv/Code/Gold/main.cc"
+}
+]
