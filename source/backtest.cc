@@ -4,14 +4,14 @@
 
 void back_test(MYSQL *db)
 {
-        std::string time;
-        double bid;
-        double ask;
-        double midpoint;
-        // long long max=315258147;
-        long long max = 10;
-        long long id = 0;
+        long long max=315258147;
 
+        back_test(db, max);
+}
+
+void back_test(MYSQL *db, long long max)
+{
+        long long id = 0;
         while(id++ < max)
         {
                 std::string sql = "select time, bid, ask from eurusd where id = ";
@@ -21,6 +21,6 @@ void back_test(MYSQL *db)
                 {
                         break;
                 }
-                // sql = "select id, time, bid, ask from eurusd where id = ";
+                sql.shrink_to_fit();
         }
 }

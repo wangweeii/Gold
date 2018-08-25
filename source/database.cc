@@ -3,31 +3,6 @@
 #include <string>
 #include "database.h"
 
-bool query_line(MYSQL *db, const char *sql)
-{
-        if (mysql_real_query(db, sql, strlen(sql))) // 查询失败
-        {
-                printf("Query Error!!!\n");
-                printf("%s\n", sql);
-                printf("%s\n", mysql_error(db));
-                return false;
-        }
-        else {
-                MYSQL_RES *res = mysql_store_result(db);
-                MYSQL_ROW row  = mysql_fetch_row(res);
-                while (row)
-                {
-                        // 逐行输出
-                        for (int i = 0; i < mysql_num_fields(res); ++i) {
-                                printf("%s ",row[i]);
-                        }
-                        printf("\n");
-                        row = mysql_fetch_row(res);
-                }
-                return true;
-        }
-}
-
 void insert2db(FILE *fp, MYSQL *db)
 {
         // 开始事务
@@ -95,4 +70,38 @@ void file2db(const char *dictionary, MYSQL *db)
         {
                 printf("Open directory error!!\n");
         }
+}
+
+bool query_line(MYSQL *db, const char *sql)
+{
+        if (mysql_real_query(db, sql, strlen(sql))) // 查询失败
+        {
+                printf("Query Error!!!\n");
+                printf("%s\n", sql);
+                printf("%s\n", mysql_error(db));
+                return false;
+        }
+        else
+        {
+                MYSQL_RES *res = mysql_store_result(db);
+                MYSQL_ROW row  = mysql_fetch_row(res);
+                while (row)
+                {
+                        // 逐行输出
+                        for (int i = 0; i < mysql_num_fields(res); ++i) {
+                                printf("%s ",row[i]);
+                        }
+                        printf("\n");
+                        row = mysql_fetch_row(res);
+                }
+                return true;
+        }
+}
+
+long long get_max_id(MYSQL *db)
+{
+        std::string sql = "select max(id) from eurusd;";
+        if (mysql_real_query(db, sql.c_str(), strlen(sql.c_str())))
+        ;
+        return 0;
 }
