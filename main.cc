@@ -3,8 +3,9 @@
 //
 
 #include <iostream>
-#include <cstring>
 #include <dirent.h>
+#include <cstring>
+#include <string>
 #include "mysql.h"
 
 char          line[60];
@@ -15,7 +16,7 @@ struct dirent *ent;
 
 void insert2db(FILE *fp, MYSQL *db);
 void file2db(const char *dictionary, MYSQL *db);
-void query(MYSQL *db, const char *sql);
+bool query(MYSQL *db, const char *sql);
 void back_test(MYSQL *db);
 
 int main(int argc, char *argv[])
@@ -32,8 +33,11 @@ int main(int argc, char *argv[])
                 return -1;
         }
 
+        // sql = "select * from eurusd where id = 9;";
+        // query(db, sql.c_str());
         // file2db("/home/vv/Downloads/tick", db);
-        query(db, "select id, time, bid, ask from eurusd where id<10;");
+        // query(db, "select * from eurusd where id<100000000;");
+        back_test(db);
 
         mysql_close(db);
         printf("Connect Closed.\n");
@@ -46,16 +50,34 @@ void back_test(MYSQL *db)
         double bid;
         double ask;
         double midpoint;
-        long long max=315258147;
-        long long id=0;
-        sql="select * from eurusd where id=";
+        // long long max=315258147;
+        long long max = 10;
+        long long id = 0;
+        sql = "select time, bid, ask from eurusd where id = ";
+        while(id++<max)
+        {
+                // std::cout << id << std::endl;
+                // printf("%d %s\n", sql.length(), sql.c_str());
+                // sql += std::to_string(id).c_str() + ';';
+                // std::cout << sql.length() << " " << sql << std::endl;
+                // sql.append(std::to_string(id));
+                sql += ';';
+                if (!query(db, sql.c_str()))
+                {
+                        break;
+                }
+                sql = "select id, time, bid, ask from eurusd where id = ";
+        }
 }
 
-void query(MYSQL *db, const char *sql)
+bool query(MYSQL *db, const char *sql)
 {
         if (mysql_real_query(db, sql, strlen(sql)))
         {
                 printf("Query Error!!!\n");
+                printf("%s\n", sql);
+                printf("%s\n", mysql_error(db));
+                return false;
         }
         else {
                 MYSQL_RES *res = mysql_store_result(db);
@@ -68,6 +90,7 @@ void query(MYSQL *db, const char *sql)
                         printf("\n");
                         row = mysql_fetch_row(res);
                 }
+                return true;
         }
 }
 
