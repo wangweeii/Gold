@@ -6,7 +6,7 @@
                 {
                         "label": "build",
                         "type": "shell",
-                        "command": "rm -rf build/* && cd build && cmake .. && make",
+                        "command":"rm -rf build/* && cd build && cmake -DCMAKE_BUILD_TYPE=Release .. && make",
                         "problemMatcher": "$gcc"
                 },
                 {
