@@ -48,10 +48,6 @@ void back_test(MYSQL *db)
         std::string sql = "select time, bid, ask from eurusd where id = ";
         while(id++ < max)
         {
-                // std::cout << id << std::endl;
-                // printf("%d %s\n", sql.length(), sql.c_str());
-                // sql += std::to_string(id).c_str() + ';';
-                // std::cout << sql.length() << " " << sql << std::endl;
                 sql.append(std::to_string(id));
                 sql += ';';
                 if (!query_line(db, sql.c_str()))
