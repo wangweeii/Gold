@@ -8,7 +8,7 @@
                         "name": "Debug",
                         "type": "cppdbg",
                         "request": "launch",
-                        "program": "${workspaceFolder}/build/Gold",
+                        "program": "${workspaceFolder}/build/shit",
                         "args": [],
                         "stopAtEntry": false,
                         "cwd": "${workspaceFolder}",
