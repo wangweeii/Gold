@@ -1,3 +1,0 @@
-/home/vv/Code/Gold/build/CMakeFiles/rebuild_cache.dir
-/home/vv/Code/Gold/build/CMakeFiles/Gold.dir
-/home/vv/Code/Gold/build/CMakeFiles/edit_cache.dir

@@ -1,1 +1,0 @@
-/bin/g++     CMakeFiles/Gold.dir/main.cc.o  -o Gold  -L/home/vv/Lib -Wl,-rpath,/home/vv/Lib -lmariadb 

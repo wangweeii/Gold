@@ -16,6 +16,7 @@ struct dirent *ent;
 void insert2db(FILE *fp, MYSQL *db);
 void file2db(const char *dictionary, MYSQL *db);
 void query(MYSQL *db, const char *sql);
+void back_test(MYSQL *db);
 
 int main(int argc, char *argv[])
 {
@@ -32,11 +33,22 @@ int main(int argc, char *argv[])
         }
 
         // file2db("/home/vv/Downloads/tick", db);
-        query(db, "select id, time, bid, ask from eurusd where id<30;");
+        query(db, "select id, time, bid, ask from eurusd where id<10;");
 
         mysql_close(db);
         printf("Connect Closed.\n");
         return 0;
+}
+
+void back_test(MYSQL *db)
+{
+        std::string time;
+        double bid;
+        double ask;
+        double midpoint;
+        long long max=3215;
+        long long id=0;
+        sql="select * from eurusd where id=";
 }
 
 void query(MYSQL *db, const char *sql)
