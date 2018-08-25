@@ -6,7 +6,13 @@
                 {
                         "label": "build",
                         "type": "shell",
-                        "command": "rm -rf build && mkdir build && cd build && cmake .. && make",
+                        "command": "rm -rf build/* && cd build && cmake .. && make",
+                        "problemMatcher": "$gcc"
+                },
+                {
+                        "label": "debug",
+                        "type": "shell",
+                        "command":"rm -rf build/* && cd build && cmake -DCMAKE_BUILD_TYPE=Debug .. && make",
                         "problemMatcher": "$gcc"
                 }
         ]
