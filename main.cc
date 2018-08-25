@@ -46,7 +46,7 @@ void back_test(MYSQL *db)
         double bid;
         double ask;
         double midpoint;
-        long long max=3215;
+        long long max=315258147;
         long long id=0;
         sql="select * from eurusd where id=";
 }
