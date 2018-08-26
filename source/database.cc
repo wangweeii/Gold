@@ -3,6 +3,7 @@
 #include <string>
 #include "database.h"
 
+/*
 void insert2db(FILE *fp, MYSQL *db)
 {
         // 开始事务
@@ -13,7 +14,6 @@ void insert2db(FILE *fp, MYSQL *db)
 
         while (fgets(line, 60, fp))
         {
-                fgets(line, 60, fp);// 从CSV文件中读取一行
                 line[strlen(line) - 1] = ',';// 去掉行尾换行符
                 result = strtok(line, ",");// 获取第一串字符'EURUSD'并丢掉
 
@@ -33,10 +33,7 @@ void insert2db(FILE *fp, MYSQL *db)
                         sql = "rollback";
                         mysql_real_query(db, sql.c_str(), strlen(sql.c_str()));
                         break;
-                }/*else
-                {
-                        printf("%s\n", sql.c_str());
-                }*/
+                }
         }
         // 结束事务
         sql = "commit";
@@ -105,3 +102,4 @@ long long get_max_id(MYSQL *db)
         ;
         return 0;
 }
+*/

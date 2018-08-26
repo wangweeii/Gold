@@ -2,15 +2,16 @@
 // Created by wangwei on 08/10.
 //
 
-// #include <iostream>
+#include <iostream>
 // #include <dirent.h>
 // #include <cstring>
 // #include <string>
-#include "database.h"
+// #include "database.h"
 #include "backtest.h"
 
 int main(int argc, char *argv[])
 {
+        /*
         MYSQL *db = mysql_init(nullptr);
 
         if (mysql_real_connect(db, "127.0.0.1", "root", "", "test", 3306, nullptr, 0))
@@ -30,6 +31,8 @@ int main(int argc, char *argv[])
         back_test(db, 100000);
 
         mysql_close(db);
+        */
+        back_test("/opt/tick");
         printf("Connect Closed.\n");
         return 0;
 }

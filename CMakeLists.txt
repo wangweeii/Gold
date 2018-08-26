@@ -3,9 +3,9 @@ project(shit)
 
 set(CMAKE_CXX_STANDARD 11)
 
-set(PROJECT_LINK_LIBS libmariadb.so)
+#set(PROJECT_LINK_LIBS libmariadb.so)
 
-link_directories(/home/vv/Lib)
+#link_directories(/home/vv/Lib)
 
 include_directories(include mariadb)
 
@@ -13,4 +13,4 @@ aux_source_directory(source SOURCE)
 
 add_executable(shit main.cc ${SOURCE})
 
-target_link_libraries(shit ${PROJECT_LINK_LIBS})
+#target_link_libraries(shit ${PROJECT_LINK_LIBS})
