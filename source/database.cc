@@ -74,7 +74,7 @@ void file2db(const char *dictionary, MYSQL *db)
 
 bool query_line(MYSQL *db, const char *sql)
 {
-        if (mysql_real_query(db, sql, strlen(sql))) // 查询失败
+        if (mysql_query(db, sql)) // 查询失败
         {
                 printf("Query Error!!!\n");
                 printf("%s\n", sql);

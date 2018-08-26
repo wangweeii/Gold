@@ -27,7 +27,7 @@ int main(int argc, char *argv[])
         // query(db, sql.c_str());
         // file2db("/home/vv/Downloads/tick", db);
         // query(db, "select * from eurusd where id<100000000;");
-        back_test(db);
+        back_test(db, 100000);
 
         mysql_close(db);
         printf("Connect Closed.\n");
