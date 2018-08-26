@@ -58,15 +58,18 @@ void file_test(const char *file)
         while (fgets(line, 60, fp))
         {
                 line[strlen(line) - 1] = ',';
+
                 raw_time = strtok(line, ",");
                 raw_time = strtok(nullptr, ",");
+                bid = atof(strtok(nullptr, ","));
+                ask = atof(strtok(nullptr, ","));
+                midpoint = (bid + ask) / 2;
+                //! get bar time
                 hour[0] = raw_time[9];
                 hour[1] = raw_time[10];
                 bar_time = raw_time.substr(0, 9);
                 bar_time += hour;
-                bid = atof(strtok(nullptr, ","));
-                ask = atof(strtok(nullptr, ","));
-                midpoint = (bid + ask) / 2;
+
                 // printf("%s, %f, %f, %f\n", raw_time.c_str(), bid, ask, midpoint);
                 printf("%s, %f, %f, %f\n", bar_time.c_str(), bid, ask, midpoint);
         }
