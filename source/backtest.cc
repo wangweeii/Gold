@@ -1,4 +1,4 @@
-#include <string>
+// #include <string>
 #include <cstring>
 #include <dirent.h>
 #include "database.h"
@@ -51,27 +51,62 @@ void back_test(const char *dictionary)
 
 void file_test(const char *file)
 {
-        char line[60], hour[3];
-        std::string raw_time, bar_time;
+        char line[60];
+        std::string time;
         double bid, ask, midpoint;
+        int time_hour, hour, previous_hour = -1;
+        Bar bar;
         FILE *fp = fopen(file, "r");
         while (fgets(line, 60, fp))
         {
                 line[strlen(line) - 1] = ',';
 
-                raw_time = strtok(line, ",");
-                raw_time = strtok(nullptr, ",");
+                time = strtok(line, ",");
+                time = strtok(nullptr, ",");
                 bid = atof(strtok(nullptr, ","));
                 ask = atof(strtok(nullptr, ","));
                 midpoint = (bid + ask) / 2;
-                //! get bar time
-                hour[0] = raw_time[9];
-                hour[1] = raw_time[10];
-                bar_time = raw_time.substr(0, 9);
-                bar_time += hour;
+/*
+                hour = (time[9] - '0') * 10 + (time[10] - '0');
+                time_hour = hour - (hour % 4);
 
-                // printf("%s, %f, %f, %f\n", raw_time.c_str(), bid, ask, midpoint);
-                printf("%s, %f, %f, %f\n", bar_time.c_str(), bid, ask, midpoint);
+                time[9] = char('0' + (time_hour / 10));
+                time[10] = char('0' + (time_hour % 10));
+                time[12] = '0';
+                time[13] = '0';
+                time[15] = '0';
+                time[16] = '0';
+                time[18] = '0';
+                time[19] = '0';
+                time[20] = '0';
+                if (previous_hour != time_hour)
+                {
+                        bar.open = midpoint;
+                        bar.high = midpoint;
+                        bar.low = midpoint;
+                } else
+                {
+                        if (midpoint > bar.high)
+                        {
+                                bar.high = midpoint;
+                        }
+                        if (midpoint < bar.low)
+                        {
+                                bar.low = midpoint;
+                        }
+                }
+                bar.time = &time;
+                bar.close = midpoint;
+                bar.bid = bid;
+                bar.ask = ask;
+*/
+                printf("%s, %f, %f, %f\n", time.c_str(), bid, ask, midpoint);
+                // bar_test(bar);
         }
         fclose(fp);
+}
+
+void bar_test(const Bar &bar)
+{
+        printf("%s Open-%f High-%f Low-%f Close-%f Bid-%f Ask-%f\n", (*bar.time).c_str(), bar.open, bar.high, bar.low, bar.close, bar.bid, bar.ask);
 }
