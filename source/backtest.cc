@@ -66,7 +66,7 @@ void file_test(const char *file)
                 bid = atof(strtok(nullptr, ","));
                 ask = atof(strtok(nullptr, ","));
                 midpoint = (bid + ask) / 2;
-/*
+
                 hour = (time[9] - '0') * 10 + (time[10] - '0');
                 time_hour = hour - (hour % 4);
 
@@ -99,9 +99,9 @@ void file_test(const char *file)
                 bar.close = midpoint;
                 bar.bid = bid;
                 bar.ask = ask;
-*/
-                printf("%s, %f, %f, %f\n", time.c_str(), bid, ask, midpoint);
-                // bar_test(bar);
+
+                // printf("%s, %f, %f, %f\n", time.c_str(), bid, ask, midpoint);
+                bar_test(bar);
         }
         fclose(fp);
 }
