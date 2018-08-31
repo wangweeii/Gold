@@ -7,16 +7,16 @@
 
 static const int LENGTH = 10000;
 
-double fast[LENGTH];
-double slow[LENGTH];
+double fast[LENGTH] = {1.325355,};
+double slow[LENGTH] = {1.325355,};
 double open;
 double high;
 double low;
-double close;
-std::string latest_time;
+double close = 0;
+std::string latest_time = "20090501 00:00:00.000";
 
-unsigned int fast_step = 8;
-unsigned int slow_step = 55;
+unsigned int fast_step = 5;
+unsigned int slow_step = 34;
 
 double fast_alpha = 2.0 / (fast_step + 1);
 double slow_alpha = 2.0 / (slow_step + 1);
@@ -30,7 +30,7 @@ double place_ema = 0;
 double highest = 0;
 double lowest = 0;
 
-int bar_count = -1;
+int bar_count = 1;
 double total_value = 9600;
 double quantity = 0;
 double stop = 0.0016;
@@ -133,26 +133,29 @@ void file_test(const char *file)
                 bar.bid = bid;
                 bar.ask = ask;
 
-                printf("%s, %f, %f, %f\n", time.c_str(), bid, ask, midpoint);
-                // ma_cross_test(bar);
+                // printf("%s, %f, %f, %f\n", time.c_str(), bid, ask, midpoint);
+                // fast[0] = 1.325355;
+                // slow[0] = 1.325355;
+                ma_cross_test(bar);
         }
         fclose(fp);
 }
 
 void ma_cross_test(const Bar &bar)
 {
-        printf("%s Open-%f High-%f Low-%f Close-%f Bid-%f Ask-%f\n", (bar.time).c_str(), bar.open, bar.high, bar.low, bar.close, bar.bid, bar.ask);
-
+        // printf("%s Open-%f High-%f Low-%f Close-%f Bid-%f Ask-%f\n", (bar.time).c_str(), bar.open, bar.high, bar.low, bar.close, bar.bid, bar.ask);
         if (latest_time != bar.time)
         {
+                // printf("%s Open-%f High-%f Low-%f Close-%f\n", latest_time.c_str(), open, high, low, close);
+
                 fast[bar_count] = fast_alpha * bar.close + fast_beta * fast[bar_count - 1];
                 slow[bar_count] = slow_alpha * bar.close + slow_beta * slow[bar_count - 1];
-                printf("At %s, EMA(fast) and EMA(slow): %g, %g\n", latest_time.c_str(), fast[bar_count], slow[bar_count]);
+                // printf("At %s, EMA(fast) and EMA(slow): %g, %g\n", latest_time.c_str(), fast[bar_count], slow[bar_count]);
                 // printf("LiveBar. ReqId: %ld, Date: %s, Open: %g, High: %g, Low: %g, Close: %g\n", reqId, latest_time.c_str(), open, high, low, close);
                 // std::cout << "The FAST EMA is: " << fast[bar_count] << ", SLOW EMA is: " << slow[bar_count] << std::endl;
 
                 // 快线上穿慢线
-                if (fast[bar_count - 1] < slow[bar_count - 1] && fast[bar_count] >= slow[bar_count])
+                if (bar_count > 400 && fast[bar_count - 1] < slow[bar_count - 1] && fast[bar_count] >= slow[bar_count])
                 {
                         if (have_position == 0 && !traded && close - fast[bar_count] <= 0.0010)
                         {
@@ -175,7 +178,7 @@ void ma_cross_test(const Bar &bar)
                 }
 
                 // 快线下穿慢线
-                if (fast[bar_count - 1] > slow[bar_count - 1] && fast[bar_count] <= slow[bar_count])
+                if (bar_count > 400 && fast[bar_count - 1] > slow[bar_count - 1] && fast[bar_count] <= slow[bar_count])
                 {
                         if (have_position == 0 && !traded && fast[bar_count] - close <= 0.0010)
                         {
@@ -205,6 +208,7 @@ void ma_cross_test(const Bar &bar)
                 close = bar.close;
         } else
         {
+                // printf("%s Open-%f High-%f Low-%f Close-%f Bid-%f Ask-%f\n", (bar.time).c_str(), bar.open, bar.high, bar.low, bar.close, bar.bid, bar.ask);
                 if (have_position > 0)
                 {
                         if (bar.high > highest)
