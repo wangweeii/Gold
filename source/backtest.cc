@@ -1,8 +1,41 @@
 // #include <string>
+#include <cmath>
 #include <cstring>
 #include <dirent.h>
 #include "database.h"
 #include "backtest.h"
+
+static const int LENGTH = 10000;
+
+double fast[LENGTH];
+double slow[LENGTH];
+double open;
+double high;
+double low;
+double close;
+std::string latest_time;
+
+unsigned int fast_step = 8;
+unsigned int slow_step = 55;
+
+double fast_alpha = 2.0 / (fast_step + 1);
+double slow_alpha = 2.0 / (slow_step + 1);
+double fast_beta = 1 - fast_alpha;
+double slow_beta = 1 - slow_alpha;
+
+double have_position = 0;
+double open_price = 0;
+double close_price = 0;
+double place_ema = 0;
+double highest = 0;
+double lowest = 0;
+
+int bar_count = -1;
+double total_value = 9600;
+double quantity = 0;
+double stop = 0.0016;
+
+bool traded = false;
 
 /*
 void back_test(MYSQL *db)
@@ -95,18 +128,128 @@ void file_test(const char *file)
                                 bar.low = midpoint;
                         }
                 }
-                bar.time = &time;
+                bar.time = time;
                 bar.close = midpoint;
                 bar.bid = bid;
                 bar.ask = ask;
 
-                // printf("%s, %f, %f, %f\n", time.c_str(), bid, ask, midpoint);
-                bar_test(bar);
+                printf("%s, %f, %f, %f\n", time.c_str(), bid, ask, midpoint);
+                // ma_cross_test(bar);
         }
         fclose(fp);
 }
 
-void bar_test(const Bar &bar)
+void ma_cross_test(const Bar &bar)
 {
-        printf("%s Open-%f High-%f Low-%f Close-%f Bid-%f Ask-%f\n", (*bar.time).c_str(), bar.open, bar.high, bar.low, bar.close, bar.bid, bar.ask);
+        printf("%s Open-%f High-%f Low-%f Close-%f Bid-%f Ask-%f\n", (bar.time).c_str(), bar.open, bar.high, bar.low, bar.close, bar.bid, bar.ask);
+
+        if (latest_time != bar.time)
+        {
+                fast[bar_count] = fast_alpha * bar.close + fast_beta * fast[bar_count - 1];
+                slow[bar_count] = slow_alpha * bar.close + slow_beta * slow[bar_count - 1];
+                printf("At %s, EMA(fast) and EMA(slow): %g, %g\n", latest_time.c_str(), fast[bar_count], slow[bar_count]);
+                // printf("LiveBar. ReqId: %ld, Date: %s, Open: %g, High: %g, Low: %g, Close: %g\n", reqId, latest_time.c_str(), open, high, low, close);
+                // std::cout << "The FAST EMA is: " << fast[bar_count] << ", SLOW EMA is: " << slow[bar_count] << std::endl;
+
+                // 快线上穿慢线
+                if (fast[bar_count - 1] < slow[bar_count - 1] && fast[bar_count] >= slow[bar_count])
+                {
+                        if (have_position == 0 && !traded && close - fast[bar_count] <= 0.0010)
+                        {
+                                place_ema = fast[bar_count];
+                                highest = close;
+                                quantity = (int) (floor(total_value) / 500) * 10000;
+                                // m_pClient->placeOrder(m_orderId++, ContractSamples::EurUsdFx(), OrderSamples::MarketOrder("BUY", quantity));
+                                traded = true;
+                                printf("--------------- %s, OPEN LONG %g at %g\n", bar.time.c_str(), quantity, close);
+                        } else if (have_position < 0 && !traded)
+                        {
+                                place_ema = fast[bar_count];
+                                highest = close;
+                                quantity = (int) (floor(total_value) / 500) * 10000 - have_position;
+                                // m_pClient->placeOrder(m_orderId++, ContractSamples::EurUsdFx(), OrderSamples::MarketOrder("BUY", quantity));
+                                traded = true;
+                                printf("--------------- %s, CLOS SHOT %g & OPEN LONG total %g at %g\n", bar.time.c_str(), -have_position, quantity,
+                                       close);
+                        }
+                }
+
+                // 快线下穿慢线
+                if (fast[bar_count - 1] > slow[bar_count - 1] && fast[bar_count] <= slow[bar_count])
+                {
+                        if (have_position == 0 && !traded && fast[bar_count] - close <= 0.0010)
+                        {
+                                place_ema = fast[bar_count];
+                                lowest = close;
+                                quantity = (int) (floor(total_value) / 500) * 10000;
+                                // m_pClient->placeOrder(m_orderId++, ContractSamples::EurUsdFx(), OrderSamples::MarketOrder("SELL", quantity));
+                                traded = true;
+                                printf("--------------- %s, OPEN SHOT %g at %g\n", bar.time.c_str(), quantity, close);
+                        } else if (have_position > 0 && !traded)
+                        {
+                                place_ema = fast[bar_count];
+                                lowest = close;
+                                quantity = (int) (floor(total_value) / 500) * 10000 + have_position;
+                                // m_pClient->placeOrder(m_orderId++, ContractSamples::EurUsdFx(), OrderSamples::MarketOrder("SELL", quantity));
+                                traded = true;
+                                printf("--------------- %s, CLOS LONG %g & OPEN SHOT total %g at %g\n", bar.time.c_str(), have_position, quantity,
+                                       close);
+                        }
+                }
+
+                bar_count++;
+                latest_time = bar.time;
+                open = bar.open;
+                high = bar.high;
+                low = bar.low;
+                close = bar.close;
+        } else
+        {
+                if (have_position > 0)
+                {
+                        if (bar.high > highest)
+                        {
+                                highest = bar.high;
+                        }
+                        // 多单盈利超过设定值又回调三分之一则平仓
+                        if ((highest - place_ema) > stop && bar.close <= highest - (highest - place_ema) / 3 && !traded)
+                        {
+                                // m_pClient->placeOrder(m_orderId++, ContractSamples::EurUsdFx(), OrderSamples::MarketOrder("SELL", have_position));
+                                traded = true;
+                                printf("--------------- %s, STOP LONG %g at %g\n", bar.time.c_str(), have_position, bar.close);
+                        }
+                        // 多单未盈利直接止损
+                        if ((bar.low - place_ema) <= -stop && !traded)
+                        {
+                                // m_pClient->placeOrder(m_orderId++, ContractSamples::EurUsdFx(), OrderSamples::MarketOrder("SELL", have_position));
+                                traded = true;
+                                printf("--------------- %s, LONG LOSS %g at %g\n", bar.time.c_str(), have_position, bar.close);
+                        }
+                } else if (have_position < 0)
+                {
+                        if (bar.low < lowest)
+                        {
+                                lowest = bar.low;
+                        }
+                        // 空单盈利超过设定值又回调三分之一则平仓
+                        if ((lowest - place_ema) < -stop && bar.close >= lowest - (lowest - place_ema) / 3 && !traded)
+                        {
+                                // m_pClient->placeOrder(m_orderId++, ContractSamples::EurUsdFx(), OrderSamples::MarketOrder("BUY", -have_position));
+                                traded = true;
+                                printf("--------------- %s, STOP SHOT %g at %g\n", bar.time.c_str(), -have_position, bar.close);
+                        }
+                        // 空单未盈利直接止损
+                        if ((bar.high - place_ema) >= stop && !traded)
+                        {
+                                // m_pClient->placeOrder(m_orderId++, ContractSamples::EurUsdFx(), OrderSamples::MarketOrder("BUY", -have_position));
+                                traded = true;
+                                printf("--------------- %s, SHOT LOSS %g at %g\n", bar.time.c_str(), -have_position, bar.close);
+                        }
+                }
+
+                open = bar.open;
+                high = bar.high;
+                low = bar.low;
+                close = bar.close;
+        }
 }

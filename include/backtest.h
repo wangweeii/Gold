@@ -1,11 +1,13 @@
 #pragma once
+#ifndef testcppclient_h__INCLUDED
+#define testcppclient_h__INCLUDED
 
 #include <string>
 #include "mysql.h"
 
 struct Bar
 {
-        std::string *time;
+        std::string time;
         double open, high, low, close, bid, ask;
 };
 
@@ -16,4 +18,6 @@ void back_test(const char *dictionary);
 
 void file_test(const char *file);
 
-void bar_test(const Bar &bar);
+void ma_cross_test(const Bar &bar);
+
+#endif
