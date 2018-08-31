@@ -18,6 +18,10 @@ void back_test(const char *dictionary);
 
 void file_test(const char *file);
 
+void ema_test(const Bar &bar);
+
 void ma_cross_test(const Bar &bar);
+
+void place_order(double quantity, double price);
 
 #endif
