@@ -5,35 +5,37 @@
 #include "database.h"
 #include "backtest.h"
 
-static const int LENGTH = 10000;
+static const int LENGTH = 1000000;
 
-double fast[LENGTH] = {1.325355,};
-double slow[LENGTH] = {1.325355,};
-double open = 1.324435;
-double high = 1.324435;
-double low = 1.324435;
-double close = 1.324435;
-std::string latest_time = "20090501 00:00:00.000";
+double      fast[LENGTH] = {1.325355,};
+double      slow[LENGTH] = {1.325355,};
+double      macd[LENGTH];
+double      open         = 1.324435;
+double      high         = 1.324435;
+double      low          = 1.324435;
+double      close        = 1.324435;
+std::string latest_time  = "20090501 00:00:00.000";
 
-unsigned int fast_step = 5;
-unsigned int slow_step = 34;
+unsigned int fast_step = 12;
+unsigned int slow_step = 55;
 
 double fast_alpha = 2.0 / (fast_step + 1);
 double slow_alpha = 2.0 / (slow_step + 1);
-double fast_beta = 1 - fast_alpha;
-double slow_beta = 1 - slow_alpha;
+double fast_beta  = 1 - fast_alpha;
+double slow_beta  = 1 - slow_alpha;
 
 double have_position = 0;
-double open_price = 0;
-double close_price = 0;
-double place_ema = 0;
-double highest = 0;
-double lowest = 0;
+double open_price    = 0;
+double close_price   = 0;
+double place_ema     = 0;
+double highest       = 0;
+double lowest        = 0;
 
-int bar_count = 1;
+int    bar_count   = 1;
 double total_value = 9600;
-double quantity = 0;
-double stop = 0.01;
+double quantity    = 0;
+double stop        = 0.0016;
+double fee         = 0;
 
 bool traded = false;
 
@@ -65,59 +67,89 @@ void back_test(MYSQL *db, long long max)
 void back_test(const char *dictionary)
 {
         struct dirent *ent;
-        DIR *dir;
+        struct dirent **namelist;
+        DIR           *dir;
         if ((dir = opendir(dictionary)) != nullptr)
         {
                 printf("Begin to test files in %s\n", dictionary);
 
+                int n = scandir(dictionary, &namelist, 0, alphasort);
+                if (n < 0)
+                {
+                        printf("Scandir ERROR\n");
+                }
+                else
+                {
+                        for (int i = 0; i < n; ++i)
+                        {
+                                if (strlen(namelist[i]->d_name) > 10)
+                                {
+                                        std::string file = dictionary;
+                                        file += namelist[i]->d_name;
+                                        printf("%s\n", file.c_str());
+                                        file_test(file);
+                                }
+                        }
+                }
+
+                /*
                 while ((ent = readdir(dir)) != nullptr)
                 {
                         if (strlen(ent->d_name) > 4)
                         {
-                                std::string file = "/opt/tick/";
+                                std::string file = dictionary;
                                 file += ent->d_name;
-                                file_test(file.c_str());
+                                // printf("%s\n", file.c_str());
+                                // file_test(file);
                         }
                 }
+                 */
+                closedir(dir);
         }
 }
 
-void file_test(const char *file)
+void file_test(std::string file)
 {
-        char line[60];
+        char        line[60];
         std::string time;
-        double bid, ask, midpoint;
-        int time_hour, hour, previous_hour = -1;
-        Bar bar;
-        FILE *fp = fopen(file, "r");
+        double      bid, ask, midpoint;
+        int         time_hour, hour, previous_hour = -1;
+        Bar         bar;
+        printf("Begin to test %s\n", file.c_str());
+        FILE *fp = fopen(file.c_str(), "r");
         while (fgets(line, 60, fp))
         {
                 line[strlen(line) - 1] = ',';
 
-                time = strtok(line, ",");
-                time = strtok(nullptr, ",");
-                bid = atof(strtok(nullptr, ","));
-                ask = atof(strtok(nullptr, ","));
+                // printf("%s", line);
+
+                time     = strtok(line, ",");
+                time     = strtok(nullptr, ",");
+                bid      = atof(strtok(nullptr, ","));
+                ask      = atof(strtok(nullptr, ","));
                 midpoint = (bid + ask) / 2;
 
-                hour = (time[9] - '0') * 10 + (time[10] - '0');
-                time_hour = hour - (hour % 4);
+                hour      = (time[12] - '0') * 10 + (time[13] - '0');
+                time_hour = hour - (hour % 15);
 
-                time[9] = char('0' + (time_hour / 10));
-                time[10] = char('0' + (time_hour % 10));
-                time[12] = '0';
-                time[13] = '0';
-                time[15] = '0';
-                time[16] = '0';
-                time[18] = '0';
-                time[19] = '0';
-                time[20] = '0';
+                // time[9]   = char('0' + (time_hour / 10));
+                // time[10]  = char('0' + (time_hour % 10));
+                // time[12]  = '0';
+                // time[13]  = '0';
+                time[12]  = char('0' + (time_hour / 10));
+                time[13]  = char('0' + (time_hour % 10));
+                time[15]  = '0';
+                time[16]  = '0';
+                time[18]  = '0';
+                time[19]  = '0';
+                time[20]  = '0';
                 if (previous_hour != time_hour)
                 {
                         bar.open = midpoint;
                         bar.high = midpoint;
-                        bar.low = midpoint;
-                } else
+                        bar.low  = midpoint;
+                }
+                else
                 {
                         if (midpoint > bar.high)
                         {
@@ -128,14 +160,12 @@ void file_test(const char *file)
                                 bar.low = midpoint;
                         }
                 }
-                bar.time = time;
+                bar.time  = time;
                 bar.close = midpoint;
-                bar.bid = bid;
-                bar.ask = ask;
+                bar.bid   = bid;
+                bar.ask   = ask;
 
-                // printf("%s, %f, %f, %f\n", time.c_str(), bid, ask, midpoint);
-                // fast[0] = 1.325355;
-                // slow[0] = 1.325355;
+                // printf("%s Open-%f High-%f Low-%f Close-%f Bid-%f Ask-%f\n", (bar.time).c_str(), bar.open, bar.high, bar.low, bar.close, bar.bid, bar.ask);
                 ma_cross_test(bar);
         }
         fclose(fp);
@@ -143,6 +173,30 @@ void file_test(const char *file)
 
 void ema_test(const Bar &bar)
 {}
+
+void macd_test(const Bar &bar)
+{
+        if (latest_time != bar.time)
+        {
+                fast[bar_count] = fast_alpha * bar.close + fast_beta * fast[bar_count - 1];
+                slow[bar_count] = slow_alpha * bar.close + slow_beta * slow[bar_count - 1];
+                macd[bar_count] = fast[bar_count] - slow[bar_count];
+
+                if (bar_count > 400 && macd[bar_count] > macd[bar_count - 1] && macd[bar_count - 1] < macd[bar_count - 2])
+                {
+                        // buy
+                }
+
+                if (bar_count > 400 && macd[bar_count] < macd[bar_count - 1] && macd[bar_count - 1] > macd[bar_count - 2])
+                {
+                        // sell
+                }
+        }
+        else
+        {
+                // stop loss
+        }
+}
 
 void ma_cross_test(const Bar &bar)
 {
@@ -163,20 +217,21 @@ void ma_cross_test(const Bar &bar)
                         if (have_position == 0 && !traded && close - fast[bar_count] <= 0.0010)
                         {
                                 place_ema = fast[bar_count];
-                                highest = close;
-                                quantity = (int) (floor(total_value) / 500) * 10000;
-                                open_price = bar.ask;
+                                highest   = close;
+                                quantity  = (int) (floor(total_value) / 500) * 10000;
                                 printf("--------------- %s, OPEN LONG %f at %f\n", bar.time.c_str(), quantity, bar.ask);
                                 place_order(quantity, bar.ask);
-                        } else if (have_position < 0 && !traded)
+                                open_price = bar.ask;
+                        }
+                        else if (have_position < 0 && !traded)
                         {
                                 place_ema = fast[bar_count];
-                                highest = close;
-                                quantity = (int) (floor(total_value) / 500) * 10000 - have_position;
-                                open_price = bar.ask;
+                                highest   = close;
+                                quantity  = (int) (floor(total_value) / 500) * 10000 - have_position;
                                 printf("--------------- %s, CLOS SHOT %f & OPEN LONG total %f at %g\n", bar.time.c_str(), -have_position, quantity,
                                        bar.ask);
                                 place_order(quantity, bar.ask);
+                                open_price = bar.ask;
                         }
                 }
 
@@ -186,30 +241,32 @@ void ma_cross_test(const Bar &bar)
                         if (have_position == 0 && !traded && fast[bar_count] - close <= 0.0010)
                         {
                                 place_ema = fast[bar_count];
-                                lowest = close;
-                                quantity = (int) (floor(total_value) / 500) * 10000;
-                                open_price = bar.bid;
+                                lowest    = close;
+                                quantity  = (int) (floor(total_value) / 500) * 10000;
                                 printf("--------------- %s, OPEN SHOT %f at %f\n", bar.time.c_str(), quantity, bar.bid);
                                 place_order(-quantity, bar.bid);
-                        } else if (have_position > 0 && !traded)
+                                open_price = bar.bid;
+                        }
+                        else if (have_position > 0 && !traded)
                         {
                                 place_ema = fast[bar_count];
-                                lowest = close;
-                                quantity = (int) (floor(total_value) / 500) * 10000 + have_position;
-                                open_price = bar.bid;
+                                lowest    = close;
+                                quantity  = (int) (floor(total_value) / 500) * 10000 + have_position;
                                 printf("--------------- %s, CLOS LONG %f & OPEN SHOT total %f at %g\n", bar.time.c_str(), have_position, quantity,
                                        bar.bid);
                                 place_order(-quantity, bar.bid);
+                                open_price = bar.bid;
                         }
                 }
 
                 bar_count++;
                 latest_time = bar.time;
-                open = bar.open;
-                high = bar.high;
-                low = bar.low;
-                close = bar.close;
-        } else
+                open        = bar.open;
+                high        = bar.high;
+                low         = bar.low;
+                close       = bar.close;
+        }
+        else
         {
                 // printf("%s Open-%f High-%f Low-%f Close-%f Bid-%f Ask-%f\n", (bar.time).c_str(), bar.open, bar.high, bar.low, bar.close, bar.bid, bar.ask);
                 if (have_position > 0)
@@ -236,7 +293,8 @@ void ma_cross_test(const Bar &bar)
                                 place_order(-have_position, bar.bid);
                                 // have_position = 0;
                         }
-                } else if (have_position < 0)
+                }
+                else if (have_position < 0)
                 {
                         if (bar.low < lowest)
                         {
@@ -262,19 +320,33 @@ void ma_cross_test(const Bar &bar)
                         }
                 }
 
-                open = bar.open;
-                high = bar.high;
-                low = bar.low;
+                open  = bar.open;
+                high  = bar.high;
+                low   = bar.low;
                 close = bar.close;
         }
 }
 
 void place_order(double quantity, double price)
 {
-        if (have_position != 0)
+        if (have_position > 0)
         {
                 total_value += have_position * (price - open_price);
-                printf("Total value: %f\n", total_value);
+        }
+        else if (have_position < 0)
+        {
+                total_value += have_position * (price - open_price);
+        }
+        if (quantity > 0)
+        {
+                fee += quantity * price / 50000;
+                total_value -= quantity * price / 50000;
+        }
+        else if (quantity < 0)
+        {
+                fee -= quantity * price / 50000;
+                total_value += quantity * price / 50000;
         }
         have_position += quantity;
+        printf("Total value: %f, Position: %f, Total fee: %f\n", total_value, have_position, fee);
 }

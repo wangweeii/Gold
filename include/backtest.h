@@ -16,7 +16,7 @@ struct Bar
 
 void back_test(const char *dictionary);
 
-void file_test(const char *file);
+void file_test(std::string file);
 
 void ema_test(const Bar &bar);
 
