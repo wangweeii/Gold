@@ -18,6 +18,8 @@ void back_test(const char *dictionary);
 
 void file_test(std::string file);
 
+void seconds_test(const Bar &bar);
+
 void macd_test(const Bar &bar);
 
 void ma_cross_test(const Bar &bar);

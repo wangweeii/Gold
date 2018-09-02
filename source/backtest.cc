@@ -5,7 +5,7 @@
 #include "database.h"
 #include "backtest.h"
 
-static const int LENGTH = 1000000;
+static const long long LENGTH = 100000000;
 
 double      fast[LENGTH] = {1.325355,};
 double      slow[LENGTH] = {1.325355,};
@@ -137,14 +137,14 @@ void file_test(std::string file)
                 // hour      = (time[12] - '0') * 10 + (time[13] - '0');
                 // time_hour = hour - (hour % 15);
 
-                time[9]   = char('0' + (time_hour / 10));
-                time[10]  = char('0' + (time_hour % 10));
-                time[12]  = '0';
-                time[13]  = '0';
+                // time[9]   = char('0' + (time_hour / 10));
+                // time[10]  = char('0' + (time_hour % 10));
+                // time[12]  = '0';
+                // time[13]  = '0';
                 // time[12]  = char('0' + (time_hour / 10));
                 // time[13]  = char('0' + (time_hour % 10));
-                time[15]  = '0';
-                time[16]  = '0';
+                // time[15]  = '0';
+                // time[16]  = '0';
                 time[18]  = '0';
                 time[19]  = '0';
                 time[20]  = '0';
@@ -175,6 +175,12 @@ void file_test(std::string file)
                 macd_test(bar);
         }
         fclose(fp);
+}
+
+// 对每秒的数据进行测试
+void seconds_test(const Bar &bar)
+{
+        //shit
 }
 
 void macd_test(const Bar &bar)
