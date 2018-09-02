@@ -35,7 +35,10 @@ int    bar_count   = 1;
 double total_value = 9600;
 double quantity    = 0;
 double stop        = 0.0016;
+double open_diff   = 0.0010;
 double fee         = 0;
+
+double macd_stop = 0.006;
 
 bool traded = false;
 
@@ -129,15 +132,17 @@ void file_test(std::string file)
                 ask      = atof(strtok(nullptr, ","));
                 midpoint = (bid + ask) / 2;
 
-                hour      = (time[12] - '0') * 10 + (time[13] - '0');
-                time_hour = hour - (hour % 15);
+                hour = (time[9] - '0') * 10 + (time[10] - '0');
+                time_hour = hour - (hour % 4);
+                // hour      = (time[12] - '0') * 10 + (time[13] - '0');
+                // time_hour = hour - (hour % 15);
 
-                // time[9]   = char('0' + (time_hour / 10));
-                // time[10]  = char('0' + (time_hour % 10));
-                // time[12]  = '0';
-                // time[13]  = '0';
-                time[12]  = char('0' + (time_hour / 10));
-                time[13]  = char('0' + (time_hour % 10));
+                time[9]   = char('0' + (time_hour / 10));
+                time[10]  = char('0' + (time_hour % 10));
+                time[12]  = '0';
+                time[13]  = '0';
+                // time[12]  = char('0' + (time_hour / 10));
+                // time[13]  = char('0' + (time_hour % 10));
                 time[15]  = '0';
                 time[16]  = '0';
                 time[18]  = '0';
@@ -166,13 +171,11 @@ void file_test(std::string file)
                 bar.ask   = ask;
 
                 // printf("%s Open-%f High-%f Low-%f Close-%f Bid-%f Ask-%f\n", (bar.time).c_str(), bar.open, bar.high, bar.low, bar.close, bar.bid, bar.ask);
-                ma_cross_test(bar);
+                // ma_cross_test(bar);
+                macd_test(bar);
         }
         fclose(fp);
 }
-
-void ema_test(const Bar &bar)
-{}
 
 void macd_test(const Bar &bar)
 {
@@ -185,16 +188,96 @@ void macd_test(const Bar &bar)
                 if (bar_count > 400 && macd[bar_count] > macd[bar_count - 1] && macd[bar_count - 1] < macd[bar_count - 2])
                 {
                         // buy
+                        if (have_position == 0)
+                        {
+                                highest  = close;
+                                quantity = (int) (floor(total_value) / 500) * 10000;
+                                printf("--------------- %s, OPEN LONG %f at %f\n", bar.time.c_str(), quantity, bar.ask);
+                                place_order(quantity, bar.ask);
+                                open_price = bar.ask;
+                        }
+                        else if (have_position < 0)
+                        {
+                                highest  = close;
+                                quantity = (int) (floor(total_value) / 500) * 10000 - have_position;
+                                printf("--------------- %s, CLOS SHOT %f & OPEN LONG total %f at %g\n", bar.time.c_str(), -have_position, quantity,
+                                       bar.ask);
+                                place_order(quantity, bar.ask);
+                                open_price = bar.ask;
+                        }
                 }
-
-                if (bar_count > 400 && macd[bar_count] < macd[bar_count - 1] && macd[bar_count - 1] > macd[bar_count - 2])
+                else if (bar_count > 400 && macd[bar_count] < macd[bar_count - 1] && macd[bar_count - 1] > macd[bar_count - 2])
                 {
                         // sell
+                        if (have_position == 0)
+                        {
+                                lowest   = close;
+                                quantity = (int) (floor(total_value) / 500) * 10000;
+                                printf("--------------- %s, OPEN SHOT %f at %f\n", bar.time.c_str(), quantity, bar.bid);
+                                place_order(-quantity, bar.bid);
+                                open_price = bar.bid;
+                        }
+                        else if (have_position > 0)
+                        {
+                                lowest   = close;
+                                quantity = (int) (floor(total_value) / 500) * 10000 + have_position;
+                                printf("--------------- %s, CLOS LONG %f & OPEN SHOT total %f at %g\n", bar.time.c_str(), have_position, quantity,
+                                       bar.bid);
+                                place_order(-quantity, bar.bid);
+                                open_price = bar.bid;
+                        }
                 }
+
+                bar_count++;
+                latest_time = bar.time;
+                open        = bar.open;
+                high        = bar.high;
+                low         = bar.low;
+                close       = bar.close;
         }
         else
         {
                 // stop loss
+                if (have_position > 0)
+                {
+                        if (bar.close > highest)
+                        {
+                                highest = bar.close;
+                        }
+
+                        // if ((highest - open_price) >= macd_stop && bar.close < (highest - (highest - open_price) / 3))
+                        // {
+                        //         printf("--------------- %s, STOP LONG %f at %f\n", bar.time.c_str(), have_position, bar.bid);
+                        //         place_order(-have_position, bar.bid);
+                        // }
+                        else if ((open_price - bar.close) >= macd_stop)
+                        {
+                                printf("--------------- %s, LONG LOSS %f at %f\n", bar.time.c_str(), have_position, bar.bid);
+                                place_order(-have_position, bar.bid);
+                        }
+                }
+                else if (have_position < 0)
+                {
+                        if (bar.close < lowest)
+                        {
+                                lowest = bar.close;
+                        }
+
+                        // if ((open_price - lowest) >= macd_stop && bar.close > (lowest + (open_price - lowest) / 3))
+                        // {
+                        //         printf("--------------- %s, STOP SHOT %f at %f\n", bar.time.c_str(), -have_position, bar.ask);
+                        //         place_order(-have_position, bar.ask);
+                        // }
+                        if ((bar.close - open_price) >= macd_stop)
+                        {
+                                printf("--------------- %s, SHOT LOSS %f at %f\n", bar.time.c_str(), -have_position, bar.ask);
+                                place_order(-have_position, bar.ask);
+                        }
+                }
+                open  = bar.open;
+                high  = bar.high;
+                low   = bar.low;
+                close = bar.close;
         }
 }
 
@@ -214,7 +297,7 @@ void ma_cross_test(const Bar &bar)
                 // 快线上穿慢线
                 if (bar_count > 400 && fast[bar_count - 1] < slow[bar_count - 1] && fast[bar_count] >= slow[bar_count])
                 {
-                        if (have_position == 0 && !traded && close - fast[bar_count] <= 0.0010)
+                        if (have_position == 0 && !traded && close - fast[bar_count] <= open_diff)
                         {
                                 place_ema = fast[bar_count];
                                 highest   = close;
@@ -238,7 +321,7 @@ void ma_cross_test(const Bar &bar)
                 // 快线下穿慢线
                 if (bar_count > 400 && fast[bar_count - 1] > slow[bar_count - 1] && fast[bar_count] <= slow[bar_count])
                 {
-                        if (have_position == 0 && !traded && fast[bar_count] - close <= 0.0010)
+                        if (have_position == 0 && !traded && fast[bar_count] - close <= open_diff)
                         {
                                 place_ema = fast[bar_count];
                                 lowest    = close;
@@ -271,12 +354,12 @@ void ma_cross_test(const Bar &bar)
                 // printf("%s Open-%f High-%f Low-%f Close-%f Bid-%f Ask-%f\n", (bar.time).c_str(), bar.open, bar.high, bar.low, bar.close, bar.bid, bar.ask);
                 if (have_position > 0)
                 {
-                        if (bar.high > highest)
+                        if (bar.close > highest)
                         {
-                                highest = bar.high;
+                                highest = bar.close;
                         }
                         // 多单盈利超过设定值又回调三分之一则平仓
-                        if ((highest - open_price) > stop && bar.close <= highest - (highest - open_price) / 3 && !traded)
+                        if ((highest - open_price) >= stop && bar.close <= (highest - (highest - open_price) / 3) && !traded)
                         {
                                 // m_pClient->placeOrder(m_orderId++, ContractSamples::EurUsdFx(), OrderSamples::MarketOrder("SELL", have_position));
                                 // traded = true;
@@ -285,7 +368,7 @@ void ma_cross_test(const Bar &bar)
                                 // have_position = 0;
                         }
                         // 多单未盈利直接止损
-                        if ((bar.low - open_price) <= -stop && !traded)
+                        if ((open_price - bar.close) >= stop && !traded)
                         {
                                 // m_pClient->placeOrder(m_orderId++, ContractSamples::EurUsdFx(), OrderSamples::MarketOrder("SELL", have_position));
                                 // traded = true;
@@ -296,12 +379,12 @@ void ma_cross_test(const Bar &bar)
                 }
                 else if (have_position < 0)
                 {
-                        if (bar.low < lowest)
+                        if (bar.close < lowest)
                         {
                                 lowest = bar.low;
                         }
                         // 空单盈利超过设定值又回调三分之一则平仓
-                        if ((lowest - open_price) < -stop && bar.close >= lowest - (lowest - open_price) / 3 && !traded)
+                        if ((open_price - lowest) >= stop && bar.close >= (lowest + (open_price - lowest) / 3) && !traded)
                         {
                                 // m_pClient->placeOrder(m_orderId++, ContractSamples::EurUsdFx(), OrderSamples::MarketOrder("BUY", -have_position));
                                 // traded = true;
@@ -310,7 +393,7 @@ void ma_cross_test(const Bar &bar)
                                 // have_position = 0;
                         }
                         // 空单未盈利直接止损
-                        if ((bar.high - open_price) >= stop && !traded)
+                        if ((open_price - bar.close) >= stop && !traded)
                         {
                                 // m_pClient->placeOrder(m_orderId++, ContractSamples::EurUsdFx(), OrderSamples::MarketOrder("BUY", -have_position));
                                 // traded = true;
@@ -339,13 +422,29 @@ void place_order(double quantity, double price)
         }
         if (quantity > 0)
         {
-                fee += quantity * price / 50000;
-                total_value -= quantity * price / 50000;
+                if (quantity * price / 50000 > 2)
+                {
+                        fee += quantity * price / 50000;
+                        total_value -= quantity * price / 50000;
+                }
+                else
+                {
+                        fee += 2;
+                        total_value -= 2;
+                }
         }
         else if (quantity < 0)
         {
-                fee -= quantity * price / 50000;
-                total_value += quantity * price / 50000;
+                if (quantity * price / 50000 < -2)
+                {
+                        fee -= quantity * price / 50000;
+                        total_value += quantity * price / 50000;
+                }
+                else
+                {
+                        fee += 2;
+                        total_value -= 2;
+                }
         }
         have_position += quantity;
         printf("Total value: %f, Position: %f, Total fee: %f\n", total_value, have_position, fee);
