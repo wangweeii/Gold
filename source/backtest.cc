@@ -14,6 +14,7 @@ double      open         = 1.324435;
 double      high         = 1.324435;
 double      low          = 1.324435;
 double      close        = 1.324435;
+double      pre_close;
 std::string latest_time  = "20090501 00:00:00.000";
 
 unsigned int fast_step = 12;
@@ -116,7 +117,7 @@ void file_test(std::string file)
         char        line[60];
         std::string time;
         double      bid, ask, midpoint;
-        int         time_hour, hour, previous_hour = -1;
+        int         int_time, sub_time, previous_hour = -1;
         Bar         bar;
         printf("Begin to test %s\n", file.c_str());
         FILE *fp = fopen(file.c_str(), "r");
@@ -132,23 +133,27 @@ void file_test(std::string file)
                 ask      = atof(strtok(nullptr, ","));
                 midpoint = (bid + ask) / 2;
 
-                hour = (time[9] - '0') * 10 + (time[10] - '0');
-                time_hour = hour - (hour % 4);
-                // hour      = (time[12] - '0') * 10 + (time[13] - '0');
-                // time_hour = hour - (hour % 15);
+                // sub_time = (time[9] - '0') * 10 + (time[10] - '0');
+                // int_time = sub_time - (sub_time % 4);
+                // sub_time      = (time[12] - '0') * 10 + (time[13] - '0');
+                // int_time = sub_time - (sub_time % 15);
+                sub_time = (time[15] - '0') * 10 + (time[16] - '0');
+                int_time = sub_time - (sub_time % 5);
 
-                // time[9]   = char('0' + (time_hour / 10));
-                // time[10]  = char('0' + (time_hour % 10));
+                // time[9]   = char('0' + (int_time / 10));
+                // time[10]  = char('0' + (int_time % 10));
                 // time[12]  = '0';
                 // time[13]  = '0';
-                // time[12]  = char('0' + (time_hour / 10));
-                // time[13]  = char('0' + (time_hour % 10));
+                // time[12]  = char('0' + (int_time / 10));
+                // time[13]  = char('0' + (int_time % 10));
                 // time[15]  = '0';
                 // time[16]  = '0';
+                time[15]  = char('0' + (int_time / 10));
+                time[16]  = char('0' + (int_time % 10));
                 time[18]  = '0';
                 time[19]  = '0';
                 time[20]  = '0';
-                if (previous_hour != time_hour)
+                if (previous_hour != int_time)
                 {
                         bar.open = midpoint;
                         bar.high = midpoint;
@@ -170,18 +175,86 @@ void file_test(std::string file)
                 bar.bid   = bid;
                 bar.ask   = ask;
 
-                // printf("%s Open-%f High-%f Low-%f Close-%f Bid-%f Ask-%f\n", (bar.time).c_str(), bar.open, bar.high, bar.low, bar.close, bar.bid, bar.ask);
+                printf("%s Open-%f High-%f Low-%f Close-%f Bid-%f Ask-%f\n", (bar.time).c_str(), bar.open, bar.high, bar.low, bar.close, bar.bid, bar.ask);
                 // ma_cross_test(bar);
-                macd_test(bar);
+                // macd_test(bar);
+                // seconds_test(bar);
         }
         fclose(fp);
 }
 
-// 对每秒的数据进行测试
+/*
+// 对秒级的数据进行测试
 void seconds_test(const Bar &bar)
 {
         //shit
+        if (latest_time != bar.time)
+        {
+                int sub_time = (bar.time[9] - '0') * 10 + (bar.time[10] - '0');
+                fast[bar_count] = fast_alpha * bar.close + fast_beta * fast[bar_count - 1];
+                if (bar_count > 500 && close >= fast[bar_count] && pre_close < fast[bar_count - 1])
+                {
+                        // close short
+                        if (have_position < 0)
+                        {
+                                highest  = close;
+                                printf("--------------- %s, CLOS SHOT %f at %f\n", bar.time.c_str(), -have_position, bar.ask);
+                                place_order(-have_position, bar.ask);
+                        }
+                        // open long
+                        if (have_position == 0 && 8 < sub_time && sub_time < 23)
+                        {
+                                highest = close;
+                                quantity = (int) (floor(total_value) / 500) * 10000;
+                                printf("--------------- %s, OPEN LONG %f at %f\n", bar.time.c_str(), quantity, bar.ask);
+                                place_order(quantity, bar.ask);
+                                open_price = bar.ask;
+                        }
+                }
+                else if (bar_count > 500 && close <= fast[bar_count] && pre_close > fast[bar_count - 1])
+                {
+                        // close long
+                        if (have_position > 0)
+                        {
+                                lowest = close;
+                                printf("--------------- %s, CLOS LONG %f at %f\n", bar.time.c_str(), -have_position, bar.bid);
+                                place_order(-have_position, bar.bid);
+                        }
+                        // open short
+                        if (have_position == 0 && 8 < sub_time && sub_time < 23)
+                        {
+                                lowest = close;
+                                quantity = (int) (floor(total_value) / 500) * 10000;
+                                printf("--------------- %s, OPEN SHOT %f at %f\n", bar.time.c_str(), quantity, bar.bid);
+                                place_order(-quantity, bar.bid);
+                                open_price = bar.bid;
+                        }
+                }
+                pre_close = close;
+                bar_count++;
+                latest_time = bar.time;
+                open = bar.open;
+                high = bar.high;
+                low = bar.low;
+                close = bar.close;
+        }
+        else
+        {
+                // if (have_position > 0)
+                // {
+                        // stop
+                // }
+                // else if (have_position < 0)
+                // {
+                        // stop
+                // }
+                open = bar.open;
+                high = bar.high;
+                low = bar.low;
+                close = bar.close;
+        }
 }
+*/
 
 void macd_test(const Bar &bar)
 {
