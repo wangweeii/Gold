@@ -175,15 +175,14 @@ void file_test(std::string file)
                 bar.bid   = bid;
                 bar.ask   = ask;
 
-                printf("%s Open-%f High-%f Low-%f Close-%f Bid-%f Ask-%f\n", (bar.time).c_str(), bar.open, bar.high, bar.low, bar.close, bar.bid, bar.ask);
+                // printf("%s Open-%f High-%f Low-%f Close-%f Bid-%f Ask-%f\n", (bar.time).c_str(), bar.open, bar.high, bar.low, bar.close, bar.bid, bar.ask);
                 // ma_cross_test(bar);
                 // macd_test(bar);
-                // seconds_test(bar);
+                seconds_test(bar);
         }
         fclose(fp);
 }
 
-/*
 // 对秒级的数据进行测试
 void seconds_test(const Bar &bar)
 {
@@ -254,7 +253,6 @@ void seconds_test(const Bar &bar)
                 close = bar.close;
         }
 }
-*/
 
 void macd_test(const Bar &bar)
 {

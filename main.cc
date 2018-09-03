@@ -34,7 +34,7 @@ int main(int argc, char *argv[])
         */
         // back_test("/home/vv/tick");
         // file_test("/opt/tick/EURUSD-2009-05.csv");
-        // back_test("/Users/vv/tick/");
+        back_test("/Users/vv/tick/");
         // file_test("/Users/vv/tick/EURUSD-2009-05.csv");
         printf("Connect Closed.\n");
         return 0;
