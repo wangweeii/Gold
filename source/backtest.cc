@@ -5,7 +5,7 @@
 #include "database.h"
 #include "backtest.h"
 
-static const long long LENGTH = 100000000;
+static const long long LENGTH = 1000000;
 
 double      fast[LENGTH] = {1.325355,};
 double      slow[LENGTH] = {1.325355,};
@@ -201,7 +201,7 @@ void seconds_test(const Bar &bar)
                                 place_order(-have_position, bar.ask);
                         }
                         // open long
-                        if (have_position == 0 && 8 < sub_time && sub_time < 23)
+                        if (have_position == 0 && 10 < sub_time && sub_time < 23)
                         {
                                 highest = close;
                                 quantity = (int) (floor(total_value) / 500) * 10000;
@@ -220,7 +220,7 @@ void seconds_test(const Bar &bar)
                                 place_order(-have_position, bar.bid);
                         }
                         // open short
-                        if (have_position == 0 && 8 < sub_time && sub_time < 23)
+                        if (have_position == 0 && 10 < sub_time && sub_time < 23)
                         {
                                 lowest = close;
                                 quantity = (int) (floor(total_value) / 500) * 10000;
@@ -229,6 +229,8 @@ void seconds_test(const Bar &bar)
                                 open_price = bar.bid;
                         }
                 }
+                if (total_value < 5000)
+                        return;
                 pre_close = close;
                 bar_count++;
                 latest_time = bar.time;
