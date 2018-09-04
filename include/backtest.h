@@ -14,9 +14,11 @@ struct Bar
 // void back_test(MYSQL *db);
 // void back_test(MYSQL *db, long long max);
 
-void back_test(const char *dictionary);
+void back_test(const char *dictionary, const int time_step, const char period);
 
-void file_test(std::string file);
+void file_test(std::string file, const int time_step, const char period);
+
+void time_trail(std::string &time, const int time_step, const char period);
 
 void seconds_test(const Bar &bar);
 

@@ -69,7 +69,7 @@ void back_test(MYSQL *db, long long max)
 }
 */
 
-void back_test(const char *dictionary)
+void back_test(const char *dictionary, const int time_step, const char period)
 {
         struct dirent *ent;
         struct dirent **namelist;
@@ -92,7 +92,7 @@ void back_test(const char *dictionary)
                                         std::string file = dictionary;
                                         file += namelist[i]->d_name;
                                         printf("%s\n", file.c_str());
-                                        file_test(file);
+                                        file_test(file, time_step, period);
                                 }
                         }
                 }
@@ -113,7 +113,7 @@ void back_test(const char *dictionary)
         }
 }
 
-void file_test(std::string file)
+void file_test(std::string file, const int time_step, const char period)
 {
         char        line[60];
         std::string time;
@@ -138,8 +138,8 @@ void file_test(std::string file)
                 // int_time = sub_time - (sub_time % 4);
                 // sub_time      = (time[12] - '0') * 10 + (time[13] - '0');
                 // int_time = sub_time - (sub_time % 15);
-                sub_time = (time[15] - '0') * 10 + (time[16] - '0');
-                int_time = sub_time - (sub_time % 15);
+                // sub_time = (time[15] - '0') * 10 + (time[16] - '0');
+                // int_time = sub_time - (sub_time % 30);
 
                 // time[9]   = char('0' + (int_time / 10));
                 // time[10]  = char('0' + (int_time % 10));
@@ -149,11 +149,14 @@ void file_test(std::string file)
                 // time[13]  = char('0' + (int_time % 10));
                 // time[15]  = '0';
                 // time[16]  = '0';
-                time[15]  = char('0' + (int_time / 10));
-                time[16]  = char('0' + (int_time % 10));
-                time[18]  = '0';
-                time[19]  = '0';
-                time[20]  = '0';
+                // time[15]  = char('0' + (int_time / 10));
+                // time[16]  = char('0' + (int_time % 10));
+                // time[18]  = '0';
+                // time[19]  = '0';
+                // time[20]  = '0';
+
+                time_trail(time, time_step, period);
+
                 if (previous_hour != int_time)
                 {
                         bar.open = midpoint;
@@ -179,9 +182,41 @@ void file_test(std::string file)
                 // printf("%s Open-%f High-%f Low-%f Close-%f Bid-%f Ask-%f\n", (bar.time).c_str(), bar.open, bar.high, bar.low, bar.close, bar.bid, bar.ask);
                 // ma_cross_test(bar);
                 // macd_test(bar);
-                seconds_test(bar);
+                // seconds_test(bar);
         }
         fclose(fp);
+}
+
+void time_trail(std::string &time, const int time_step, const char period)
+{
+        printf("%s\n", time.c_str());
+        int first = 0, second = 0;
+        switch (period)
+        {
+                case 's':
+                        first = 15;
+                        second = 16;
+                        break;
+                case 'm':
+                        first = 12;
+                        second = 13;
+                        break;
+                case 'h':
+                        first = 9;
+                        second = 10;
+                        break;
+                default:break;
+        }
+        int int_time = (time[first] - '0') * 10 + time[second] - '0';
+        int_time -= (int_time % time_step);
+        time[first]  = char('0' + (int_time / 10));
+        time[second] = char('0' + (int_time % 10));
+        for (int i = second + 1; i < time.length(); ++i)
+        {
+                if (time[i] != '.' && time[i] != ':')
+                        time[i] = '0';
+        }
+        printf("%s\n", time.c_str());
 }
 
 void seconds_test(const Bar &bar)
