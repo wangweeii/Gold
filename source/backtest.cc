@@ -118,7 +118,7 @@ void file_test(std::string file, const int time_step, const char period)
         char        line[60];
         std::string time;
         double      bid, ask, midpoint;
-        int         int_time, sub_time, previous_hour = -1;
+        int         int_time, previous_hour = -1;
         Bar         bar;
         printf("Begin to test %s\n", file.c_str());
         FILE *fp = fopen(file.c_str(), "r");
