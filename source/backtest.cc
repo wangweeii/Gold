@@ -126,8 +126,6 @@ void file_test(std::string file, const int time_step, const char period)
         {
                 line[strlen(line) - 1] = ',';
 
-                // printf("%s", line);
-
                 time     = strtok(line, ",");
                 time     = strtok(nullptr, ",");
                 bid      = atof(strtok(nullptr, ","));
