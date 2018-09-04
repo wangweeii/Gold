@@ -134,27 +134,6 @@ void file_test(std::string file, const int time_step, const char period)
                 ask      = atof(strtok(nullptr, ","));
                 midpoint = (bid + ask) / 2;
 
-                // sub_time = (time[9] - '0') * 10 + (time[10] - '0');
-                // int_time = sub_time - (sub_time % 4);
-                // sub_time      = (time[12] - '0') * 10 + (time[13] - '0');
-                // int_time = sub_time - (sub_time % 15);
-                // sub_time = (time[15] - '0') * 10 + (time[16] - '0');
-                // int_time = sub_time - (sub_time % 30);
-
-                // time[9]   = char('0' + (int_time / 10));
-                // time[10]  = char('0' + (int_time % 10));
-                // time[12]  = '0';
-                // time[13]  = '0';
-                // time[12]  = char('0' + (int_time / 10));
-                // time[13]  = char('0' + (int_time % 10));
-                // time[15]  = '0';
-                // time[16]  = '0';
-                // time[15]  = char('0' + (int_time / 10));
-                // time[16]  = char('0' + (int_time % 10));
-                // time[18]  = '0';
-                // time[19]  = '0';
-                // time[20]  = '0';
-
                 time_trail(time, time_step, period);
 
                 if (previous_hour != int_time)
@@ -189,7 +168,6 @@ void file_test(std::string file, const int time_step, const char period)
 
 void time_trail(std::string &time, const int time_step, const char period)
 {
-        printf("%s\n", time.c_str());
         int first = 0, second = 0;
         switch (period)
         {
@@ -216,7 +194,6 @@ void time_trail(std::string &time, const int time_step, const char period)
                 if (time[i] != '.' && time[i] != ':')
                         time[i] = '0';
         }
-        printf("%s\n", time.c_str());
 }
 
 void seconds_test(const Bar &bar)
