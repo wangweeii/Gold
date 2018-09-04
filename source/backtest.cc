@@ -17,7 +17,7 @@ double      close        = 1.324435;
 double      pre_close;
 std::string latest_time  = "20090501 00:00:00.000";
 
-unsigned int fast_step = 12;
+unsigned int fast_step = 21;
 unsigned int slow_step = 55;
 
 double fast_alpha = 2.0 / (fast_step + 1);
@@ -40,6 +40,7 @@ double open_diff   = 0.0010;
 double fee         = 0;
 
 double macd_stop = 0.006;
+double seconds_stop = 0.0003;
 
 bool traded = false;
 
@@ -138,7 +139,7 @@ void file_test(std::string file)
                 // sub_time      = (time[12] - '0') * 10 + (time[13] - '0');
                 // int_time = sub_time - (sub_time % 15);
                 sub_time = (time[15] - '0') * 10 + (time[16] - '0');
-                int_time = sub_time - (sub_time % 5);
+                int_time = sub_time - (sub_time % 15);
 
                 // time[9]   = char('0' + (int_time / 10));
                 // time[10]  = char('0' + (int_time % 10));
@@ -183,7 +184,6 @@ void file_test(std::string file)
         fclose(fp);
 }
 
-// 对秒级的数据进行测试
 void seconds_test(const Bar &bar)
 {
         //shit
@@ -241,14 +241,40 @@ void seconds_test(const Bar &bar)
         }
         else
         {
-                // if (have_position > 0)
-                // {
-                        // stop
-                // }
-                // else if (have_position < 0)
-                // {
-                        // stop
-                // }
+                if (have_position > 0)
+                {
+                        if (bar.close > highest)
+                        {
+                                highest = bar.close;
+                        }
+                        if ((highest - open_price) > seconds_stop && bar.close <= (highest - (highest - open_price) / 3))
+                        {
+                                printf("--------------- %s, STOP LONG %f at %f\n", bar.time.c_str(), have_position, bar.bid);
+                                place_order(-have_position, bar.bid);
+                        }
+                        if ((open_price - bar.close) >= seconds_stop)
+                        {
+                                printf("--------------- %s, LONG LOSS %f at %f\n", bar.time.c_str(), have_position, bar.bid);
+                                place_order(-have_position, bar.bid);
+                        }
+                }
+                else if (have_position < 0)
+                {
+                        if (bar.close < lowest)
+                        {
+                                lowest = bar.close;
+                        }
+                        if ((open_price - lowest) > seconds_stop && bar.close >= (lowest + (open_price - lowest) / 3))
+                        {
+                                printf("--------------- %s, STOP SHOT %f at %f\n", bar.time.c_str(), -have_position, bar.ask);
+                                place_order(-have_position, bar.ask);
+                        }
+                        if ((bar.close - open_price) >= seconds_stop)
+                        {
+                                printf("--------------- %s, SHOT LOSS %f at %f\n", bar.time.c_str(), -have_position, bar.ask);
+                                place_order(-have_position, bar.ask);
+                        }
+                }
                 open = bar.open;
                 high = bar.high;
                 low = bar.low;
