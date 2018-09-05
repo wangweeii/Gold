@@ -32,9 +32,9 @@ int main(int argc, char *argv[])
 
         mysql_close(db);
         */
-        // back_test("/home/vv/tick/", 30, 's');
+        back_test("/home/vv/tick/", 30, 's');
         // file_test("/opt/tick/EURUSD-2009-05.csv");
-        back_test("/Users/vv/tick/", 30, 's');
+        // back_test("/Users/vv/tick/", 30, 's');
         // file_test("/Users/vv/tick/EURUSD-2009-05.csv");
         printf("Connect Closed.\n");
         return 0;
