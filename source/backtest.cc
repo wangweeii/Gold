@@ -17,7 +17,7 @@ double      close        = 1.324435;
 double      pre_close;
 std::string latest_time  = "20090501 00:00:00.000";
 
-unsigned int fast_step = 21;
+unsigned int fast_step = 55;
 unsigned int slow_step = 55;
 
 double fast_alpha = 2.0 / (fast_step + 1);
@@ -40,7 +40,7 @@ double open_diff   = 0.0010;
 double fee         = 0;
 
 double macd_stop = 0.006;
-double seconds_stop = 0.0003;
+double seconds_stop = 0.0002;
 
 bool traded = false;
 
@@ -159,39 +159,9 @@ void file_test(std::string file, const int time_step, const char period)
                 // printf("%s Open-%f High-%f Low-%f Close-%f Bid-%f Ask-%f\n", (bar.time).c_str(), bar.open, bar.high, bar.low, bar.close, bar.bid, bar.ask);
                 // ma_cross_test(bar);
                 // macd_test(bar);
-                // seconds_test(bar);
+                seconds_test(bar);
         }
         fclose(fp);
-}
-
-void time_trail(std::string &time, const int time_step, const char period)
-{
-        int first = 0, second = 0;
-        switch (period)
-        {
-                case 's':
-                        first = 15;
-                        second = 16;
-                        break;
-                case 'm':
-                        first = 12;
-                        second = 13;
-                        break;
-                case 'h':
-                        first = 9;
-                        second = 10;
-                        break;
-                default:break;
-        }
-        int int_time = (time[first] - '0') * 10 + time[second] - '0';
-        int_time -= (int_time % time_step);
-        time[first]  = char('0' + (int_time / 10));
-        time[second] = char('0' + (int_time % 10));
-        for (int i = second + 1; i < time.length(); ++i)
-        {
-                if (time[i] != '.' && time[i] != ':')
-                        time[i] = '0';
-        }
 }
 
 void seconds_test(const Bar &bar)
@@ -257,12 +227,12 @@ void seconds_test(const Bar &bar)
                         {
                                 highest = bar.close;
                         }
-                        if ((highest - open_price) > seconds_stop && bar.close <= (highest - (highest - open_price) / 3))
+                        if ((highest - open_price) > seconds_stop && bar.close <= (highest - (highest - open_price) / 2))
                         {
                                 printf("--------------- %s, STOP LONG %f at %f\n", bar.time.c_str(), have_position, bar.bid);
                                 place_order(-have_position, bar.bid);
                         }
-                        if ((open_price - bar.close) >= seconds_stop)
+                        if ((open_price - bar.close) >= seconds_stop / 2)
                         {
                                 printf("--------------- %s, LONG LOSS %f at %f\n", bar.time.c_str(), have_position, bar.bid);
                                 place_order(-have_position, bar.bid);
@@ -274,12 +244,12 @@ void seconds_test(const Bar &bar)
                         {
                                 lowest = bar.close;
                         }
-                        if ((open_price - lowest) > seconds_stop && bar.close >= (lowest + (open_price - lowest) / 3))
+                        if ((open_price - lowest) > seconds_stop && bar.close >= (lowest + (open_price - lowest) / 2))
                         {
                                 printf("--------------- %s, STOP SHOT %f at %f\n", bar.time.c_str(), -have_position, bar.ask);
                                 place_order(-have_position, bar.ask);
                         }
-                        if ((bar.close - open_price) >= seconds_stop)
+                        if ((bar.close - open_price) >= seconds_stop / 2)
                         {
                                 printf("--------------- %s, SHOT LOSS %f at %f\n", bar.time.c_str(), -have_position, bar.ask);
                                 place_order(-have_position, bar.ask);
@@ -527,14 +497,11 @@ void ma_cross_test(const Bar &bar)
 
 void place_order(double quantity, double price)
 {
-        if (have_position > 0)
+        if (have_position != 0)
         {
                 total_value += have_position * (price - open_price);
         }
-        else if (have_position < 0)
-        {
-                total_value += have_position * (price - open_price);
-        }
+
         if (quantity > 0)
         {
                 if (quantity * price / 50000 > 2)
@@ -563,4 +530,34 @@ void place_order(double quantity, double price)
         }
         have_position += quantity;
         printf("Total value: %f, Position: %f, Total fee: %f\n", total_value, have_position, fee);
+}
+
+void time_trail(std::string &time, const int time_step, const char period)
+{
+        int first = 0, second = 0;
+        switch (period)
+        {
+                case 's':
+                        first = 15;
+                        second = 16;
+                        break;
+                case 'm':
+                        first = 12;
+                        second = 13;
+                        break;
+                case 'h':
+                        first = 9;
+                        second = 10;
+                        break;
+                default:break;
+        }
+        int int_time = (time[first] - '0') * 10 + time[second] - '0';
+        int_time -= (int_time % time_step);
+        time[first]  = char('0' + (int_time / 10));
+        time[second] = char('0' + (int_time % 10));
+        for (int i = second + 1; i < time.length(); ++i)
+        {
+                if (time[i] != '.' && time[i] != ':')
+                        time[i] = '0';
+        }
 }
