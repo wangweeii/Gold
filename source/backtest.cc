@@ -17,7 +17,7 @@ double      close        = 1.324435;
 double      pre_close;
 std::string latest_time  = "20090501 00:00:00.000";
 
-unsigned int fast_step = 55;
+unsigned int fast_step = 3;
 unsigned int slow_step = 55;
 
 double fast_alpha = 2.0 / (fast_step + 1);
@@ -35,7 +35,7 @@ double lowest        = 0;
 int    bar_count   = 1;
 double total_value = 9600;
 double quantity    = 0;
-double stop        = 0.0016;
+double stop        = 0.003;
 double open_diff   = 0.0010;
 double fee         = 0;
 
@@ -157,9 +157,9 @@ void file_test(std::string file, const int time_step, const char period)
                 bar.ask   = ask;
 
                 // printf("%s Open-%f High-%f Low-%f Close-%f Bid-%f Ask-%f\n", (bar.time).c_str(), bar.open, bar.high, bar.low, bar.close, bar.bid, bar.ask);
-                // ma_cross_test(bar);
+                ma_cross_test(bar);
                 // macd_test(bar);
-                seconds_test(bar);
+                // seconds_test(bar);
         }
         fclose(fp);
 }
@@ -444,22 +444,16 @@ void ma_cross_test(const Bar &bar)
                                 highest = bar.close;
                         }
                         // 多单盈利超过设定值又回调三分之一则平仓
-                        if ((highest - open_price) >= stop && bar.close <= (highest - (highest - open_price) / 3) && !traded)
+                        if ((highest - open_price) >= 0.005 && bar.close <= (highest - (highest - open_price) / 3) && !traded)
                         {
-                                // m_pClient->placeOrder(m_orderId++, ContractSamples::EurUsdFx(), OrderSamples::MarketOrder("SELL", have_position));
-                                // traded = true;
                                 printf("--------------- %s, STOP LONG %f at %f\n", bar.time.c_str(), have_position, bar.bid);
                                 place_order(-have_position, bar.bid);
-                                // have_position = 0;
                         }
                         // 多单未盈利直接止损
-                        if ((open_price - bar.close) >= stop && !traded)
+                        if ((open_price - bar.close) >= 0.002 && !traded)
                         {
-                                // m_pClient->placeOrder(m_orderId++, ContractSamples::EurUsdFx(), OrderSamples::MarketOrder("SELL", have_position));
-                                // traded = true;
                                 printf("--------------- %s, LONG LOSS %f at %f\n", bar.time.c_str(), have_position, bar.bid);
                                 place_order(-have_position, bar.bid);
-                                // have_position = 0;
                         }
                 }
                 else if (have_position < 0)
@@ -469,22 +463,16 @@ void ma_cross_test(const Bar &bar)
                                 lowest = bar.low;
                         }
                         // 空单盈利超过设定值又回调三分之一则平仓
-                        if ((open_price - lowest) >= stop && bar.close >= (lowest + (open_price - lowest) / 3) && !traded)
+                        if ((open_price - lowest) >= 0.005 && bar.close >= (lowest + (open_price - lowest) / 3) && !traded)
                         {
-                                // m_pClient->placeOrder(m_orderId++, ContractSamples::EurUsdFx(), OrderSamples::MarketOrder("BUY", -have_position));
-                                // traded = true;
                                 printf("--------------- %s, STOP SHOT %f at %f\n", bar.time.c_str(), -have_position, bar.ask);
                                 place_order(-have_position, bar.ask);
-                                // have_position = 0;
                         }
                         // 空单未盈利直接止损
-                        if ((open_price - bar.close) >= stop && !traded)
+                        if ((open_price - bar.close) >= 0.002 && !traded)
                         {
-                                // m_pClient->placeOrder(m_orderId++, ContractSamples::EurUsdFx(), OrderSamples::MarketOrder("BUY", -have_position));
-                                // traded = true;
                                 printf("--------------- %s, SHOT LOSS %f at %f\n", bar.time.c_str(), -have_position, bar.ask);
                                 place_order(-have_position, bar.ask);
-                                // have_position = 0;
                         }
                 }
 
